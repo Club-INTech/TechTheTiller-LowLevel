@@ -579,18 +579,18 @@ void ORDER_ptpdemoseq::impl(Args args)
 
 void ORDER_GateOpen::impl(Args args)
 {
-    ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    XL430* motRight = manager.motor1;
-    XL430* motLeft = manager.motor2;
+    Servo motRight;
+    Servo motLeft;
+    motRight.attach(1);
+    motLeft.attach(2);
     if (!strcmp(args[0],"left")) {
-        motLeft->setGoalAngle(120);
+        motLeft.write(120);
     }
     else {
-        motRight->setGoalAngle(120);
+        motRight.write(120);
     }
 
 }
-
 
 void ORDER_GateClose::impl(Args args)
 {
@@ -608,6 +608,12 @@ void ORDER_GateClose::impl(Args args)
 void ORDER_FlagDown::impl(Args args) {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
 
+}
+
+void ORDER_FlagUp::impl(Args args) {
+    Servo moteurFlag;
+    moteurFlag.attach(3);
+    moteurFlag.write(90);
 }
 
 #elif defined(SLAVE)
