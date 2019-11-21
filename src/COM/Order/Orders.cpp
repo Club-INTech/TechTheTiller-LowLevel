@@ -574,16 +574,14 @@ void ORDER_ptpdemoseq::impl(Args args)
 
 
 
-// Mouvements de dégageage de palet
-#if defined(SLAVE)
-
-
-
-#endif
-
-
 #if defined(MAIN)
 
+
+void ORDER_GateOpen::impl(Args args)
+{
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+
+}
 
 
 #elif defined(SLAVE)

@@ -77,7 +77,7 @@ if [ -z "$(command -v platformio)" ]; then
 fi
 
 if [ "$(command -v platformio)" ]; then
-	pio init --ide clion --board teensy35
+	pio init --ide clion
 	echo "Platformio initialisé."
 else
 	echo "Impossible d'initialiser platformio"
