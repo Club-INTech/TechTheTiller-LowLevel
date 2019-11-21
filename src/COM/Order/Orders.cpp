@@ -582,7 +582,7 @@ void ORDER_GateOpen::impl(Args args)
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
     XL430* mot1 = manager.motor1;
     XL430* mot2 = manager.motor2;
-    if (strcmp(args[0],"left")) {
+    if (!strcmp(args[0],"left")) {
         mot1->setGoalAngle(120);
     }
     else {
@@ -591,6 +591,16 @@ void ORDER_GateOpen::impl(Args args)
 
 }
 
+
+void ORDER_GateClose::impl(Args args)
+{
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    XL430* mot1 = manager.motor1;
+    XL430* mot2 = manager.motor2;
+    if (!strcmp(args[0],"left")) {
+
+    }
+}
 
 #elif defined(SLAVE)
 

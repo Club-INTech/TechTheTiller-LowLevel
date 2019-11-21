@@ -149,6 +149,7 @@ ORDER(posBras,1);
 #if defined(MAIN)
 
 ORDER(GateOpen,1);
+ORDER(GateClose,1);
 
 
 ORDER(torqueBras,1);
