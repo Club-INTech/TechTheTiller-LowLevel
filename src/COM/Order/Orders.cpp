@@ -580,6 +580,14 @@ void ORDER_ptpdemoseq::impl(Args args)
 void ORDER_GateOpen::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    XL430* mot1 = manager.motor1;
+    XL430* mot2 = manager.motor2;
+    if (strcmp(args[0],"left")) {
+        mot1->setGoalAngle(120);
+    }
+    else {
+        mot2->setGoalAngle(120);
+    }
 
 }
 

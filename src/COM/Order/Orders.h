@@ -148,7 +148,7 @@ ORDER(posBras,1);
 // This is horrible and should probably burn
 #if defined(MAIN)
 
-ORDER(GateOpen,0);
+ORDER(GateOpen,1);
 
 
 ORDER(torqueBras,1);
