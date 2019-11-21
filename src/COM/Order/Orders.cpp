@@ -605,6 +605,11 @@ void ORDER_GateClose::impl(Args args)
     }
 }
 
+void ORDER_FlagDown::impl(Args args) {
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+
+}
+
 #elif defined(SLAVE)
 
 void ORDER_oust::impl(Args args)
