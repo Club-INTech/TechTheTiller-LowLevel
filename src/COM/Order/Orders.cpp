@@ -580,13 +580,13 @@ void ORDER_ptpdemoseq::impl(Args args)
 void ORDER_GateOpen::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    XL430* mot1 = manager.motor1;
-    XL430* mot2 = manager.motor2;
+    XL430* motRight = manager.motor1;
+    XL430* motLeft = manager.motor2;
     if (!strcmp(args[0],"left")) {
-        mot1->setGoalAngle(120);
+        motLeft->setGoalAngle(120);
     }
     else {
-        mot2->setGoalAngle(120);
+        motRight->setGoalAngle(120);
     }
 
 }
@@ -595,10 +595,13 @@ void ORDER_GateOpen::impl(Args args)
 void ORDER_GateClose::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    XL430* mot1 = manager.motor1;
-    XL430* mot2 = manager.motor2;
+    XL430* motRight= manager.motor1;
+    XL430* motLeft= manager.motor2;
     if (!strcmp(args[0],"left")) {
-
+        motLeft->setGoalAngle(0);
+    }
+    else {
+        motRight->setGoalAngle(0);
     }
 }
 
