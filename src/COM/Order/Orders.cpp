@@ -594,20 +594,22 @@ void ORDER_GateOpen::impl(Args args)
 
 void ORDER_GateClose::impl(Args args)
 {
-    ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    XL430* motRight= manager.motor1;
-    XL430* motLeft= manager.motor2;
+    Servo motRight;
+    Servo motLeft;
+    motRight.attach( 1);
+    motLeft.attach(2);
     if (!strcmp(args[0],"left")) {
-        motLeft->setGoalAngle(0);
+        motLeft.write(0);
     }
     else {
-        motRight->setGoalAngle(0);
+        motRight.write(0);
     }
 }
 
 void ORDER_FlagDown::impl(Args args) {
-    ActuatorsMgr& manager = ActuatorsMgr::Instance();
-
+    Servo motorFlag;
+    motorFlag.attach(3);
+    motorFlag.write(90)
 }
 
 #elif defined(SLAVE)
