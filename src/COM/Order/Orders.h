@@ -150,6 +150,7 @@ ORDER(posBras,1);
 
 ORDER(GateOpen,1);
 ORDER(GateClose,1);
+ORDER(FlagUp,0);
 
 
 ORDER(torqueBras,1);
