@@ -587,9 +587,12 @@ void ORDER_GateOpen::impl(Args args)
     }
     else {
         mot2->setGoalAngle(120);
+        mot2->setGoalAngle(150);
     }
 
 }
+
+
 
 
 #elif defined(SLAVE)
