@@ -34,12 +34,6 @@ enum class Side
 };
 
 class Motor {
-private:
-	Side side;
-	Direction direction;
-	uint8_t pin_pwm;
-	uint8_t pin_ina;
-	uint8_t pin_inb;
 public:
 	Motor(Side);
 	int16_t pwm;
@@ -54,6 +48,14 @@ public:
 	 */
 	void stop();
 	void brake();
+
+
+private:
+    Side side;
+    Direction direction;
+    uint8_t pin_pwm;
+    uint8_t pin_ina;
+    uint8_t pin_inb;
 };
 
 #endif //COMPLETE_LOW_LEVEL_MOTOR_H

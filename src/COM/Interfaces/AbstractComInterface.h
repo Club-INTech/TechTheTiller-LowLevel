@@ -12,8 +12,6 @@
 
 class AbstractComInterface
 {
-protected:
-    String data;
 public:
     AbstractComInterface() = default;
     virtual ~AbstractComInterface() = default;
@@ -26,6 +24,10 @@ public:
 
     virtual void printfln(const char*) = 0;
     virtual void printf(const char*) = 0;
+
+
+protected:
+    String data;
 };
 
 

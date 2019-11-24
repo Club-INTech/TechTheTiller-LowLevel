@@ -8,14 +8,6 @@
 #include <vector>
 
 class PointToPointTrajectory {
-
-private:
-
-    int counter;
-    int size;
-    const double* xTable;
-    const double* yTable;
-
 public:
 
     PointToPointTrajectory();
@@ -30,6 +22,15 @@ public:
     void clear();
     std::pair<double,double> query();
     explicit operator bool();
+
+
+private:
+
+    int counter;
+    int size;
+    const double* xTable;
+    const double* yTable;
+
 };
 
 

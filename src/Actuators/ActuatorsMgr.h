@@ -27,16 +27,6 @@ enum StepperDirection {
 
 class ActuatorsMgr : public Singleton<ActuatorsMgr>
 {
-private:
-    StepperDirection leftDirection;
-    StepperDirection rightDirection;
-	volatile int32_t leftStepCount;
-	volatile int32_t rightStepCount;
-	int32_t nextLeftStepCount;
-	int32_t nextRightStepCount;
-	volatile int32_t timerForLeftStepper = -1;
-	volatile int32_t timerForRightStepper = -1;
-
 public:
     void init() override;
 
@@ -81,6 +71,17 @@ public:
 
 	void checkArmMovements();
 	void rebootArms();
+
+
+private:
+    StepperDirection leftDirection;
+    StepperDirection rightDirection;
+    volatile int32_t leftStepCount;
+    volatile int32_t rightStepCount;
+    int32_t nextLeftStepCount;
+    int32_t nextRightStepCount;
+    volatile int32_t timerForLeftStepper = -1;
+    volatile int32_t timerForRightStepper = -1;
 
 };
 

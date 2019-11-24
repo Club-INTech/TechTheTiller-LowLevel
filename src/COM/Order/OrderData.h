@@ -9,9 +9,6 @@
 #include <vector>
 
 class OrderData {
-
-private:
-    std::vector<String> orderData;
 public:
     OrderData() : orderData(std::vector<String>()) {}
     void push_back(const String& s) {
@@ -37,6 +34,10 @@ public:
     inline uint8_t nbrParams() {
         return size()-1;
     }
+
+
+private:
+    std::vector<String> orderData;
 };
 
 #endif //TECHTHETOWN_LOWLEVEL_ORDERDATA_H

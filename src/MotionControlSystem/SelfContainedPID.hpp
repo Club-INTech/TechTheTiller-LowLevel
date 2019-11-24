@@ -9,12 +9,6 @@
 
 template <typename T>
 class SelfContainedPID: public PID<T> {
-
-private:
-    T input;
-    T output;
-    T goal;
-
 public:
     SelfContainedPID(): PID<T>(&input, &output, &goal), input(0), output(0), goal(0), active(false) {}
 
@@ -50,6 +44,13 @@ public:
     void resetOutput(T newValue) {
         output = newValue;
     }
+
+
+private:
+    T input;
+    T output;
+    T goal;
+
 };
 
 

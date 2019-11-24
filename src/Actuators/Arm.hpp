@@ -18,60 +18,6 @@ enum ArmStatus {
 
 template <typename MotorType>
 class Arm {
-private:
-    DynamixelManager& manager;
-    MotorType& base;
-    MotorType& elbow;
-    MotorType& wrist;
-    const char* sideName;
-    char* syncAngles = new char[MotorType::goalAngle.length*3];
-    MotorType* motorList;
-    SyncWrite* syncVelocityLimit;
-    SyncWrite* syncAngleWriteData;
-    SyncWrite* syncToggleTorqueWriteData;
-    SyncWrite* syncReturnDelay;
-    SyncRead* syncMovingRead;
-    SyncRead* syncMovingStatus;
-    SyncRead* syncHardwareError;
-    SyncWrite* syncWatchdog;
-    SyncWrite* syncHomePos;
-    ArmStatus status = OK;
-
-    float targetPositions[3] = {0.0f};
-    uint16_t retryMovementAttempts = 0;
-    float positionsAsked[ARM_POSITION_BUFFER_SIZE][3] = { {0.0f} };
-    bool noRetryAsked[ARM_POSITION_BUFFER_SIZE] = { false };
-    uint16_t writeIndex = 0;
-    uint16_t currentPositionIndex = 0;
-
-    /**
-     * Est ce que le bras veut pas répondre? Dans ce cas on retient et on attend plus de réponse
-     */
-    bool mute = false;
-
-    /**
-     * Nombre d'essais de lecture de paquets Dynamixel avant de déclarer ce bras muet
-     */
-    uint8_t attemptsBeforeMute = ARM_ATTEMPTS_BEFORE_MUTE;
-
-    /**
-     * Temps de début du mouvement, utilisé au cas où le bras ne réponde pas
-     */
-    long movementStartTime = 0;
-
-    /**
-     * Temps de la dernière vérification que le bras répondait pas
-     */
-    long lastMuteCheck = 0;
-
-    bool noRetry = false;
-
-    /**
-     * Est-ce qu'on a pas eu de problème avec l'Alarm dans le dernier mouvement?
-     */
-    bool lastAlerts[6] = {true, true, true, true, true, true};
-    bool reactivated[6] = {true, true, true, true, true, true};
-
 public:
     Arm(const char* sideName, DynamixelManager& manager, MotorType* list): sideName(sideName), manager(manager), motorList(list), base(list[0]), elbow(list[1]), wrist(list[2]), status(ArmStatus::OK) {
     }
@@ -484,6 +430,61 @@ private:
             reactivated[xl.getId()-1] = true;
         }
     }
+
+
+private:
+    DynamixelManager& manager;
+    MotorType& base;
+    MotorType& elbow;
+    MotorType& wrist;
+    const char* sideName;
+    char* syncAngles = new char[MotorType::goalAngle.length*3];
+    MotorType* motorList;
+    SyncWrite* syncVelocityLimit;
+    SyncWrite* syncAngleWriteData;
+    SyncWrite* syncToggleTorqueWriteData;
+    SyncWrite* syncReturnDelay;
+    SyncRead* syncMovingRead;
+    SyncRead* syncMovingStatus;
+    SyncRead* syncHardwareError;
+    SyncWrite* syncWatchdog;
+    SyncWrite* syncHomePos;
+    ArmStatus status = OK;
+
+    float targetPositions[3] = {0.0f};
+    uint16_t retryMovementAttempts = 0;
+    float positionsAsked[ARM_POSITION_BUFFER_SIZE][3] = { {0.0f} };
+    bool noRetryAsked[ARM_POSITION_BUFFER_SIZE] = { false };
+    uint16_t writeIndex = 0;
+    uint16_t currentPositionIndex = 0;
+
+    /**
+     * Est ce que le bras veut pas répondre? Dans ce cas on retient et on attend plus de réponse
+     */
+    bool mute = false;
+
+    /**
+     * Nombre d'essais de lecture de paquets Dynamixel avant de déclarer ce bras muet
+     */
+    uint8_t attemptsBeforeMute = ARM_ATTEMPTS_BEFORE_MUTE;
+
+    /**
+     * Temps de début du mouvement, utilisé au cas où le bras ne réponde pas
+     */
+    long movementStartTime = 0;
+
+    /**
+     * Temps de la dernière vérification que le bras répondait pas
+     */
+    long lastMuteCheck = 0;
+
+    bool noRetry = false;
+
+    /**
+     * Est-ce qu'on a pas eu de problème avec l'Alarm dans le dernier mouvement?
+     */
+    bool lastAlerts[6] = {true, true, true, true, true, true};
+    bool reactivated[6] = {true, true, true, true, true, true};
 
 };
 

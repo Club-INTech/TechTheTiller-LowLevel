@@ -29,14 +29,6 @@
 
 class OrderManager : public Singleton<OrderManager>
 {
-private:
-
-	std::map<String, AbstractOrder*> orders;
-
-	char readMessage[RX_BUFFER_SIZE];
-    char charIDLastMessage;
-    uint64_t messageCount = 0;
-
 public:
 	HookList hookList;
 	OrderData orderData;
@@ -81,8 +73,16 @@ public:
     void executeHooks();
     bool hooksEnabled;
 
-
 //    std::map<std::string,int> lookupTable;
+
+
+private:
+
+    std::map<String, AbstractOrder*> orders;
+
+    char readMessage[RX_BUFFER_SIZE];
+    char charIDLastMessage;
+    uint64_t messageCount = 0;
 };
 
 #endif //_ORDERMGR_h

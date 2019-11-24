@@ -11,10 +11,6 @@
 
 class HookList
 {
-private:
-    std::map<uint8_t, Hook> hooks;
-    std::vector<uint8_t> readyIds;
-
 public:
     HookList() : hooks(std::map<uint8_t, Hook>()), readyIds(std::vector<uint8_t>()){}
 
@@ -83,6 +79,11 @@ public:
         }
         return false;
     }
+
+
+private:
+    std::map<uint8_t, Hook> hooks;
+    std::vector<uint8_t> readyIds;
 };
 
 

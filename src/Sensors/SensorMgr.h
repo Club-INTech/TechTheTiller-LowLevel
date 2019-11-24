@@ -20,18 +20,6 @@
 
 class SensorMgr : public Singleton<SensorMgr>
 {
-
-
-private:
-
-	ComMgr& highLevel;
-
-	SICKDT35_B15851 distanceSensors[NBR_OF_DISTANCE_SENSOR];
-	MOVEMENT measure_direction;
-
-	bool jumperPlugged;
-	bool basicBlocked;
-
 public:
 
 	SensorMgr();
@@ -46,6 +34,18 @@ public:
 	 * @return
 	 */
 	SICKDT35_B15851& getDistanceSensor(size_t index);
+
+
+private:
+
+    ComMgr& highLevel;
+
+    SICKDT35_B15851 distanceSensors[NBR_OF_DISTANCE_SENSOR];
+    MOVEMENT measure_direction;
+
+    bool jumperPlugged;
+    bool basicBlocked;
+
 };
 
 #endif

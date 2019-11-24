@@ -13,11 +13,6 @@
 
 class InterruptStackPrint : public Singleton<InterruptStackPrint>
 {
-private:
-    String stack[INTERRUPT_PRINT_STACK_MAX_SIZE];
-    char headerStack[INTERRUPT_PRINT_STACK_MAX_SIZE][HEADER_LENGTH];
-    uint8_t writePointer = 0;
-    uint8_t readPointer = 0;
 public:
 
     InterruptStackPrint() = default;
@@ -30,6 +25,13 @@ public:
     ~InterruptStackPrint() = default;
 
     void doPrint();
+
+
+private:
+    String stack[INTERRUPT_PRINT_STACK_MAX_SIZE];
+    char headerStack[INTERRUPT_PRINT_STACK_MAX_SIZE][HEADER_LENGTH];
+    uint8_t writePointer = 0;
+    uint8_t readPointer = 0;
 };
 
 

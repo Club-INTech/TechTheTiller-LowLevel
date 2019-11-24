@@ -28,57 +28,6 @@
 // TODO : P'tet passer les config dans un fichier dans src/Config ?
 class MCS : public Singleton<MCS>
 {
-
-private:
-
-    Encoder* encoderRight = nullptr;
-    Encoder* encoderLeft = nullptr;
-
-    RobotStatus robotStatus;
-    ControlSettings controlSettings;
-
-    Motor leftMotor;
-    Motor rightMotor;
-
-    SelfContainedPID<float> leftSpeedPID;
-    SelfContainedPID<float> rightSpeedPID;
-    SelfContainedPID<float> translationPID;
-//    SelfContainedPID<float> rotationPID180;
-//    SelfContainedPID<float> rotationPID90;
-    SelfContainedPID<float> rotationPID;
-
-    int32_t currentDistance;
-    int16_t targetX;
-    int16_t targetY;
-
-    int32_t leftTicks;
-    int32_t rightTicks;
-    int32_t previousLeftTicks;
-    int32_t previousRightTicks;
-    float previousLeftSpeedGoal;
-    float previousRightSpeedGoal;
-    int16_t targetDistance;
-    float targetAngle;
-    float angleOffset;
-    bool expectedWallImpact;
-
-    Average<float, 100> averageLeftSpeed;
-    Average<float, 100> averageRightSpeed;
-#if defined(MAIN)
-    Average<float, 25> averageRotationDerivativeError;
-    Average<float, 25> averageTranslationDerivativeError;
-#elif defined(SLAVE)
-    Average<float, 10> averageRotationDerivativeError;
-    Average<float, 10> averageTranslationDerivativeError;
-#endif
-
-    bool sequentialMovement;
-    PointToPointTrajectory trajectory;
-
-    // Timer entre translation et rotation pour les goto
-    uint32_t gotoTimer;
-
-
 public:
     MCS();
 
@@ -153,6 +102,56 @@ public:
     bool sentMoveAbnormal();
     bool isMoveAbnormal();
     void setMoveAbnormalSent(bool);
+
+
+private:
+
+    Encoder* encoderRight = nullptr;
+    Encoder* encoderLeft = nullptr;
+
+    RobotStatus robotStatus;
+    ControlSettings controlSettings;
+
+    Motor leftMotor;
+    Motor rightMotor;
+
+    SelfContainedPID<float> leftSpeedPID;
+    SelfContainedPID<float> rightSpeedPID;
+    SelfContainedPID<float> translationPID;
+//    SelfContainedPID<float> rotationPID180;
+//    SelfContainedPID<float> rotationPID90;
+    SelfContainedPID<float> rotationPID;
+
+    int32_t currentDistance;
+    int16_t targetX;
+    int16_t targetY;
+
+    int32_t leftTicks;
+    int32_t rightTicks;
+    int32_t previousLeftTicks;
+    int32_t previousRightTicks;
+    float previousLeftSpeedGoal;
+    float previousRightSpeedGoal;
+    int16_t targetDistance;
+    float targetAngle;
+    float angleOffset;
+    bool expectedWallImpact;
+
+    Average<float, 100> averageLeftSpeed;
+    Average<float, 100> averageRightSpeed;
+#if defined(MAIN)
+    Average<float, 25> averageRotationDerivativeError;
+    Average<float, 25> averageTranslationDerivativeError;
+#elif defined(SLAVE)
+    Average<float, 10> averageRotationDerivativeError;
+    Average<float, 10> averageTranslationDerivativeError;
+#endif
+
+    bool sequentialMovement;
+    PointToPointTrajectory trajectory;
+
+    // Timer entre translation et rotation pour les goto
+    uint32_t gotoTimer;
 };
 
 #endif //LL_MCSREBORN_H
