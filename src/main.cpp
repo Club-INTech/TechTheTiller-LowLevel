@@ -29,17 +29,28 @@ void setup(){}
 void loop() {
 	/*************************
 	 * Initialisation du LL, gère:
+	 * Les pins
 	 * La série
 	 * Les actionneurs
 	 * L'asservissement
 	 *************************/
 
-    /* Série */
+    InitAllPins();
+
+    // TODO : Automate init
+    ComMgr::Instance().init();
+    Serial.println("Com OK");
+    ActuatorsMgr::Instance().init();
+    Serial.println("Actuateurs OK");
     SensorMgr::Instance().init();
+    Serial.println("Capteurs OK");
+    MCS::Instance().init();
+    Serial.println("MCS OK");
+    OrderManager& orderMgr = OrderManager::Instance();
+    orderMgr.init();
+    Serial.println("Ordres OK");
 
-
-    Serial.flush();
-	Serial.println("Série OK");
+	Serial.println("Init OK");
 	delay(250);
 
 	/* Actuators */
@@ -53,11 +64,6 @@ void loop() {
 	digitalWrite(LEFT_VALVE_PIN,LOW);
 	pinMode(RIGHT_VALVE_PIN,OUTPUT);
 	digitalWrite(RIGHT_VALVE_PIN,LOW);
-
-	Serial.println("Fin du setup");
-	OrderManager& orderMgr = OrderManager::Instance();
-	orderMgr.init();
-    Serial.println("Order manager ok");
 
     /* InterruotStackPrint */
     InterruptStackPrint& interruptStackPrint = InterruptStackPrint::Instance();
@@ -73,7 +79,7 @@ void loop() {
 
 
     // Timer pour steppers
-    HardwareTimer stepperTimer(TIM7);
+    HardwareTimer stepperTimer(TIM2);   // Check needed timers
     stepperTimer.setMode(1,TIMER_OUTPUT_COMPARE);
     stepperTimer.setOverflow(STEPPER_FREQUENCY, HERTZ_FORMAT);
     stepperTimer.attachInterrupt(stepperInterrupt);
@@ -81,12 +87,13 @@ void loop() {
     //    stepperTimer.setInterruptPriority(10,0);
     stepperTimer.resume();
 
+    Serial.println("Interrupt Timers OK");
+    ActuatorsMgr::Instance().initTorques();
+    Serial.println("Dynamixels OK");
+    Serial.println("Setup DONE");
 
 	Serial.println("Starting...");
-    delay(2000);//Laisse le temps aux capteurs de clignotter leur ID
-    ActuatorsMgr::Instance().initTorques();
 
-    Serial.println("Ready!");
 	/**
 	 * Boucle principale, y est géré:
 	 * La communication HL

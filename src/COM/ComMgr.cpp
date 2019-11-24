@@ -4,10 +4,7 @@
 
 #include "ComMgr.h"
 
-ComMgr::ComMgr() {
-    // On met l'initialisation des pins ici parce que c'est le premier Singleton qui se lance
-    InitAllPins();
-
+void ComMgr::init() {
     if(com_options & SERIAL_W) {
         while(!Serial);
         Serial.begin(115200);

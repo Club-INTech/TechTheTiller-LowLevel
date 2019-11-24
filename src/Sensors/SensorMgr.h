@@ -31,12 +31,13 @@ private:
 
 	bool jumperPlugged;
 	bool basicBlocked;
+
 public:
 
 	SensorMgr();
-	void init();
+    void init() override;
 
-	bool isJumperEngaged();
+    bool isJumperEngaged();
 	bool isReadyToGo();
 
 	/**

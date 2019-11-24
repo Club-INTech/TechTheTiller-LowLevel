@@ -8,11 +8,16 @@ OrderManager::OrderManager():
         motionControlSystem(MCS::Instance()),
         actuatorsMgr(ActuatorsMgr::Instance()),
         highLevel(ComMgr::Instance())
-{
+{}
+
+
+void OrderManager::init() {
     memset(readMessage, 0, RX_BUFFER_SIZE);
     isSendingUS = true;
     hooksEnabled = true;
     HLWaiting = false;
+    orders = allOrders;
+
     highLevel.printfln(DEBUG_HEADER,"Communications ready");
 }
 
@@ -161,8 +166,4 @@ void OrderManager::executeHooks() {
 
 void OrderManager::registerOrder(String id, AbstractOrder *order) {
     orders.insert( { id, order });
-}
-
-void OrderManager::init() {
-    orders = allOrders;
 }

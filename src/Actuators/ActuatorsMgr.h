@@ -38,6 +38,8 @@ private:
 	volatile int32_t timerForRightStepper = -1;
 
 public:
+    void init() override;
+
     //Gestion des XL430
     DynamixelManager* dynamixelManager;
 
@@ -65,8 +67,7 @@ public:
 
 #endif
 
-	ActuatorsMgr();
-	~ActuatorsMgr();
+	ActuatorsMgr() = default;
 
 	/**
     * Appelé tous les 800 µs pour faire bouger les steppers

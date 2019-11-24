@@ -5,8 +5,10 @@
 #include <COM/InterruptStackPrint.h>
 #include "ActuatorsMgr.h"
 
-ActuatorsMgr::ActuatorsMgr() : dynamixelManager(new DynamixelManager(PIN_RX_DYNAMIXEL,PIN_TX_DYNAMIXEL, &DebugSerial))
+void ActuatorsMgr::init()
 {
+    dynamixelManager = new DynamixelManager(PIN_RX_DYNAMIXEL,PIN_TX_DYNAMIXEL, &DebugSerial);
+
     motor1 = (XL430*) dynamixelManager->createMotor(1, XL430GeneratorFunction);//new XL430(1,*manager);
     motor2 = (XL430*) dynamixelManager->createMotor(2, XL430GeneratorFunction);//new XL430(2,*manager);
     motor3 = (XL430*) dynamixelManager->createMotor(3, XL430GeneratorFunction);//new XL430(3,*manager);
@@ -26,10 +28,6 @@ ActuatorsMgr::ActuatorsMgr() : dynamixelManager(new DynamixelManager(PIN_RX_DYNA
     motor4 = (XL430*) dynamixelManager->createMotor(4, XL430GeneratorFunction);//new XL430(7,*manager);
 
 #endif
-}
-
-ActuatorsMgr::~ActuatorsMgr()
-{
 }
 
 void stepperInterrupt(HardwareTimer* hardwareTimer) {

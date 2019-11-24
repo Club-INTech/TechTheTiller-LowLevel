@@ -33,8 +33,6 @@ private:
 
 	std::map<String, AbstractOrder*> orders;
 
-	bool basicDetectionTriggeredSent;
-	bool basicDetectionFinishedSent;
 	char readMessage[RX_BUFFER_SIZE];
     char charIDLastMessage;
     uint64_t messageCount = 0;

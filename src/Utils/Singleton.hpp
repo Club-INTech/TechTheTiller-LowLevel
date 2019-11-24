@@ -15,8 +15,11 @@ public:
 		static T instance;
 		return instance;
 	}
+
+    /// MUST be used to initialize the singleton in a non-static context.
+    /// Called automatically during first ::Instance() call.
+    virtual void init(){};
 protected:
-	Singleton() {
-	}
+	Singleton() = default;
 };
 #endif

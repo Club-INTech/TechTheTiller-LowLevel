@@ -17,8 +17,10 @@ class ComMgr : public Singleton<ComMgr>
 {
 public:
 
-    ComMgr();
+    ComMgr() = default;
     ~ComMgr();
+
+    void init() override;
 
     template< typename T >
     bool read(T data){
