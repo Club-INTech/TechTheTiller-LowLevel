@@ -10,7 +10,7 @@ class Metro
 {
 
 public:
-    Metro();
+    Metro() = default;
     Metro(unsigned long interval_millis);
     void interval(unsigned long interval_millis);
     bool check();
