@@ -609,7 +609,7 @@ void ORDER_GateClose::impl(Args args)
 void ORDER_FlagDown::impl(Args args) {
     Servo motorFlag;
     motorFlag.attach(3);
-    motorFlag.write(90)
+    motorFlag.write(90);
 }
 
 void ORDER_FlagUp::impl(Args args) {
