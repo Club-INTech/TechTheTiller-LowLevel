@@ -618,7 +618,30 @@ void ORDER_FlagUp::impl(Args args) {
     moteurFlag.write(90);
 }
 
+
+
 #elif defined(SLAVE)
+
+void ORDER_BrasStock::impl(Args args)
+{
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    XL430* mot = manager.motor4;
+    mot->setGoalAngle(0);
+}
+
+void ORDER_BrasEcueil::impl(Args args)
+{
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    XL430* mot = manager.motor4;
+    mot->setGoalAngle(90);
+}
+
+void ORDER_BrasDepot::impl(Args args)
+{
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    XL430* mot = manager.motor4;
+    mot->setGoalAngle(100);
+}
 
 void ORDER_oust::impl(Args args)
 {

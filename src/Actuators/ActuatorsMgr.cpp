@@ -25,7 +25,7 @@ void ActuatorsMgr::init()
 
 #elif defined(SLAVE)
 
-    motor4 = (XL430*) dynamixelManager->createMotor(4, XL430GeneratorFunction);//new XL430(7,*manager);
+    motor4 = (XL430*) dynamixelManager->createMotor(4, XL430GeneratorFunction);//new XL430(4,*manager);
 
 #endif
 }

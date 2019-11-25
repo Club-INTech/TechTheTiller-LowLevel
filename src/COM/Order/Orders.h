@@ -161,6 +161,10 @@ ORDER(torqueXL,1);
 
 #elif defined(SLAVE)
 
+ORDER(BrasStock, 1);
+ORDER(BrasEcueil, 1);
+ORDER(BrasDepot, 1);
+
 ORDER(grnd,1);
 
 ORDER(torqueBras,1);
