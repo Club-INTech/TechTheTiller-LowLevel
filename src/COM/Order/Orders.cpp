@@ -573,6 +573,19 @@ void ORDER_ptpdemoseq::impl(Args args)
 // TODO: pour les 2 qui suivent: électrovannes?
 
 
+void ORDER_ValveOn::impl(Args args)
+{
+    uint8_t valve = int(args[0]);
+    pinMode(valve, OUTPUT);
+    digitalWrite(valve, HIGH);
+}
+
+void ORDER_ValveOff::impl(Args args)
+{
+    uint8_t valve = int(args[0]);
+    pinMode(valve, OUTPUT);
+    digitalWrite(valve, LOW);
+}
 
 #if defined(MAIN)
 
@@ -591,6 +604,7 @@ void ORDER_GateOpen::impl(Args args)
     }
 
 }
+
 
 void ORDER_GateClose::impl(Args args)
 {

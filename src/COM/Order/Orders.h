@@ -147,13 +147,17 @@ ORDER(XLs,2);
 ORDER(posBras,1);
 
 // This is horrible and should probably burn
+
+ORDER(ValveOn, 1);
+ORDER(ValveOff, 1);
+
 #if defined(MAIN)
 
 ORDER(GateOpen,1);
 ORDER(GateClose,1);
 ORDER(FlagUp,0);
+ORDER(FlagDown,0);
 
-ORDER(FlagDown,0)
 
 ORDER(torqueBras,1);
 ORDER(torqueXL,1);
