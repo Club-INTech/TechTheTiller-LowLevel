@@ -616,7 +616,7 @@ void ORDER_BrasIn::impl(Args args) {
 void ORDER_LiftUp::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    Stepper stepper(50, 3, 4, 5, 6);
+    Stepper stepper(50, 3, 4, 5, 6);        //A CHECKER DANS LA DATASHEEEEEEEET, PARCE QUE 50 CA PUE DU CUL
     stepper.step(500);
 }
 void ORDER_LiftDown::impl(Args args)
