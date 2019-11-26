@@ -599,6 +599,18 @@ void ORDER_BrasOut::impl(Args args) {
     }
 }
 
+void ORDER_BrasIn::impl(Args args) {
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    if ( !strcmp(args[0],"principal") ) {
+        XL430* mot = manager.motor1;
+        mot->setGoalAngle(0);
+    }
+    else {
+        XL430* mot = manager.motor4;
+        mot->setGoalAngle(0);
+    }
+}
+
 #if defined(MAIN)
 
 
