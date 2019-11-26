@@ -611,6 +611,22 @@ void ORDER_BrasIn::impl(Args args) {
     }
 }
 
+void ORDER_Suck::impl(Args args) {
+    switch((int)args[0]) {
+        case 0:
+            digitalWrite(RIGHT_PUMP_PIN, HIGH);
+            break;
+        case 1:
+            digitalWrite(LEFT_PUMP_PIN, LOW);
+            break;
+        default:
+            orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");   //Renvoit un message d'erreur au HL, il faut vérifier si STD_HEADER convient.
+#if defined(SLAVE)
+
+#endif
+    }
+}
+
 #if defined(MAIN)
 
 void ORDER_LiftUp::impl(Args args)

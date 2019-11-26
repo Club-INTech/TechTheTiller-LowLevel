@@ -154,6 +154,8 @@ ORDER(BrasIn,1);
 
 ORDER(ValveOn, 1);
 ORDER(ValveOff, 1);
+ORDER(Suck,1)
+
 
 #if defined(MAIN)
 
