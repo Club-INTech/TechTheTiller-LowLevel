@@ -643,31 +643,28 @@ void ORDER_LiftDown::impl(Args args)
 
 void ORDER_GateOpen::impl(Args args)
 {
-    Servo motRight;
-    Servo motLeft;
-    motRight.attach(1);
-    motLeft.attach(2);
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    Servo* motR = manager.motRight;
+    Servo* motL = manager.motLeft;
     if (!strcmp(args[0],"left")) {
-        motLeft.write(120);
+        motL->write(120);
     }
     else {
-        motRight.write(120);
+        motR->write(120);
     }
 
 }
 
-
 void ORDER_GateClose::impl(Args args)
 {
-    Servo motRight;
-    Servo motLeft;
-    motRight.attach( 1);
-    motLeft.attach(2);
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    Servo* motR = manager.motRight;
+    Servo* motL = manager.motLeft;
     if (!strcmp(args[0],"left")) {
-        motLeft.write(0);
+        motL->write(0);
     }
     else {
-        motRight.write(0);
+        motR->write(0);
     }
 }
 

@@ -6,6 +6,7 @@
 
 #include "Arduino.h"
 
+
 #include "DynamixelManager.h"
 #include "XL430.h"
 #include "SyncWrite.h"
@@ -14,6 +15,8 @@
 #include "Config/PinMapping.h"
 #include "Utils/Singleton.hpp"
 #include "Utils/Utils.h"
+#include "Stepper.h"
+#include "Servo.h"
 
 #include "ActuatorValues.h"
 #include "Arm.hpp"
@@ -49,6 +52,8 @@ public:
 	XL430* motor6;
 
 	Arm<XL430>* leftArm;
+    Servo* motRight;
+    Servo* motLeft;
 
 #elif defined(SLAVE)
 
