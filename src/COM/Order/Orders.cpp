@@ -613,6 +613,17 @@ void ORDER_BrasIn::impl(Args args) {
 
 #if defined(MAIN)
 
+void ORDER_LiftUp::impl(Args args)
+{
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    Stepper stepper(50, 3, 4, 5, 6);
+    stepper.step(500);
+}
+void ORDER_LiftDown::impl(Args args)
+{
+    Stepper stepper(50, 3, 4, 5, 6);
+    stepper.step(500);
+}
 
 void ORDER_GateOpen::impl(Args args)
 {

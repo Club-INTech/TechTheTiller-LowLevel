@@ -13,6 +13,7 @@
 #include "Actuators/ActuatorValues.h"
 #include "Actuators/ActuatorsMgr.h"
 #include "Servo.h"
+#include <Stepper.h>
 
 ORDER(ping,0);
 ORDER(j,0);
@@ -156,6 +157,8 @@ ORDER(ValveOff, 1);
 
 #if defined(MAIN)
 
+ORDER(LiftUp, 0);
+ORDER(LiftDown, 0);
 ORDER(GateOpen,1);
 ORDER(GateClose,1);
 ORDER(FlagUp,0);
