@@ -587,6 +587,18 @@ void ORDER_ValveOff::impl(Args args)
     digitalWrite(valve, LOW);
 }
 
+void ORDER_BrasOut::impl(Args args) {
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    if ( !strcmp(args[0],"principal") ) {
+    XL430* mot = manager.motor1;
+    mot->setGoalAngle(90);
+    }
+    else {
+    XL430* mot = manager.motor4;
+    mot->setGoalAngle(90);
+    }
+}
+
 #if defined(MAIN)
 
 
