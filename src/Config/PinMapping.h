@@ -55,6 +55,8 @@ constexpr uint8_t RST_PIN_LEFT = 99; //reset
 
 constexpr uint8_t RIGHT_VALVE_PIN = 26; // électrovanne droite
 constexpr uint8_t LEFT_VALVE_PIN = 24;  // électrovanne gauche
+constexpr uint8_t VALVE0 = 999;
+constexpr uint8_t VALVE1 = 999;
 
 constexpr uint8_t LEFT_PUMP_PIN = 7;
 constexpr uint8_t RIGHT_PUMP_PIN = 6;

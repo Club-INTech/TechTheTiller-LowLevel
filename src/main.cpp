@@ -64,6 +64,8 @@ void loop() {
 	digitalWrite(LEFT_VALVE_PIN,LOW);
 	pinMode(RIGHT_VALVE_PIN,OUTPUT);
 	digitalWrite(RIGHT_VALVE_PIN,LOW);
+    pinMode(VALVE0, OUTPUT);
+    pinMode(VALVE1,OUTPUT);
 
     /* InterruotStackPrint */
     InterruptStackPrint& interruptStackPrint = InterruptStackPrint::Instance();

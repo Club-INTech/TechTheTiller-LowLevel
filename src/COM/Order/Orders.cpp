@@ -576,15 +576,37 @@ void ORDER_ptpdemoseq::impl(Args args)
 void ORDER_ValveOn::impl(Args args)
 {
     uint8_t valve = int(args[0]);
-    pinMode(valve, OUTPUT);
-    digitalWrite(valve, HIGH);
+    switch(valve) {
+        case 0: digitalWrite(VALVE0, HIGH); break;
+        case 1: digitalWrite(VALVE1, HIGH); break;
+
+        // TODO: rajouter les ordres pour le secondaire qui a plus de valves (utiliser un #if define(SLAVE)
+
+        default:
+            orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
+
+    }
+
+
+
 }
 
 void ORDER_ValveOff::impl(Args args)
 {
     uint8_t valve = int(args[0]);
-    pinMode(valve, OUTPUT);
-    digitalWrite(valve, LOW);
+    switch(valve) {
+        case 0:
+            digitalWrite(VALVE0, LOW);
+            break;
+        case 1:
+            digitalWrite(VALVE1, LOW);
+            break;
+
+            // TODO: rajouter les ordres pour le secondaire qui a plus de valves (utiliser un #if define(SLAVE)
+
+        default:
+            orderManager.highLevel.printfln(STD_HEADER, "ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
+    }
 }
 
 void ORDER_BrasOut::impl(Args args) {
@@ -636,8 +658,8 @@ void ORDER_LiftUp::impl(Args args)
 }
 void ORDER_LiftDown::impl(Args args)
 {
-    Stepper stepper(50, 3, 4, 5, 6);
-    stepper.step(500);
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    manager.stepper->step(-500);
 }
 
 void ORDER_GateOpen::impl(Args args)

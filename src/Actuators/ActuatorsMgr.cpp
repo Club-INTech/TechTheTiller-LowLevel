@@ -27,6 +27,7 @@ void ActuatorsMgr::init()
     motLeft->attach(2);
 
     stepper = new Stepper(50, 3, 4, 5, 6);  //A CHECKER DANS LA DATASHEEEEEEEET, PARCE QUE 50 CA PUE DU CUL
+    stepper->setSpeed(60);
 
 #elif defined(SLAVE)
 
