@@ -15,7 +15,7 @@
 class SerialInterface : public AbstractComInterface
 {
 public:
-	SerialInterface();
+	SerialInterface() = default;
 
 	/* RECEPTION */
 

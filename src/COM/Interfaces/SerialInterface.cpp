@@ -8,9 +8,6 @@
 
 #include "SerialInterface.h"
 
-SerialInterface::SerialInterface()
-{
-}
 
 bool inline SerialInterface::read_char(char & buffer)
 {
@@ -25,13 +22,16 @@ bool SerialInterface::read(char* order)
 		int i = 0;
 
 		while (read_char(readChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas � la fin d'un message(\r)
-			order[i] = readChar;
-			i++;												//Au cas o� on ne re�oit jamais de terminaison
+		    if (readChar != 255)
+            {
+                order[i] = readChar;
+                i++;												//Au cas o� on ne re�oit jamais de terminaison
+            }
 		}
 		if (Serial.peek()==10) {
 			read_char(readChar);								//On �limine le \n
 		}
-		return (strcmp(order, ""));
+		return (strncmp(order, "",RX_BUFFER_SIZE));
 	}
 	else {
 		return false;
