@@ -45,10 +45,14 @@ void InitAllPins() {
     digitalWrite(LEFT_PUMP_PIN, LOW);
     pinMode(RIGHT_PUMP_PIN, OUTPUT);
     digitalWrite(RIGHT_PUMP_PIN, LOW);
+
     pinMode(VALVE0, OUTPUT);
     digitalWrite(VALVE0, LOW);
-    pinMode(VALVE1,OUTPUT);
-    digitalWrite(VALVE1, LOW);
+    pinMode(PUMP_0,OUTPUT);
+    digitalWrite(PUMP_0, LOW);
+
+
+
 
     // Éclairages
     pinMode(LED1,OUTPUT);
@@ -97,6 +101,24 @@ void InitAllPins()
     digitalWrite(RIGHT_VALVE_PIN, LOW);
     pinMode(RIGHT_PUMP_PIN, OUTPUT);
     digitalWrite(RIGHT_PUMP_PIN, LOW);
+
+    pinMode(VALVE0, OUTPUT);
+    digitalWrite(VALVE0, LOW);
+    pinMode(VALVE1,OUTPUT);
+    digitalWrite(VALVE1, LOW);
+    pinMode(PUMP_0,OUTPUT);
+    digitalWrite(PUMP_0, LOW);
+    pinMode(PUMP_1,OUTPUT);
+    digitalWrite(PUMP_1, LOW);
+    pinMode(PUMP_2,OUTPUT);
+    digitalWrite(PUMP_2, LOW);
+    pinMode(PUMP_3,OUTPUT);
+    digitalWrite(PUMP_3, LOW);
+    pinMode(PUMP_4,OUTPUT);
+    digitalWrite(PUMP_4, LOW);
+    pinMode(PUMP_5,OUTPUT);
+    digitalWrite(PUMP_5, LOW);
+
 
     pinMode(LED1_1, OUTPUT);
     pinMode(LED2_1, OUTPUT);

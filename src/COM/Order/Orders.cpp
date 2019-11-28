@@ -588,14 +588,20 @@ void ORDER_ValveOn::impl(Args args)
 {
     uint8_t valve = int(args[0]);
     switch(valve) {
-        case 0: digitalWrite(VALVE0, HIGH); break;
-        case 1: digitalWrite(VALVE1, HIGH); break;
+        case 0:
+            digitalWrite(VALVE0, HIGH);
+            break;
+
 
         // TODO: rajouter les ordres pour le secondaire qui a plus de valves (utiliser un #if define(SLAVE)
 
         default:
             orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
-
+#if defined(SLAVE)
+        case 1:
+            digitalWrite(VALVE1, HIGH);
+            break;
+#endif
     }
 
 
@@ -609,12 +615,15 @@ void ORDER_ValveOff::impl(Args args)
         case 0:
             digitalWrite(VALVE0, LOW);
             break;
+
+
+            // TODO: rajouter les ordres pour le secondaire qui a plus de valves
+#if defined(SLAVE)
         case 1:
             digitalWrite(VALVE1, LOW);
             break;
 
-            // TODO: rajouter les ordres pour le secondaire qui a plus de valves (utiliser un #if define(SLAVE)
-
+#endif
         default:
             orderManager.highLevel.printfln(STD_HEADER, "ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
     }
@@ -635,16 +644,19 @@ void ORDER_BrasIn::impl(Args args) {
 void ORDER_Suck::impl(Args args) {
     switch((int)args[0]) {
         case 0:
-            digitalWrite(RIGHT_PUMP_PIN, HIGH);
+            digitalWrite(PUMP_0, HIGH);
             break;
-        case 1:
-            digitalWrite(LEFT_PUMP_PIN, LOW);
-            break;
-        default:
-            orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");   //Renvoit un message d'erreur au HL, il faut vérifier si STD_HEADER convient.
+
+
+            // TODO: rajouter les ordres pour le secondaire qui a plus de pompes
 #if defined(SLAVE)
+        case 1:
+            digitalWrite(PUMP_1, HIGH);
+            break;
 
 #endif
+        default:
+            orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");   //Renvoit un message d'erreur au HL, il faut vérifier si STD_HEADER convient.
     }
 }
 
