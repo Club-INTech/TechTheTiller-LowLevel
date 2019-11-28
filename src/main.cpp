@@ -26,7 +26,7 @@ void positionInterrupt() {
 
 void setup(){}
 
-void loop() {
+void __attribute__((noreturn)) loop() {
 	/*************************
 	 * Initialisation du LL, gère:
 	 * Les pins

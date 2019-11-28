@@ -1,4 +1,4 @@
-# TechTheTachyon-LowLevel
+# TechTheTide-LowLevel
 ## SETUP
 > NB: Plusieurs aspects de configuration du projet sont pensés pour utiliser platformio avec CLion et ne sont ni testés ni prévus pour d'autres IDE.
 

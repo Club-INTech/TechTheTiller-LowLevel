@@ -39,7 +39,7 @@ constexpr uint8_t SICK_PINS[NBR_OF_DISTANCE_SENSOR] = {
 constexpr uint8_t PIN_TX_DYNAMIXEL = 0;
 constexpr uint8_t PIN_RX_DYNAMIXEL = 0;
 
-// TechTheTachyon
+// TechTheTide
 /* Ascenceurs */
 
 // ! Inversées par rapport au pin mapping !
@@ -109,7 +109,7 @@ constexpr uint8_t SICK_PINS[NBR_OF_DISTANCE_SENSOR] = {
 constexpr uint8_t PIN_TX_DYNAMIXEL = 0;
 constexpr uint8_t PIN_RX_DYNAMIXEL = 0;
 
-// TechTheTachyon
+// TechTheTide
 /* Ascenceurs */
 
 // ! Inversées par rapport au pin mapping !
