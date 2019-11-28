@@ -15,7 +15,7 @@
 #include "Config/PinMapping.h"
 #include "Utils/Singleton.hpp"
 #include "Utils/Utils.h"
-#include "Stepper.h"
+#include <Stepper.h>
 #include "Servo.h"
 
 #include "ActuatorValues.h"
@@ -54,6 +54,9 @@ public:
 	Arm<XL430>* leftArm;
     Servo* motRight;
     Servo* motLeft;
+
+    // Stepper pour l'ascenseur porte-gobelets
+    Stepper* stepper;
 
 #elif defined(SLAVE)
 
