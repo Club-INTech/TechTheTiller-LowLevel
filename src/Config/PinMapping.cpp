@@ -45,6 +45,10 @@ void InitAllPins() {
     digitalWrite(LEFT_PUMP_PIN, LOW);
     pinMode(RIGHT_PUMP_PIN, OUTPUT);
     digitalWrite(RIGHT_PUMP_PIN, LOW);
+    pinMode(VALVE0, OUTPUT);
+    digitalWrite(VALVE0, LOW);
+    pinMode(VALVE1,OUTPUT);
+    digitalWrite(VALVE1, LOW);
 
     // Éclairages
     pinMode(LED1,OUTPUT);
