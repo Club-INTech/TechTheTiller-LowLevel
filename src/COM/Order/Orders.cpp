@@ -572,6 +572,17 @@ void ORDER_ptpdemoseq::impl(Args args)
 
 // TODO: pour les 2 qui suivent: électrovannes?
 
+void ORDER_FlagDown::impl(Args args) {
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    Servo* motorFlag = manager.motFlag;
+    motorFlag->write(90);
+}
+
+void ORDER_FlagUp::impl(Args args) {
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    Servo* motorFlag = manager.motFlag;
+    motorFlag->write(90);
+}
 
 void ORDER_ValveOn::impl(Args args)
 {
@@ -689,17 +700,6 @@ void ORDER_GateClose::impl(Args args)
     }
 }
 
-void ORDER_FlagDown::impl(Args args) {
-    Servo motorFlag;
-    motorFlag.attach(3);
-    motorFlag.write(90);
-}
-
-void ORDER_FlagUp::impl(Args args) {
-    Servo moteurFlag;
-    moteurFlag.attach(3);
-    moteurFlag.write(90);
-}
 
 
 

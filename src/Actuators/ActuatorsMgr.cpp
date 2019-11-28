@@ -15,6 +15,8 @@ void ActuatorsMgr::init()
 
     rightArm = new Arm<XL430>("right", *dynamixelManager, new XL430[3]{*motor1, *motor2, *motor3});
 
+    motFlag->attach(3);
+
 #if defined(MAIN)
 
     motor4 = (XL430*) dynamixelManager->createMotor(4, XL430GeneratorFunction);//new XL430(1,*manager);

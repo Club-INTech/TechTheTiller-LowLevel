@@ -43,6 +43,7 @@ public:
 	XL430* motor3;
 
     Arm<XL430>* rightArm;
+    Servo* motFlag;
 
 #if defined(MAIN)
 
@@ -57,6 +58,7 @@ public:
 
     // Stepper pour l'ascenseur porte-gobelets
     Stepper* stepper;
+
 
 #elif defined(SLAVE)
 
