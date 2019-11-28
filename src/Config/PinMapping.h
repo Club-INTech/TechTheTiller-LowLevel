@@ -65,6 +65,10 @@ constexpr uint8_t LED2 = 14;
 constexpr uint8_t LED3 = 15;
 constexpr uint8_t LED4 = 31;
 
+// TechTheTide
+/* Drapeaux */
+constexpr uint8_t FLAG_PIN = 1;
+
 #elif defined(SLAVE)
 
 /* Ethernet */
@@ -125,6 +129,10 @@ constexpr uint8_t LED2_3 = 20;
 constexpr uint8_t LED3_1 = 21;
 constexpr uint8_t LED3_2 = 22;
 constexpr uint8_t LED3_3 = 23;
+
+// TechTheTide
+/* Drapeaux */
+constexpr uint8_t FLAG_PIN = 1;
 
 #endif
 

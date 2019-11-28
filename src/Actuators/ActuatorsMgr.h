@@ -43,6 +43,7 @@ public:
 	XL430* motor3;
 
     Arm<XL430>* rightArm;
+    Servo* motFlag;
 
 #if defined(MAIN)
 
@@ -54,6 +55,7 @@ public:
 	Arm<XL430>* leftArm;
     Servo* motRight;
     Servo* motLeft;
+
 
 #elif defined(SLAVE)
 
