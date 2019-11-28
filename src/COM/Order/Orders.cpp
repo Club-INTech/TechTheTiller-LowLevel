@@ -622,26 +622,14 @@ void ORDER_ValveOff::impl(Args args)
 
 void ORDER_BrasOut::impl(Args args) {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    if ( !strcmp(args[0],"principal") ) {
-    XL430* mot = manager.motor1;
-    mot->setGoalAngle(90);
-    }
-    else {
     XL430* mot = manager.motor4;
     mot->setGoalAngle(90);
-    }
 }
 
 void ORDER_BrasIn::impl(Args args) {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    if ( !strcmp(args[0],"principal") ) {
-        XL430* mot = manager.motor1;
-        mot->setGoalAngle(0);
-    }
-    else {
-        XL430* mot = manager.motor4;
-        mot->setGoalAngle(0);
-    }
+    XL430* mot = manager.motor4;
+    mot->setGoalAngle(0);
 }
 
 void ORDER_Suck::impl(Args args) {
@@ -708,21 +696,21 @@ void ORDER_GateClose::impl(Args args)
 void ORDER_BrasStock::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    XL430* mot = manager.motor4;
+    XL430* mot = manager.motor5;
     mot->setGoalAngle(0);
 }
 
 void ORDER_BrasEcueil::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    XL430* mot = manager.motor4;
+    XL430* mot = manager.motor5;
     mot->setGoalAngle(90);
 }
 
 void ORDER_BrasDepot::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    XL430* mot = manager.motor4;
+    XL430* mot = manager.motor5;
     mot->setGoalAngle(100);
 }
 
