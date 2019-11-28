@@ -1,5 +1,4 @@
 ﻿#include "OrderManager.h"
-#include "Actuators/ActuatorValues.h"
 
 OrderManager::OrderManager():
         hookList(HookList()),
@@ -76,9 +75,9 @@ void OrderManager::communicate() {
      bool requiresConfirmation = orderToExecute[0] == '!';
      if(requiresConfirmation) {
          highLevel.printfln(DEBUG_HEADER, "Confirmation requested for %s", orderToExecute);
-         strcpy(orderBuffer, &orderToExecute[1]);
+         strncpy(orderBuffer, &orderToExecute[1],RX_BUFFER_SIZE-1);
      } else {
-         strcpy(orderBuffer, orderToExecute);
+         strncpy(orderBuffer, orderToExecute,RX_BUFFER_SIZE);
      }
 
      int8_t n_param = split(orderBuffer, orderData,
@@ -156,14 +155,10 @@ void OrderManager::checkHooks() {
 }
 
 void OrderManager::executeHooks() {
-    std::vector<String> orders = hookList.executeHooks();
+    std::vector<String> hookOrders = hookList.executeHooks();
 
-    for(String &order : orders)
+    for(String &order : hookOrders)
     {
         execute(order.c_str());
     }
-}
-
-void OrderManager::registerOrder(String id, AbstractOrder *order) {
-    orders.insert( { id, order });
 }

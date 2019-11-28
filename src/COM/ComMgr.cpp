@@ -21,16 +21,6 @@ bool ComMgr::connectedEthernet()
     return static_cast<EthernetInterface*>(ethernet)->connected();
 }
 
-void ComMgr::sendPosition(const float * data)
-{
-    String tmp="";
-    for(int i=0;i<3;i++){
-        tmp.concat(data[i]);
-        tmp.concat(" ");
-    }
-    printfln(POSITION_HEADER,tmp.c_str());
-}
-
 void ComMgr::printfln(Header header,const char * data,...)
 {
     va_list args;

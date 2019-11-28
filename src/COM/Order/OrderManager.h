@@ -45,13 +45,6 @@ public:
 
     void init();
 
-    /**
-     * Enregistres un ordre avec l'id correspondant
-     * @param id l'identifiant de l'ordre
-     * @param order l'ordre à enregistrer
-     */
-    void registerOrder(String id, AbstractOrder* order);
-
     //COM&exec
     inline void refreshUS(){
 	}
@@ -62,9 +55,9 @@ public:
 
 
     //Utilitaire
-    int8_t split(char* , OrderData& , const char* separator = " ");
-    int parseInt(const char*);
-    float parseFloat(const char*);
+    static int8_t split(char* , OrderData& , const char* separator = " ");
+    static int parseInt(const char*);
+    static float parseFloat(const char*);
 	bool isHLWaiting();
 	void checkJumper();
 
