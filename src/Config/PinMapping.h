@@ -56,13 +56,13 @@ constexpr uint8_t RST_PIN_LEFT = 99; //reset
 constexpr uint8_t RIGHT_VALVE_PIN = 26; // électrovanne droite
 constexpr uint8_t LEFT_VALVE_PIN = 24;  // électrovanne gauche
 
-constexpr uint8_t VALVE0 = 999;
+
 
 
 constexpr uint8_t LEFT_PUMP_PIN = 7;
 constexpr uint8_t RIGHT_PUMP_PIN = 6;
 
-constexpr uint8_t PUMP_0 = 999;
+
 
 /* LEDs debug */
 constexpr uint8_t LED1 = 35;
@@ -73,6 +73,15 @@ constexpr uint8_t LED4 = 31;
 // TechTheTide
 /* Drapeaux */
 constexpr uint8_t FLAG_PIN = 1;
+
+constexpr uint8_t PUMP_0 = 999;
+
+constexpr uint8_t VALVE0 = 999;
+
+/* Ouverture couloirs gobeulets */
+
+constexpr uint8_t MG_COULOIR_G = 2;
+constexpr uint8_t MG_COULOIR_D = 3;
 
 #elif defined(SLAVE)
 

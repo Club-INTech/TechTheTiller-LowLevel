@@ -15,7 +15,7 @@ void ActuatorsMgr::init()
 
     rightArm = new Arm<XL430>("right", *dynamixelManager, new XL430[3]{*motor1, *motor2, *motor3});
 
-    motFlag->attach(3);
+
 
 #if defined(MAIN)
 
@@ -25,8 +25,9 @@ void ActuatorsMgr::init()
 
     leftArm = new Arm<XL430>("left", *dynamixelManager, new XL430[3]{*motor4,*motor5,*motor6});
 
-    motRight->attach(1);
-    motLeft->attach(2);
+    motRight->attach(MG_COULOIR_D);
+    motLeft->attach(MG_COULOIR_G);
+    motFlag->attach(FLAG_PIN);
 
     stepper = new Stepper(50, 3, 4, 5, 6);  //A CHECKER DANS LA DATASHEEEEEEEET, PARCE QUE 50 CA PUE DU CUL
     stepper->setSpeed(60);

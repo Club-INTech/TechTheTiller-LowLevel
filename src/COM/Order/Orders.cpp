@@ -591,17 +591,16 @@ void ORDER_ValveOn::impl(Args args)
         case 0:
             digitalWrite(VALVE0, HIGH);
             break;
-
-
         // TODO: rajouter les ordres pour le secondaire qui a plus de valves (utiliser un #if define(SLAVE)
 
-        default:
-            orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
 #if defined(SLAVE)
         case 1:
             digitalWrite(VALVE1, HIGH);
             break;
 #endif
+
+        default:
+            orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
     }
 
 
