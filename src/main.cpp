@@ -88,7 +88,7 @@ void __attribute__((noreturn)) loop() {
     stepperTimer.resume();
 
     Serial.println("Interrupt Timers OK");
-    ActuatorsMgr::Instance().initTorques();
+//    ActuatorsMgr::Instance().initTorques();
     Serial.println("Dynamixels OK");
     Serial.println("Setup DONE");
 

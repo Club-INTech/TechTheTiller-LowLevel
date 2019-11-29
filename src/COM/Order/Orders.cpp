@@ -575,7 +575,7 @@ void ORDER_ptpdemoseq::impl(Args args)
 void ORDER_FlagDown::impl(Args args) {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
     Servo* motorFlag = manager.motFlag;
-    motorFlag->write(90);
+    motorFlag->write(0);
 }
 
 void ORDER_FlagUp::impl(Args args) {
