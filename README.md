@@ -39,105 +39,99 @@ a été mit en place.
 - [ ] Gagner la Coupe
 
 ## TABLE DES ORDRES
-### ORDRES HL ⇒ LL
-#### ORDRES GENERAUX
 
-|        Ordres         |                           Actions                         |
-|:---------------------:|:---------------------------------------------------------:|                  
-|         ping          |                         Ping le LL                        |
-|          j            |           Active l'attente de l'activation du jumper      |
-|         sus           |        Switch les US ou choisit leur état (on/off)        |
-|          f            |                     Check le mouvement                    |
-|        ?xyo           |                   Position + Orientation                  |
-|          d            |                      Translate de x mm                    |
-|          t            |     Tourne de α rad, dans le sens demandé ou librement    |
-|        stop           |                            Stop                           |
-|         cx            |                       Set x d'origine                     |
-|         cy            |                       Set y d'origine                     |
-|         co            |                       Set α d'origine                     |
-|        cxyo           |                     Set x,y,α d'origine                   |
-|        ctv            |                    Set translation speed                  |
-|        crv            |                     Set rotation speed                    |
-|        ctrv           |               Set translation+rotation speed              |
-|        efm            |                    Enable forced movment                  |
-|        dfm            |                   Disable forced movment                  |
-|        ct0            |              Désactive l'asserv en translation            |
-|        ct1            |               Active l'asserv en translation              |
-|        cr0            |               Désactive l'asserv en rotation              |
-|        cr1            |                 Active l'asserv en rotation               |
-|        cv0            |                Désactive l'asserv en vitesse              |
-|        cv1            |                 Active l'asserv en vitesse                |
-|        cod            |                Retourne les ticks de codeuse              |
-|      pfdebug          |                Info de debug sur la position              |
-|      rawpwm           |            Demande un PWM brut aux deux moteurs           |
-|      getpwn           |              Retourne le PWM des deux moteurs             |
-|      errors           |             Retourne les erreurs d'incertitude            |
-|      rawspeed         |                   Vitesse brute des roues                 |
-|     rawposdata        |             Pos x,y,α; vL,vR, targetvL,targetvR           |
-|     montlhery         |                    Mode de présentation                   |
-|         av            |                           Avance                          |
-|         rc            |                           Recule                          |
-|         td            |                       Tourne à droite                     |
-|         tg            |                       Tourne à gauche                     |
-|       sstop           |                            Arrêt                          |
-|       maxtr           |                Vitesse maximale de translation            |
-|       maxro           |                  Vitesse maximale de rotation             |
-|         nh            |     Créé un nouveau hook (id,x,y,r,α,tolerance,action)    |
-|         eh            |                       Active le hook                      |
-|         dh            |                     Désactive le hook                     |
+> Text starting from here is generated automatically. **ANY MODIFICATION WILL BE OVERWRITTEN**.
 
-### Ordres pour les capteurs
-|   Ordres  |                       Actions                                          			| Arguments      				|
-|:---------:|:---------------------------------------------------------------------------------:|:------------------------------|
-|lectureSICK|Renvoie les 6 distances lues par les SICK (dans le sens trigo)          			|N/A             				|
-|testSICK	|Renvoie la valeur d'un seul capteur SICK								 			|indice du capteur             	|
-|rangeSICK	|Configure la fenêtre de détection d'un SICK (pour que le LL connaisse les valeurs)	|indice, min, max	            |
-
-
-#### ORDRES DE CONTRÔLE D'ACTION
-
-|   Ordres  |                       Actions                      | Arguments                 |
-|:---------:|:--------------------------------------------------:|:--------------------------|
-|    XLm    |Envoie le XL-430 à un α en °                        |id XL / α                  |
-|    XLs    |Modifie la vitesse d'un XL-430                      |id XL / speed              |
-|    posBras|Récupère les angles (en °) d'un bras                		 |side(left/right)			 |
-|	brasToutDroit	|Envoie le bras à la position "tout droit"           |side(left/right)           |
-|    dist   		|Envoie le bras à la position "distributeur"         |side(left/right)           |
-|   grnd    		|Envoie le bras à la position "sol"                  |side(left/right)           |
-|   stock   		|Envoie le bras à la position "ascenceur"            |side(left/right)           |
-|    acc    		|Envoie le bras à la position "accélérateur"         |side(left/right)           |
-|    posinter 		|Envoie le bras à la position "intermediaire"        |side(left/right)           |
-|     up    		|Monte l'ascenceur de la hauteur d'un palet          |side(left/right)           |
-|    down   		|Descend l'ascenseur de la hauteur d'un palet        |side(left/right)           |
-|    suck   		|Active la pompe                                     |side(left/right)           |
-|  unsuck   		|Désactive la pompe                                  |side(left/right)           |
-|  valveon  		|Active l'électrovanne                               |side(left/right)           |
-|  valveoff 		|Désactive l'électrovanne                            |side(left/right)           |
-|   gold    |Envoie le bras à la position "goldonium"            |      /                    |
-|   bal     |Envoie le bras à la position "balance"              |side(left/right)           |
-|   elec    |Démarre l'électron                                  |      /                    |
-| torqueBras|Donne la couleur du palet pris (selon le couple)    |side(left/right) / position|
-|  torqueXL |Donne le couple d'un XL                             |id XL                      |
-
-
-
-
-### ORDRES SPECIFIQUES LL
-
-|   Ordres          |                       Actions                      |
-|:-----------------:|:--------------------------------------------------:|
-|   reseteth        |            Redémarre le module ethernet            |
-|   toggle          |         Change le mode de réglage d'asserv         |
-|   displayAsserv   |          Retourne les constantes d'asserv          |
-|   kpt             |              Set le kp de translation              |
-|   kdt             |              Set le kd de translation              |
-|   kit             |              Set le ki de translation              |
-|   kpr             |                Set le kp de rotation               |
-|   kdt             |                Set le kd de rotation               |
-|   kit             |                Set le ki de rotation               |
-|   kpg             |            Set le kp de vitesse à gauche           |
-|   kdg             |            Set le kd de vitesse à gauche           |
-|   kig             |            Set le ki de vitesse à gauche           |
-|   kpd             |            Set le kd de vitesse à droite           |
-|   kdg             |            Set le kd de vitesse à droite           |
-|   kig             |            Set le ki de vitesse à droite           |
+|      Ordre       |                            Description                             |                           Arguments                           |
+|:----------------:|:------------------------------------------------------------------:|:-------------------------------------------------------------:|
+|       ping       |               Répond pong, utile pour tester la com.               |                                                               |
+|        j         |            Active l'attente de l'activation du jumper.             |                                                               |
+|        f         |                                                                    |                                                               |
+|       xyo        |              Retourne la position (x,y) et en angle.               |                                                               |
+|        d         |                       Lance une translation.                       |        Distance en mm, [excpectedWallImpact: booléen]         |
+|        t         |                        Lance une rotation.                         |                   Angle en radians ou 'pi'                    |
+|       goto       |        Goto a position by first rotating then translating.         |      x cible en mm, y cible en mm, [séquentiel: booléen]      |
+| followTrajectory |                                                                    |                                                               |
+|       stop       |         Essaye d'arrêter le robot à la position actuelle.          |                                                               |
+|        cx        |                   Change la position x actuelle.                   |                       Position x en mm                        |
+|        cy        |                   Change la position y actuelle.                   |                       Position y en mm                        |
+|        co        |                   Change l'orientation actuelle.                   |                       Angle en radians                        |
+|       cxyo       |                Change la position (x,y) et l'angle.                |                     x,y,angle (mm,mm,rad)                     |
+|       ctv        |                 Change la vitesse de translation.                  |                         Vitesse en mm                         |
+|       crv        |                   Change la vitesse de rotation.                   |                       Vitesse en rad/s                        |
+|       ctrv       |         Change les vitesses de translation et de rotation.         |               Vitesse en mm/s, vitesse en rad/s               |
+|       efm        |                   Active les mouvements forcés.                    |                                                               |
+|       dfm        |                  Désactive les mouvements forcés.                  |                                                               |
+|       ct0        |             Désactive l'asservissement en translation.             |                                                               |
+|       ct1        |              Active l'asservissement en translation.               |                                                               |
+|       cr0        |              Désactive l'asservissement en rotation.               |                                                               |
+|       cr1        |                Active l'asservissement en rotation.                |                                                               |
+|       cv0        | Désactive l'asservissement en vitesse (/!\ : plus de déplacement)  |                                                               |
+|       cv1        |                Active l'asservissement en vitesse.                 |                                                               |
+|       cod        |                   Affiche les ticks de codeuse.                    |                                                               |
+|     pfdebug      |                                                                    |                                                               |
+|      rawpwm      |                                                                    |                                                               |
+|      getpwm      |                                                                    |                                                               |
+|      errors      |                                                                    |                                                               |
+|     rawspeed     |                                                                    |                                                               |
+|    rawposdata    | Retourne, dans l'ordre: x,y,angle, v_g, cible v_g, v_d, cible v_d. |                                                               |
+|     reseteth     |                 Force un reset du module ethernet.                 |                                                               |
+|  disableTorque   |              Désactive le couple du bras sélectionné.              |                 Côté du bras ("right"/"left")                 |
+|   enableTorque   |               Active le couple du bras sélectionné.                |                 Côté du bras ("right"/"left")                 |
+|    montlhery     |      Asservissement en vitesse seulement, mouvements forcés.       |                                                               |
+|        av        |    Impose une consigne de vitesse en translation vers l'avant.     |                                                               |
+|        rc        |   Impose une consigne de vitesse en translation vers l'arrière.    |                                                               |
+|        td        |  Impose une consigne de vitesse afin de tourner en sens horaire.   |                                                               |
+|        tg        |   Impose une consigne de vitesse afin de tourner en sens trigo.    |                                                               |
+|      sstop       |           Impose une consigne de vitesse et un PWM nul.            |                                                               |
+|      maxtr       |             Change la vitesse maximale en translation.             |                Vitesse de translation en mm/s                 |
+|      maxro       |              Change la vitesse maximale en rotation.               |                  Vitesse de rotaion en rad/s                  |
+|     maxtrro      |     Change les vitesses maximales en translation et rotation.      | Vitesse de translation en mm/s, vitesse de rotation en rad/s  |
+|      trstop      |                                                                    |                                                               |
+|      rostop      |                                                                    |                                                               |
+|      toggle      |                                                                    |                                                               |
+|  displayAsserv   |                                                                    |                                                               |
+|       kpt        |                                                                    |                                                               |
+|       kdt        |                                                                    |                                                               |
+|       kit        |                                                                    |                                                               |
+|       kpr        |                                                                    |                                                               |
+|       kir        |                                                                    |                                                               |
+|       kdr        |                                                                    |                                                               |
+|       kpg        |                                                                    |                                                               |
+|       kig        |                                                                    |                                                               |
+|       kdg        |                                                                    |                                                               |
+|       kpd        |                                                                    |                                                               |
+|       kid        |                                                                    |                                                               |
+|       kdd        |                                                                    |                                                               |
+|        nh        |        Créé un nouvel hook et les conditions d'activation.         | ID, x, y, rayon, angle, écart max à l'angle, ordre à exécuter |
+|        eh        |                          Active un hook.                           |                     ID du hook à activer                      |
+|        dh        |                         Désactive un hook.                         |                   ID du hook à désactiver.                    |
+|       demo       |                                                                    |                                                               |
+|     ptpdemo      |                                                                    |                                                               |
+|    ptpdemoseq    |                                                                    |                                                               |
+|       XLm        |                 Bouge un XL à une position donnée.                 |                    ID du XL, position en °                    |
+|       XLs        |                     Change la vitesse d'un XL.                     |           ID du XL, vitesse en unités de vitesse XL           |
+|     posBras      |               Renvoie la position des XL d'un bras.                |                 Côté du bras ("right"/"left")                 |
+|     BrasOut      |                                                                    |                                                               |
+|      BrasIn      |                                                                    |                                                               |
+|    torqueBras    |          Renvoie le couple mesuré par les XLs d'un bras.           |                 Côté du bras ("right"/"left")                 |
+|     torqueXL     |                     Renvoie le couple d'un XL.                     |                           ID du XL                            |
+|     ValveOn      |                                                                    |                                                               |
+|     ValveOff     |                                                                    |                                                               |
+|       Suck       |                                                                    |                                                               |
+|      LiftUp      |                                                                    |                                                               |
+|     LiftDown     |                                                                    |                                                               |
+|     GateOpen     |                                                                    |                                                               |
+|    GateClose     |                                                                    |                                                               |
+|      FlagUp      |                                                                    |                                                               |
+|     FlagDown     |                                                                    |                                                               |
+|    BrasStock     |                                                                    |                                                               |
+|    BrasEcueil    |                                                                    |                                                               |
+|    BrasDepot     |                                                                    |                                                               |
+|       grnd       |                                                                    |                                                               |
+|       oust       |               Pousse palet en dehors des ascenceurs                |                                                               |
+|   lectureSICK    |       Renvoie les distances lues par les SICK (sens trigo).        |                                                               |
+|     testSICK     |                 Renvoie la valeur lue par un SICK.                 |                        Indice du SICK.                        |
+|    rangeSICK     |               Règle la fenêtre de mesure d'un SICK.                |                Indice, valeur min, valeur max.                |
+|    waitJumper    |              Met le bas niveau en attente du jumper.               |                                                               |
+|     endMatch     |                  Arrête le robot en fin de match.                  |                                                               |

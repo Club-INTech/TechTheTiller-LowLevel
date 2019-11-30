@@ -15,7 +15,7 @@
 /* Interruptions d'asservissements */
 void motionControlInterrupt(HardwareTimer* hardwareTimer) {
 	static MCS &motionControlSystem = MCS::Instance();
-	motionControlSystem.control();
+    motionControlSystem.control();
 	motionControlSystem.manageStop();
 }
 

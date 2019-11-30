@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Run README updater
+Utilitaires/UpdateReadmeOrders.py
+
+# Check if the README was modified
+if [ "$(git status README.md | grep README)" ]; then
+	git add README.md
+	echo "Updated README and added it to the commit"
+fi
