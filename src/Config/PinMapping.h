@@ -72,7 +72,7 @@ constexpr uint8_t LED4 = 31;
 
 // TechTheTide
 /* Drapeaux */
-constexpr uint8_t FLAG_PIN = 1;
+constexpr uint8_t FLAG_PIN = A1;
 
 constexpr uint8_t PUMP_0 = 999;
 
