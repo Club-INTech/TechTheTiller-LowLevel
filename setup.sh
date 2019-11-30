@@ -31,6 +31,17 @@ echo "Clonage des submodule"
 git submodule update --init
 
 echo "Fin du clonage"
+
+echo "Préparation de la mise à jour automatique du README"
+chmod u+x Utilitaires/UpdatedReadmeOrders.py3
+chmod u+x Utilitaires/pre-commit
+(
+  cd .git/hooks/
+  ln -s ../../Utilitaires/pre-commit .
+  chmod u+x pre-commit
+)
+echo "Mise à jour automatique du README prête"
+
 echo "Initialisation avec platformio"
 
 if [ -z "$(command -v platformio)" ]; then
