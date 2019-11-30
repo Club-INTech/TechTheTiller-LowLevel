@@ -52,6 +52,7 @@ with open(projectPath+"/README.md", 'r+') as readme:
         if line.find("## TABLE DES ORDRES") >= 0:
             # Deletes the rest of the file as it will be replaced
             readme.truncate(readme.tell())
+            readme.seek(0, 2)  # Move to the end of the stream properly
             readme.write("\n> Text starting from here is generated automatically. "
                          "**ANY MODIFICATION WILL BE OVERWRITTEN**.\n\n")
             readme.writelines(table)

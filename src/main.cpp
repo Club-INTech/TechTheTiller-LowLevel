@@ -15,8 +15,14 @@
 /* Interruptions d'asservissements */
 void motionControlInterrupt(HardwareTimer* hardwareTimer) {
 	static MCS &motionControlSystem = MCS::Instance();
-	motionControlSystem.control();
+    static int i = 0;
+    if (i % 500 == 0)
+    {
+        digitalWrite(LED_BUILTIN, (i / 500) % 2);
+    }
+    motionControlSystem.control();
 	motionControlSystem.manageStop();
+	i++;
 }
 
 void positionInterrupt() {
@@ -88,7 +94,7 @@ void __attribute__((noreturn)) loop() {
     stepperTimer.resume();
 
     Serial.println("Interrupt Timers OK");
-    ActuatorsMgr::Instance().initTorques();
+//    ActuatorsMgr::Instance().initTorques();
     Serial.println("Dynamixels OK");
     Serial.println("Setup DONE");
 
@@ -100,6 +106,10 @@ void __attribute__((noreturn)) loop() {
 	 * L'execution des ordres de ce dernier
 	 * Les capteurs
 	 */
+
+
+    pinMode(LED_BUILTIN,OUTPUT);
+
 
     while (true) {
         interruptStackPrint.print();
