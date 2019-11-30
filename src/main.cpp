@@ -15,14 +15,8 @@
 /* Interruptions d'asservissements */
 void motionControlInterrupt(HardwareTimer* hardwareTimer) {
 	static MCS &motionControlSystem = MCS::Instance();
-    static int i = 0;
-    if (i % 500 == 0)
-    {
-        digitalWrite(LED_BUILTIN, (i / 500) % 2);
-    }
     motionControlSystem.control();
 	motionControlSystem.manageStop();
-	i++;
 }
 
 void positionInterrupt() {
@@ -106,10 +100,6 @@ void __attribute__((noreturn)) loop() {
 	 * L'execution des ordres de ce dernier
 	 * Les capteurs
 	 */
-
-
-    pinMode(LED_BUILTIN,OUTPUT);
-
 
     while (true) {
         interruptStackPrint.print();
