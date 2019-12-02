@@ -597,6 +597,18 @@ void ORDER_ValveOn::impl(Args args)
         case 1:
             digitalWrite(VALVE1, HIGH);
             break;
+        case 2:
+            digitalWrite(VALVE2, HIGH);
+            break;
+        case 3:
+            digitalWrite(VALVE3, HIGH);
+            break;
+        case 4:
+            digitalWrite(VALVE4, HIGH);
+            break;
+        case 5:
+            digitalWrite(VALVE5, HIGH);
+            break;
 #endif
 
         default:
@@ -621,7 +633,18 @@ void ORDER_ValveOff::impl(Args args)
         case 1:
             digitalWrite(VALVE1, LOW);
             break;
-
+        case 2:
+            digitalWrite(VALVE2, LOW);
+            break;
+        case 3:
+            digitalWrite(VALVE3, LOW);
+            break;
+        case 4:
+            digitalWrite(VALVE4, LOW);
+            break;
+        case 5:
+            digitalWrite(VALVE5, LOW);
+            break;
 #endif
         default:
             orderManager.highLevel.printfln(STD_HEADER, "ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
@@ -646,13 +669,23 @@ void ORDER_Suck::impl(Args args) {
             digitalWrite(PUMP_0, HIGH);
             break;
 
-
             // TODO: rajouter les ordres pour le secondaire qui a plus de pompes
 #if defined(SLAVE)
         case 1:
             digitalWrite(PUMP_1, HIGH);
             break;
-
+        case 2:
+            digitalWrite(PUMP_2, HIGH);
+            break;
+        case 3:
+            digitalWrite(PUMP_3, HIGH);
+            break;
+        case 4:
+            digitalWrite(PUMP_4, HIGH);
+            break;
+        case 5:
+            digitalWrite(PUMP_5, HIGH);
+            break;
 #endif
         default:
             orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");   //Renvoit un message d'erreur au HL, il faut vérifier si STD_HEADER convient.
