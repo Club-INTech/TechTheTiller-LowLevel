@@ -310,8 +310,7 @@ ORDER(torqueXL,1);
 
 // This is horrible and should probably burn
 
-ORDER(ValveOn, 1);
-ORDER(ValveOff, 1);
+ORDER(Valve, 2);
 ORDER(Suck,1)
 
 

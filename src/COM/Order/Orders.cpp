@@ -584,72 +584,74 @@ void ORDER_FlagUp::impl(Args args) {
     motorFlag->write(90);
 }
 
-void ORDER_ValveOn::impl(Args args)
+void ORDER_Valve::impl(Args args)
 {
-    uint8_t valve = int(args[0]);
-    switch(valve) {
-        case 0:
-            digitalWrite(VALVE0, HIGH);
-            break;
-        // TODO: rajouter les ordres pour le secondaire qui a plus de valves (utiliser un #if define(SLAVE)
+    uint8_t valve = int(args[0]) ;
+    if ( !strcmp(args[1],"on"))  {
+        switch(valve) {
+            case 0:
+                digitalWrite(VALVE0, HIGH);
+                break;
+                // TODO: rajouter les ordres pour le secondaire qui a plus de valves (utiliser un #if define(SLAVE)
 
 #if defined(SLAVE)
-        case 1:
-            digitalWrite(VALVE1, HIGH);
-            break;
-        case 2:
-            digitalWrite(VALVE2, HIGH);
-            break;
-        case 3:
-            digitalWrite(VALVE3, HIGH);
-            break;
-        case 4:
-            digitalWrite(VALVE4, HIGH);
-            break;
-        case 5:
-            digitalWrite(VALVE5, HIGH);
-            break;
+            case 1:
+                digitalWrite(VALVE1, HIGH);
+                break;
+            case 2:
+                digitalWrite(VALVE2, HIGH);
+                break;
+            case 3:
+                digitalWrite(VALVE3, HIGH);
+                break;
+            case 4:
+                digitalWrite(VALVE4, HIGH);
+                break;
+            case 5:
+                digitalWrite(VALVE5, HIGH);
+                break;
 #endif
 
-        default:
-            orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
+            default:
+                orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
+        }
+    }
+    else if ( !strcmp(args[1], "off")) {
+        switch(valve) {
+            case 0:
+                digitalWrite(VALVE0, LOW);
+                break;
+
+
+                // TODO: rajouter les ordres pour le secondaire qui a plus de valves
+#if defined(SLAVE)
+            case 1:
+                digitalWrite(VALVE1, LOW);
+                break;
+            case 2:
+                digitalWrite(VALVE2, LOW);
+                break;
+            case 3:
+                digitalWrite(VALVE3, LOW);
+                break;
+            case 4:
+                digitalWrite(VALVE4, LOW);
+                break;
+            case 5:
+                digitalWrite(VALVE5, LOW);
+                break;
+#endif
+            default:
+                orderManager.highLevel.printfln(STD_HEADER, "ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
+        }
     }
 
-
+    else {
+        orderManager.highLevel.printfln(STD_HEADER, "ERREUR::Il faut spécifier si la valve est à on ou off.");
+    }
 
 }
 
-void ORDER_ValveOff::impl(Args args)
-{
-    uint8_t valve = int(args[0]);
-    switch(valve) {
-        case 0:
-            digitalWrite(VALVE0, LOW);
-            break;
-
-
-            // TODO: rajouter les ordres pour le secondaire qui a plus de valves
-#if defined(SLAVE)
-        case 1:
-            digitalWrite(VALVE1, LOW);
-            break;
-        case 2:
-            digitalWrite(VALVE2, LOW);
-            break;
-        case 3:
-            digitalWrite(VALVE3, LOW);
-            break;
-        case 4:
-            digitalWrite(VALVE4, LOW);
-            break;
-        case 5:
-            digitalWrite(VALVE5, LOW);
-            break;
-#endif
-        default:
-            orderManager.highLevel.printfln(STD_HEADER, "ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
-    }
-}
 
 void ORDER_BrasOut::impl(Args args) {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
