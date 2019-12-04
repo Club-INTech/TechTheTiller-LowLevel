@@ -69,25 +69,28 @@ void __attribute__((noreturn)) loop() {
     InterruptStackPrint& interruptStackPrint = InterruptStackPrint::Instance();
 
     // MotionControlSystem interrupt on timer
-    HardwareTimer motionControlInterruptTimer(TIM6);
-    motionControlInterruptTimer.setMode(1, TIMER_OUTPUT_COMPARE);
-    motionControlInterruptTimer.setOverflow(MCS_FREQ,HERTZ_FORMAT);
-    motionControlInterruptTimer.attachInterrupt(motionControlInterrupt);
+    // FIXME: Pour le débug
+//    HardwareTimer motionControlInterruptTimer(TIM6);
+//    motionControlInterruptTimer.setMode(1, TIMER_OUTPUT_COMPARE);
+//    motionControlInterruptTimer.setOverflow(MCS_FREQ,HERTZ_FORMAT);
+//    motionControlInterruptTimer.attachInterrupt(motionControlInterrupt);
     // FIXME: Wait for upstream update
     //    motionControlInterruptTimer.setInterruptPriority(0,0);
-    motionControlInterruptTimer.resume();
+//    motionControlInterruptTimer.resume();
 
 
     // Timer pour steppers
-    HardwareTimer stepperTimer(TIM2);   // Check needed timers
-    stepperTimer.setMode(1,TIMER_OUTPUT_COMPARE);
-    stepperTimer.setOverflow(STEPPER_FREQUENCY, HERTZ_FORMAT);
-    stepperTimer.attachInterrupt(stepperInterrupt);
+    // FIXME: Pour le débug
+//    HardwareTimer stepperTimer(TIM2);   // Check needed timers
+//    stepperTimer.setMode(1,TIMER_OUTPUT_COMPARE);
+//    stepperTimer.setOverflow(STEPPER_FREQUENCY, HERTZ_FORMAT);
+//    stepperTimer.attachInterrupt(stepperInterrupt);
     // FIXME: Wait for upstream update
     //    stepperTimer.setInterruptPriority(10,0);
-    stepperTimer.resume();
+//    stepperTimer.resume();
 
     Serial.println("Interrupt Timers OK");
+    // FIXME: Pour le débug
 //    ActuatorsMgr::Instance().initTorques();
     Serial.println("Dynamixels OK");
     Serial.println("Setup DONE");

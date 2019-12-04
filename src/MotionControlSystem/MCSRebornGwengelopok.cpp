@@ -510,6 +510,7 @@ void MCS::speedBasedMovement(MOVEMENT movement) {
 }
 
 void MCS::sendPositionUpdate() {
+    // FIXME : Does not seem to work properly
     ComMgr::Instance().printfln(POSITION_HEADER, "%f %f %f %li", robotStatus.x, robotStatus.y, robotStatus.orientation, millis());
 }
 

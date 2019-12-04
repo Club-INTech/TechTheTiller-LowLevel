@@ -62,7 +62,7 @@ void OrderManager::communicate() {
         checkHooks();
         executeHooks();
     }
-
+// FIXME : Pour le debug
 //    if (sendPos.check()) {
 //        motionControlSystem.sendPositionUpdate();
 //    }

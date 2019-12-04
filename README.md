@@ -116,8 +116,7 @@ a été mit en place.
 |      BrasIn      |                                                                    |                                                               |
 |    torqueBras    |          Renvoie le couple mesuré par les XLs d'un bras.           |                 Côté du bras ("right"/"left")                 |
 |     torqueXL     |                     Renvoie le couple d'un XL.                     |                           ID du XL                            |
-|     ValveOn      |                                                                    |                                                               |
-|     ValveOff     |                                                                    |                                                               |
+|      Valve       |                                                                    |                                                               |
 |       Suck       |                                                                    |                                                               |
 |      LiftUp      |                                                                    |                                                               |
 |     LiftDown     |                                                                    |                                                               |

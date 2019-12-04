@@ -2,7 +2,6 @@
 .idea
 __vm
 .pio
-lib
 .travis.yml
 CMakeLists.txt
 .directory
