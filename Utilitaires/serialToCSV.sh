@@ -12,7 +12,7 @@ pythonGraph () {
 # Subshell allows cd-ing around without affecting user
 (
 # Moves to script origin
-cd $(dirname "${BASH_SOURCE[0]}")
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 if [ ! -d ./serialOutput ]; then
 	mkdir serialOutput
@@ -29,7 +29,7 @@ if [ -e "$fileName" ]; then
 fi
 
 touch "$fileName"
-outFile=$(echo $fileName | cut -f 3 -d"/")
+outFile=$(echo "$fileName" | cut -f 3 -d"/")
 
 
 if [ ! -e /dev/ttyACM0 ]; then
@@ -43,22 +43,22 @@ fi
 
 
 # Useless to trap signals if nothing has been setup/nothing could have been read
-trap "pythonGraph \"$fileName\" \"$outFile\" $1" INT
-trap "pythonGraph \"$fileName\" \"$outFile\" $1" TERM
-trap "pythonGraph \"$fileName\" \"$outFile\" $1" EXIT
+trap 'pythonGraph \"$fileName\" \"$outFile\" $1' INT
+trap 'pythonGraph \"$fileName\" \"$outFile\" $1' TERM
+trap 'pythonGraph \"$fileName\" \"$outFile\" $1' EXIT
 
 echo > /dev/ttyACM0
 stty -F /dev/ttyACM0 115200 raw -echo -echoe -echok
 
 while true; do
 	read line < /dev/ttyACM0
-	echo $line >> "$fileName"
+	echo "$line" >> "$fileName"
 	case "$line" in 
    		*"DATAEND"*)
    			 break;;
 	esac
 done
 
-python3 extraction_asserv.py "$outFile" "$1"
+pythonGraph "$fileName" "$outFile" "$1"
 
 )
