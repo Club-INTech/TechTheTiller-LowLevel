@@ -10,8 +10,7 @@ Pour configurer le projet, deux possibilités:
    3. Ouvrez un terminal dans le dossier du dépot, et effectuez la commande \
      ```pio init --ide IDE --board teensy35```\
      avec IDE=clion si vous utilisez CLion, ou vscode si vous utilisez Visual Studio Code
-2. 
-   - ```./setup.sh``` Uniquement pour CLion pour le moment. (Peut se charger de l'installation de platformio avec apt et pacman)
+
 
 Une fois que le projet est configuré, vous pouvez l'ouvrir avec l'IDE de votre choix.
 
@@ -29,14 +28,22 @@ a été mit en place.
  
 ## TODO
 
-- [x] Compléter le nouveau MCS
-- [x] Asservissement
-- [x] Vérifier l'état de la communication LL/HL
-- [x] Implémenter les nouveaux ordres
+- [x] Asservissement de test
+- [ ] Test des ordres
+- [ ] Asservissement sur robot définitif
+- [ ] Refaire la détection de blocage (+recalage mécanique)
+- [ ] Refaire le goto
+- [ ] Suivi de trajectoire (De jolies courbes !)
+- [ ] Gagner la Coupe
+
+### Choses en plus
+
+- [ ] Bien documenter et commenter tout le code
+- [ ] Nettoyer les warnings
+- [ ] Refaire au propre le watchdog des XL
 - [ ] Ordre propre pour la récupération de données d'asservissement + scripts en conséquence
 - [ ] Mise en place de cas d'erreur explicites et plus nombreux pour le HL
 - [ ] Meilleure façon de séparer les robots dans le code
-- [ ] Gagner la Coupe
 
 ## TABLE DES ORDRES
 
