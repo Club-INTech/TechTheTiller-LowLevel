@@ -297,6 +297,7 @@ ORDER(posBras,1);
 ORDER(BrasOut,1);
 ORDER(BrasIn,1);
 
+
 /**
  * @Description: Renvoie le couple mesuré par les XLs d'un bras.
  * @Arguments: Côté du bras ("right"/"left")
@@ -311,7 +312,12 @@ ORDER(torqueXL,1);
 // This is horrible and should probably burn
 
 ORDER(Valve, 2);
-ORDER(Suck,1)
+ORDER(Suck,1);
+
+/** Pour le drapeau des deux robots */
+
+ORDER(FlagUp,0);
+ORDER(FlagDown,0);
 
 
 #if defined(MAIN)
@@ -320,8 +326,7 @@ ORDER(LiftUp, 0);
 ORDER(LiftDown, 0);
 ORDER(GateOpen,1);
 ORDER(GateClose,1);
-ORDER(FlagUp,0);
-ORDER(FlagDown,0);
+
 
 
 

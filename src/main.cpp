@@ -91,7 +91,7 @@ void __attribute__((noreturn)) loop() {
 
     Serial.println("Interrupt Timers OK");
     // FIXME: Pour le débug
-//    ActuatorsMgr::Instance().initTorques();
+    ActuatorsMgr::Instance().initTorques();
     Serial.println("Dynamixels OK");
     Serial.println("Setup DONE");
 

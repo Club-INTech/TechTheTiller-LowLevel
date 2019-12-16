@@ -36,8 +36,8 @@ constexpr uint8_t SICK_PINS[NBR_OF_DISTANCE_SENSOR] = {
         A1, // 6e
 };
 
-constexpr uint8_t PIN_TX_DYNAMIXEL = 0;
-constexpr uint8_t PIN_RX_DYNAMIXEL = 0;
+constexpr uint8_t PIN_TX_DYNAMIXEL = D2;
+constexpr uint8_t PIN_RX_DYNAMIXEL = D2;
 
 // TechTheTide
 /* Ascenceurs */
@@ -74,7 +74,7 @@ constexpr uint8_t LED4 = 31;
 /* Drapeaux */
 constexpr uint8_t FLAG_PIN = A1;
 
-constexpr uint8_t PUMP_0 = 999;
+constexpr uint8_t PUMP_0 = D6;
 
 constexpr uint8_t VALVE0 = 999;
 

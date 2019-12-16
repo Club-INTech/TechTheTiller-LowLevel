@@ -19,11 +19,11 @@ void ActuatorsMgr::init()
 
 #if defined(MAIN)
 
-    motor4 = (XL430*) dynamixelManager->createMotor(4, XL430GeneratorFunction);//new XL430(1,*manager);
+    motor4 = (XL430*) dynamixelManager->createMotor(254, XL430GeneratorFunction);//new XL430(1,*manager);
     motor5 = (XL430*) dynamixelManager->createMotor(5, XL430GeneratorFunction);//new XL430(2,*manager);
     motor6 = (XL430*) dynamixelManager->createMotor(6, XL430GeneratorFunction);//new XL430(3,*manager);
 
-    leftArm = new Arm<XL430>("left", *dynamixelManager, new XL430[3]{*motor4,*motor5,*motor6});
+    leftArm = new Arm<XL430>("left", *dynamixelManager, new XL430[3]{*motor1,*motor2,*motor3});
 
     motRight->attach(MG_COULOIR_D);
     motLeft->attach(MG_COULOIR_G);
@@ -45,12 +45,7 @@ void stepperInterrupt(HardwareTimer* hardwareTimer) {
 }
 
 void ActuatorsMgr::initTorques() {
-    ActuatorsMgr::Instance().rightArm->initTorque();
-#if defined(MAIN)
-    ActuatorsMgr::Instance().leftArm->initTorque();
-#elif defined(SLAVE)
-    ActuatorsMgr::Instance().motor4->toggleTorque(true);
-#endif
+    motor4->toggleTorque(true);
 }
 
 

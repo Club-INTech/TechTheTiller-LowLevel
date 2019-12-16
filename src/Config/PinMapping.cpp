@@ -54,6 +54,7 @@ void InitAllPins() {
 
 
 
+
     // Éclairages
     pinMode(LED1,OUTPUT);
     digitalWrite(LED1,LOW);

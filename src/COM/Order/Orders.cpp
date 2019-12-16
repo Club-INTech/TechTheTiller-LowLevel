@@ -574,14 +574,14 @@ void ORDER_ptpdemoseq::impl(Args args)
 
 void ORDER_FlagDown::impl(Args args) {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    Servo* motorFlag = manager.motFlag;
-    motorFlag->write(0);
+    ////Servo* motorFlag = manager.motFlag;
+    //motorFlag->write(0);
 }
 
 void ORDER_FlagUp::impl(Args args) {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    Servo* motorFlag = manager.motFlag;
-    motorFlag->write(90);
+    ////Servo* motorFlag = manager.motFlag;
+    //motorFlag->write(90);
 }
 
 void ORDER_Valve::impl(Args args)
@@ -654,19 +654,29 @@ void ORDER_Valve::impl(Args args)
 
 
 void ORDER_BrasOut::impl(Args args) {
+
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
+
     XL430* mot = manager.motor4;
-    mot->setGoalAngle(90);
+
+    mot->changeLED(true);
+
+    mot->setGoalAngle(90.0f);
+    Serial.println("Coucou");
 }
 
 void ORDER_BrasIn::impl(Args args) {
+
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    Serial.println("toto");
     XL430* mot = manager.motor4;
-    mot->setGoalAngle(0);
+    mot->changeLED(true);
+    mot->setGoalAngle(0.0f);
+
 }
 
 void ORDER_Suck::impl(Args args) {
-    switch((int)args[0]) {
+    switch(strtol(args[0], nullptr, 10)) {
         case 0:
             digitalWrite(PUMP_0, HIGH);
             break;
@@ -690,7 +700,7 @@ void ORDER_Suck::impl(Args args) {
             break;
 #endif
         default:
-            orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");   //Renvoit un message d'erreur au HL, il faut vérifier si STD_HEADER convient.
+            orderManager.highLevel.printfln(STD_HEADER,"ERREUR %d n'est pas un entier entre 0 et 5.", (int)args[0]);   //Renvoit un message d'erreur au HL, il faut vérifier si STD_HEADER convient.
     }
 }
 
