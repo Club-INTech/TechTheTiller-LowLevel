@@ -586,7 +586,7 @@ void ORDER_FlagUp::impl(Args args) {
 
 void ORDER_Valve::impl(Args args)
 {
-    uint8_t valve = int(args[0]) ;
+    uint8_t valve = strtol(args[0], nullptr, 10);
     if ( !strcmp(args[1],"on"))  {
         switch(valve) {
             case 0:
@@ -613,7 +613,7 @@ void ORDER_Valve::impl(Args args)
 #endif
 
             default:
-                orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
+                orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument %d donné n'est pas un entier entre 0 et 5.");
         }
     }
     else if ( !strcmp(args[1], "off")) {

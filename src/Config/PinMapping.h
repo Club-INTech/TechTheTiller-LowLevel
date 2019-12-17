@@ -76,7 +76,7 @@ constexpr uint8_t FLAG_PIN = A1;
 
 constexpr uint8_t PUMP_0 = D6;
 
-constexpr uint8_t VALVE0 = 999;
+constexpr uint8_t VALVE0 = D6;
 
 /* Ouverture couloirs gobeulets */
 
