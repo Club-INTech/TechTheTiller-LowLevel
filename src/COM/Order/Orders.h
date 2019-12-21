@@ -311,7 +311,10 @@ ORDER(torqueXL,1);
 
 // This is horrible and should probably burn
 
+/** Pour les pompes et électrovannes */
+
 ORDER(Valve, 2);
+ORDER(Unsuck,1);
 ORDER(Suck,1);
 
 /** Pour le drapeau des deux robots */

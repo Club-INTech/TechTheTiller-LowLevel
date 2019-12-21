@@ -590,25 +590,24 @@ void ORDER_Valve::impl(Args args)
     if ( !strcmp(args[1],"on"))  {
         switch(valve) {
             case 0:
-                digitalWrite(VALVE0, HIGH);
+                digitalWrite(VALVE_0, HIGH);
                 break;
-                // TODO: rajouter les ordres pour le secondaire qui a plus de valves (utiliser un #if define(SLAVE)
 
 #if defined(SLAVE)
             case 1:
-                digitalWrite(VALVE1, HIGH);
+                digitalWrite(VALVE_1, HIGH);
                 break;
             case 2:
-                digitalWrite(VALVE2, HIGH);
+                digitalWrite(VALVE_2, HIGH);
                 break;
             case 3:
-                digitalWrite(VALVE3, HIGH);
+                digitalWrite(VALVE_3, HIGH);
                 break;
             case 4:
-                digitalWrite(VALVE4, HIGH);
+                digitalWrite(VALVE_4, HIGH);
                 break;
             case 5:
-                digitalWrite(VALVE5, HIGH);
+                digitalWrite(VALVE_5, HIGH);
                 break;
 #endif
 
@@ -619,35 +618,33 @@ void ORDER_Valve::impl(Args args)
     else if ( !strcmp(args[1], "off")) {
         switch(valve) {
             case 0:
-                digitalWrite(VALVE0, LOW);
+                digitalWrite(VALVE_0, LOW);
                 break;
 
-
-                // TODO: rajouter les ordres pour le secondaire qui a plus de valves
 #if defined(SLAVE)
             case 1:
-                digitalWrite(VALVE1, LOW);
+                digitalWrite(VALVE_1, LOW);
                 break;
             case 2:
-                digitalWrite(VALVE2, LOW);
+                digitalWrite(VALVE_2, LOW);
                 break;
             case 3:
-                digitalWrite(VALVE3, LOW);
+                digitalWrite(VALVE_3, LOW);
                 break;
             case 4:
-                digitalWrite(VALVE4, LOW);
+                digitalWrite(VALVE_4, LOW);
                 break;
             case 5:
-                digitalWrite(VALVE5, LOW);
+                digitalWrite(VALVE_5, LOW);
                 break;
 #endif
             default:
-                orderManager.highLevel.printfln(STD_HEADER, "ERREUR::L'argument donné n'est pas un entier entre 0 et 5.");
+                orderManager.highLevel.printfln(STD_HEADER, "ERREUR::L'argument donné (%d) n'est pas un entier entre 0 et 5.");
         }
     }
 
     else {
-        orderManager.highLevel.printfln(STD_HEADER, "ERREUR::Il faut spécifier si la valve est à on ou off.");
+        orderManager.highLevel.printfln(STD_HEADER, "ERREUR::Il faut spécifier si on veut mettre la valve sur on ou off.");
     }
 
 }
@@ -656,32 +653,26 @@ void ORDER_Valve::impl(Args args)
 void ORDER_BrasOut::impl(Args args) {
 
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-
     XL430* mot = manager.motor4;
-
     mot->changeLED(true);
-
     mot->setGoalAngle(90.0f);
-    Serial.println("Coucou");
 }
 
 void ORDER_BrasIn::impl(Args args) {
 
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    Serial.println("toto");
     XL430* mot = manager.motor4;
     mot->changeLED(true);
     mot->setGoalAngle(0.0f);
-
 }
 
 void ORDER_Suck::impl(Args args) {
+
     switch(strtol(args[0], nullptr, 10)) {
         case 0:
             digitalWrite(PUMP_0, HIGH);
             break;
 
-            // TODO: rajouter les ordres pour le secondaire qui a plus de pompes
 #if defined(SLAVE)
         case 1:
             digitalWrite(PUMP_1, HIGH);
@@ -700,8 +691,37 @@ void ORDER_Suck::impl(Args args) {
             break;
 #endif
         default:
-            orderManager.highLevel.printfln(STD_HEADER,"ERREUR %d n'est pas un entier entre 0 et 5.", (int)args[0]);   //Renvoit un message d'erreur au HL, il faut vérifier si STD_HEADER convient.
+            orderManager.highLevel.printfln(STD_HEADER,"ERREUR L'argument donné (%d) n'est pas un entier entre 0 et 5.");   //Renvoit un message d'erreur au HL, il faut vérifier si STD_HEADER convient.
     }
+}
+
+void ORDER_Unsuck::impl(Args args) {
+
+    switch(strtol(args[0], nullptr, 10)) {
+        case 0:
+            digitalWrite(PUMP_0, LOW);
+            break;
+#if defined(SLAVE)
+        case 1:
+            digitalWrite(PUMP_1, LOW);
+            break;
+        case 2:
+            digitalWrite(PUMP_2, LOW);
+            break
+        case 3:
+            digitalWrite(PUMP_3, LOW);
+            break;
+        case 4:
+            digitalWrite(PUMP_4, LOW);
+            break;
+        case 5:
+            digitalWrite(PUMP_5, LOW);
+            break;
+#endif
+        default:
+            orderManager.highLevel.printfln(STD_HEADER, "ERREUR L'argument donné (%d) n'est pas un entier entre 0 et 5.");
+    }
+
 }
 
 #if defined(MAIN)

@@ -76,7 +76,7 @@ constexpr uint8_t FLAG_PIN = A1;
 
 constexpr uint8_t PUMP_0 = D6;
 
-constexpr uint8_t VALVE0 = D6;
+constexpr uint8_t VALVE_0 = D6;
 
 /* Ouverture couloirs gobeulets */
 
@@ -131,8 +131,12 @@ constexpr uint8_t DIR_PIN_RIGHT = 6; //direction
 constexpr uint8_t RIGHT_VALVE_PIN = 31; // électrovanne droite
 constexpr uint8_t LEFT_VALVE_PIN = 26; // électrovanne gauche
 
-constexpr uint8_t VALVE0 = 999;
-constexpr uint8_t VALVE1 = 999;
+constexpr uint8_t VALVE_0 = 999;
+constexpr uint8_t VALVE_1 = 999;
+constexpr uint8_t VALVE_2 = 999;
+constexpr uint8_t VALVE_3 = 999;
+constexpr uint8_t VALVE_4 = 999;
+constexpr uint8_t VALVE_5 = 999;
 constexpr uint8_t PUMP_0 = 999;
 constexpr uint8_t PUMP_1 = 999;
 constexpr uint8_t PUMP_2 = 999;

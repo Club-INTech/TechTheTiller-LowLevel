@@ -46,8 +46,9 @@ void InitAllPins() {
     pinMode(RIGHT_PUMP_PIN, OUTPUT);
     digitalWrite(RIGHT_PUMP_PIN, LOW);
 
-    pinMode(VALVE0, OUTPUT);
-    digitalWrite(VALVE0, LOW);
+    //Pneumatique TechTheTide
+    pinMode(VALVE_0, OUTPUT);
+    digitalWrite(VALVE_0, LOW);
     pinMode(PUMP_0,OUTPUT);
     digitalWrite(PUMP_0, LOW);
 
@@ -103,10 +104,19 @@ void InitAllPins()
     pinMode(RIGHT_PUMP_PIN, OUTPUT);
     digitalWrite(RIGHT_PUMP_PIN, LOW);
 
-    pinMode(VALVE0, OUTPUT);
-    digitalWrite(VALVE0, LOW);
-    pinMode(VALVE1,OUTPUT);
-    digitalWrite(VALVE1, LOW);
+    // Pneumatique TechTheTide
+    pinMode(VALVE_0, OUTPUT);
+    digitalWrite(VALVE_0, LOW);
+    pinMode(VALVE_1,OUTPUT);
+    digitalWrite(VALVE_1, LOW);
+    pinMode(VALVE_2, OUTPUT);
+    digitalWrite(VALVE_2, LOW);
+    pinMode(VALVE_3,OUTPUT);
+    digitalWrite(VALVE_3, LOW);
+    pinMode(VALVE_4, OUTPUT);
+    digitalWrite(VALVE_4, LOW);
+    pinMode(VALVE_5,OUTPUT);
+    digitalWrite(VALVE_5, LOW);
     pinMode(PUMP_0,OUTPUT);
     digitalWrite(PUMP_0, LOW);
     pinMode(PUMP_1,OUTPUT);
