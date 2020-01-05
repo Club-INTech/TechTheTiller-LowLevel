@@ -764,7 +764,31 @@ void ORDER_GateClose::impl(Args args)
     }
 }
 
+void ORDER_Gate90::impl(Args args)
+{
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    Servo* motR = manager.motRight;
+    Servo* motL = manager.motLeft;
+    if (!strcmp(args[0],"left")) {
+        motL->write(90);
+    }
+    else {
+        motR->write(90);
+    }
+}
 
+void ORDER_Gate135::impl(Args args)
+{
+    ActuatorsMgr& manager = ActuatorsMgr::Instance();
+    Servo* motR = manager.motRight;
+    Servo* motL = manager.motLeft;
+    if (!strcmp(args[0],"left")) {
+        motL->write(135);
+    }
+    else {
+        motR->write(135);
+    }
+}
 
 
 #elif defined(SLAVE)

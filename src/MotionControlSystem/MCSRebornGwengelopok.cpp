@@ -123,6 +123,14 @@ void MCS::initStatus() {
 
 void MCS::updatePositionOrientation() {
 
+//    digitalWrite(LED2,LOW);
+    float dx = targetX-robotStatus.x;
+    float dy = targetY-robotStatus.y;
+    float translation = sqrt(dx * dx + dy * dy);
+    translate(translation);
+    float rotation = atan2f(dy, dx);
+    rotate(rotation);
+
     int32_t leftDistance = leftTicks * TICK_TO_MM;
     int32_t rightDistance = rightTicks * TICK_TO_MM;
 
@@ -138,7 +146,6 @@ void MCS::updatePositionOrientation() {
     robotStatus.x += distanceTravelled * cos;
     robotStatus.y += distanceTravelled * sin;
 
-    currentDistance = distance;
 }
 
 void MCS::updateSpeed()
@@ -194,40 +201,61 @@ void MCS::control()
 {
     if(!robotStatus.controlled)
         return;
+    if (robotStatus.inGoto) {
 
-    leftTicks = encoderLeft->read();
-    rightTicks = encoderRight->read();
+        leftTicks = encoderLeft->read();
+        rightTicks = encoderRight->read();
 
-    updatePositionOrientation();
+        updatePositionOrientation();
 
-    updateSpeed();
+        updateSpeed();
 
-    int32_t leftPWM = leftSpeedPID.compute(robotStatus.speedLeftWheel);
-    int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
-    leftMotor.run(leftPWM);
-    rightMotor.run(rightPWM);
 
-    previousLeftTicks = leftTicks;
-    previousRightTicks = rightTicks;
+//    static volatile int32_t lastDistance = 0;
+//
+//	float deltaDistanceMm = (currentDistance - lastDistance) * TICK_TO_MM;
+//	lastDistance = currentDistance;
+//
+//	robotStatus.x += (deltaDistanceMm * cosf(getAngle()));
+//	robotStatus.y += (deltaDistanceMm * sinf(getAngle()));
+//    float currentAngleRadian = getAngle();
 
-#if defined(MAIN)
-    digitalWrite(LED3, robotStatus.moving);
-#elif defined(SLAVE)
-    digitalWrite(LED3_2, !robotStatus.moving);
-#endif
+        int32_t leftPWM = leftSpeedPID.compute(robotStatus.speedLeftWheel);
+        int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
+        leftMotor.run(leftPWM);
+        rightMotor.run(rightPWM);
 
-    if(gotoTimer > 0)
-        gotoTimer--;
-    if(robotStatus.inRotationInGoto  && !robotStatus.moving && gotoTimer == 0) {//ABS(averageRotationDerivativeError.value()) <= controlSettings.tolerancyDerivative && ABS(rotationPID.getError())<=controlSettings.tolerancyAngle){
-        float dx = (targetX - robotStatus.x);
-        float dy = (targetY - robotStatus.y);
-        float target = sqrtf(dx * dx + dy * dy);
+//    rotate(rotation);
+//
+//    if (ABS(robotStatus.orientation - targetAngle) <= 10){
+//        robotStatus.translation = true;
+//    }
+//    if (robotStatus.translation){
+//        translate(translatiion);
+//    }
 
-        //digitalWrite(LED2,HIGH);
-        translate(target);
+        previousLeftTicks = leftTicks;
+        previousRightTicks = rightTicks;
 
-        // Serial.printf("Target is %f current angle is %f (dx=%f dy=%f) (x=%f y=%f)\n", target, getAngle(), dx, dy, robotStatus.x, robotStatus.y);
-        robotStatus.inRotationInGoto = false;
+//#if defined(MAIN)
+//    digitalWrite(LED3, robotStatus.moving);
+//#elif defined(SLAVE)
+//    digitalWrite(LED3_2, !robotStatus.moving);
+//#endif
+//
+//    if(gotoTimer > 0)
+//        gotoTimer--;
+//    if(robotStatus.inRotationInGoto  && !robotStatus.moving && gotoTimer == 0) {//ABS(averageRotationDerivativeError.value()) <= controlSettings.tolerancyDerivative && ABS(rotationPID.getError())<=controlSettings.tolerancyAngle){
+//        float dx = (targetX - robotStatus.x);
+//        float dy = (targetY - robotStatus.y);
+//        float target = sqrtf(dx * dx + dy * dy);
+//
+//        //digitalWrite(LED2,HIGH);
+//        translate(target);
+//
+//        // Serial.printf("Target is %f current angle is %f (dx=%f dy=%f) (x=%f y=%f)\n", target, getAngle(), dx, dy, robotStatus.x, robotStatus.y);
+//        robotStatus.inRotationInGoto = false;
+//    }
     }
 
 }
@@ -314,33 +342,33 @@ void MCS::stop() {
     }
 
 
-    bool shouldResetP2P = true;
-    if(!robotStatus.inRotationInGoto) {
-        if(!robotStatus.moving && robotStatus.inGoto && ABS(targetX-robotStatus.x)>=controlSettings.tolerancyX && ABS(targetY-robotStatus.y)>=controlSettings.tolerancyY && !robotStatus.stuck){
-            translationPID.resetErrors();
-            rotationPID.resetErrors();
-            leftSpeedPID.resetErrors();
-            rightSpeedPID.resetErrors();
-
-            gotoPoint2(targetX,targetY);
-            InterruptStackPrint::Instance().push(EVENT_HEADER, "renvoie un goto");
-            shouldResetP2P = false;
-
-        }
-        else {
-            InterruptStackPrint::Instance().push(EVENT_HEADER, "stoppedMoving");
-            robotStatus.inGoto=false;
-            leftSpeedPID.setGoal(0);
-            rightSpeedPID.setGoal(0);
-            rotationPID.setGoal(robotStatus.orientation);
-        }
-    }
-
-    if(shouldResetP2P) {
-        robotStatus.moving = false;
-        robotStatus.inRotationInGoto = false;
-        robotStatus.movement = MOVEMENT::NONE;
-    }
+//    bool shouldResetP2P = true;
+//    if(!robotStatus.inRotationInGoto) {
+//        if(!robotStatus.moving && robotStatus.inGoto && ABS(targetX-robotStatus.x)>=controlSettings.tolerancyX && ABS(targetY-robotStatus.y)>=controlSettings.tolerancyY && !robotStatus.stuck){
+//            translationPID.resetErrors();
+//            rotationPID.resetErrors();
+//            leftSpeedPID.resetErrors();
+//            rightSpeedPID.resetErrors();
+//
+//            gotoPoint2(targetX,targetY);
+//            InterruptStackPrint::Instance().push(EVENT_HEADER, "renvoie un goto");
+//            shouldResetP2P = false;
+//
+//        }
+//        else {
+//            InterruptStackPrint::Instance().push(EVENT_HEADER, "stoppedMoving");
+//            robotStatus.inGoto=false;
+//            leftSpeedPID.setGoal(0);
+//            rightSpeedPID.setGoal(0);
+//            rotationPID.setGoal(robotStatus.orientation);
+//        }
+//    }
+//
+//    if(shouldResetP2P) {
+//        robotStatus.moving = false;
+//        robotStatus.inRotationInGoto = false;
+//        robotStatus.movement = MOVEMENT::NONE;
+//    }
 
     trajectory.clear();
     translationPID.resetErrors();
@@ -440,20 +468,22 @@ void MCS::rotate(float angle) {
 }*/
 
 void MCS::gotoPoint2(int16_t x, int16_t y) {
+//    robotStatus.translation=false;
     robotStatus.inGoto=true;
     targetX = x;
     targetY = y;
 //    digitalWrite(LED2,LOW);
-    float dx = x-robotStatus.x;
-    float dy = y-robotStatus.y;
-    ComMgr::Instance().printfln(DEBUG_HEADER, "goto %i %i (diff is %f %f) x= %f; y= %f", x, y, dx, dy, robotStatus.x, robotStatus.y);
-    float rotation = atan2f(dy, dx);
-    ComMgr::Instance().printfln(DEBUG_HEADER, "Required angle: %f", rotation);
-
-    rotate(rotation);
+//    float dx = x-robotStatus.x;
+//    float dy = y-robotStatus.y;
+//    ComMgr::Instance().printfln(DEBUG_HEADER, "goto %i %i (diff is %f %f) x= %f; y= %f", x, y, dx, dy, robotStatus.x, robotStatus.y);
+//    float rotation = atan2f(dy, dx);
+//    ComMgr::Instance().printfln(DEBUG_HEADER, "Required angle: %f", rotation);
+//
+//    rotate(rotation);
     robotStatus.moving = true;
     robotStatus.inRotationInGoto = true;
 }
+
 
 void MCS::followTrajectory(const double* xTable, const double* yTable, int count) {
     trajectory.set(xTable, yTable, count);

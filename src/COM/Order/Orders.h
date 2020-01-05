@@ -329,7 +329,10 @@ ORDER(LiftUp, 0);
 ORDER(LiftDown, 0);
 ORDER(GateOpen,1);
 ORDER(GateClose,1);
-
+ORDER(Gate90,1);
+ORDER(Gate135,1);
+ORDER(FlagUp,0);
+ORDER(FlagDown,0);
 
 
 

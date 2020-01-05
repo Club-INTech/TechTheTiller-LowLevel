@@ -45,6 +45,7 @@ public:
     void rotate(float);
     void gotoPoint(int16_t,int16_t,bool);
     void gotoPoint2(int16_t,int16_t);
+    void goto1(int16_t,int16_t);
     void followTrajectory(const double* xTable, const double* yTable, int count);
 
     void speedBasedMovement(MOVEMENT);
