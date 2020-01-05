@@ -742,12 +742,12 @@ void ORDER_GateOpen::impl(Args args)
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
     Servo* motR = manager.motRight;
     Servo* motL = manager.motLeft;
-    if (!strcmp(args[0],"left")) {
+//    if (!strcmp(args[0],"left")) {
         motL->write(120);
-    }
-    else {
+//    }
+//    else {
         motR->write(120);
-    }
+//    }
 
 }
 
@@ -756,12 +756,12 @@ void ORDER_GateClose::impl(Args args)
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
     Servo* motR = manager.motRight;
     Servo* motL = manager.motLeft;
-    if (!strcmp(args[0],"left")) {
+//    if (!strcmp(args[0],"left")) {
         motL->write(0);
-    }
-    else {
+//    }
+//    else {
         motR->write(0);
-    }
+//    }
 }
 
 void ORDER_Gate90::impl(Args args)
@@ -769,12 +769,12 @@ void ORDER_Gate90::impl(Args args)
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
     Servo* motR = manager.motRight;
     Servo* motL = manager.motLeft;
-    if (!strcmp(args[0],"left")) {
+//    if (!strcmp(args[0],"left")) {
         motL->write(90);
-    }
-    else {
+//    }
+//    else {
         motR->write(90);
-    }
+//    }
 }
 
 void ORDER_Gate135::impl(Args args)
@@ -782,12 +782,12 @@ void ORDER_Gate135::impl(Args args)
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
     Servo* motR = manager.motRight;
     Servo* motL = manager.motLeft;
-    if (!strcmp(args[0],"left")) {
+//    if (!strcmp(args[0],"left")) {
         motL->write(135);
-    }
-    else {
+//    }
+//    else {
         motR->write(135);
-    }
+//    }
 }
 
 
@@ -796,21 +796,78 @@ void ORDER_Gate135::impl(Args args)
 void ORDER_BrasStock::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    XL430* mot = manager.motor5;
+    switch ((int)args[0]){
+        case 1:
+            XL430* mot = manager.motor1;
+            break;
+        case 2:
+            XL430* mot = manager.motor2;
+            break;
+        case 3:
+            XL430* mot = manager.motor3;
+            break;
+        case 4:
+            XL430* mot = manager.motor4;
+            break;
+        case 5:
+            XL430* mot = manager.motor5;
+            break;
+        case 6:
+            XL430* mot = manager.motor6;
+            break;
+    }
     mot->setGoalAngle(0);
 }
 
 void ORDER_BrasEcueil::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    XL430* mot = manager.motor5;
+    switch ((int)args[0]){
+        case 1:
+            XL430* mot = manager.motor1;
+            break;
+        case 2:
+            XL430* mot = manager.motor2;
+            break;
+        case 3:
+            XL430* mot = manager.motor3;
+            break;
+        case 4:
+            XL430* mot = manager.motor4;
+            break;
+        case 5:
+            XL430* mot = manager.motor5;
+            break;
+        case 6:
+            XL430* mot = manager.motor6;
+            break;
+    }
     mot->setGoalAngle(90);
 }
 
 void ORDER_BrasDepot::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    XL430* mot = manager.motor5;
+    switch ((int)args[0]){
+        case 1:
+            XL430* mot = manager.motor1;
+            break;
+        case 2:
+            XL430* mot = manager.motor2;
+            break;
+        case 3:
+            XL430* mot = manager.motor3;
+            break;
+        case 4:
+            XL430* mot = manager.motor4;
+            break;
+        case 5:
+            XL430* mot = manager.motor5;
+            break;
+        case 6:
+            XL430* mot = manager.motor6;
+            break;
+    }
     mot->setGoalAngle(100);
 }
 

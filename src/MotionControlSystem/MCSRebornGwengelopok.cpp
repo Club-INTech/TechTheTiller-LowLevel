@@ -127,9 +127,29 @@ void MCS::updatePositionOrientation() {
     float dx = targetX-robotStatus.x;
     float dy = targetY-robotStatus.y;
     float translation = sqrt(dx * dx + dy * dy);
-    translate(translation);
     float rotation = atan2f(dy, dx);
+    float currentAngle = getAngle();
+
+    if (ABS(currentAngle-rotation) > (float)PI)
+    {
+        if (rotation < 0)
+        {
+            rotation += 2*PI;
+        }
+        else
+        {
+            rotation -= 2*PI;
+        }
+    }
     rotate(rotation);
+    if (ABS(currentAngle-rotation) < 10)
+    {
+        robotStatus.translation = true;
+    }
+    if (robotStatus.translation)
+    {
+        translate(translation);
+    }
 
     int32_t leftDistance = leftTicks * TICK_TO_MM;
     int32_t rightDistance = rightTicks * TICK_TO_MM;
@@ -468,7 +488,7 @@ void MCS::rotate(float angle) {
 }*/
 
 void MCS::gotoPoint2(int16_t x, int16_t y) {
-//    robotStatus.translation=false;
+    robotStatus.translation=false;
     robotStatus.inGoto=true;
     targetX = x;
     targetY = y;
