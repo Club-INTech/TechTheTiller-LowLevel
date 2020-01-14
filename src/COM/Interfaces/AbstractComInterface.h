@@ -8,7 +8,7 @@
 #include <Arduino.h>
 #include <vector>
 #include "Utils/Average.hpp"
-#include "Utils/stdarg.h"
+#include <cstdarg>
 
 class AbstractComInterface
 {

@@ -24,7 +24,7 @@ void OrderManager::init() {
 void OrderManager::communicate() {
     if (highLevel.read(readMessage)) {
         // TODO: debug only
-        highLevel.printfln(DEBUG_HEADER, "(%lli) Received '''%s'''\n", messageCount, readMessage);
+        highLevel.printfln(DEBUG_HEADER, "(%li) Received '%s'\n", messageCount, readMessage);
         messageCount++;
         execute(readMessage);
     }

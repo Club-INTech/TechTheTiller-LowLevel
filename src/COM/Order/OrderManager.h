@@ -11,10 +11,7 @@
 #include "Utils/Metro.h"
 #include <map>
 #include <set>
-#include <string>
-#include <cstdlib>
 #include <Arduino.h>
-#include <WString.h>
 #include "Utils/Singleton.hpp"
 #include "MotionControlSystem/MCS.h"
 #include "Sensors/SensorMgr.h"
@@ -75,7 +72,7 @@ private:
 
     char readMessage[RX_BUFFER_SIZE];
     char charIDLastMessage;
-    uint64_t messageCount = 0;
+    uint32_t messageCount = 0;
 };
 
 #endif //_ORDERMGR_h

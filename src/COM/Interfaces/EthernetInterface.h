@@ -15,8 +15,7 @@ MOSI	11/11
 #include <Arduino.h>
 #include <vector>
 #include "Utils/Singleton.hpp"
-#include "Utils/stdarg.h"
-#include <WString.h>
+#include <cstdarg>
 #include "Config/Defines.h"
 #include <SPI.h>
 #include <Ethernet.h>

@@ -3,10 +3,9 @@
 
 #include <Arduino.h>
 #include <vector>
-#include <string>
 
 #include "Utils/Singleton.hpp"
-#include "Utils/stdarg.h"
+#include <cstdarg>
 #include "Config/Defines.h"
 #include "Utils/Average.hpp"
 #include "AbstractComInterface.h"
