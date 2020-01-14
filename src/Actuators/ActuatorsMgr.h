@@ -65,6 +65,7 @@ public:
     //XL qui pousse les palets
 	XL430* motor4;
 	XL430* motor5;
+	XL430* motor6;
 
 #endif
 

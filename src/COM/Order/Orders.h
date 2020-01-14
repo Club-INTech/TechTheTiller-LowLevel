@@ -331,8 +331,6 @@ ORDER(GateOpen,0);
 ORDER(GateClose,0);
 ORDER(Gate90,0);
 ORDER(Gate135,0);
-ORDER(FlagUp,0);
-ORDER(FlagDown,0);
 
 
 

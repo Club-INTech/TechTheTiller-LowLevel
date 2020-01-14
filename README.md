@@ -124,13 +124,16 @@ a été mit en place.
 |    torqueBras    |          Renvoie le couple mesuré par les XLs d'un bras.           |                 Côté du bras ("right"/"left")                 |
 |     torqueXL     |                     Renvoie le couple d'un XL.                     |                           ID du XL                            |
 |      Valve       |                                                                    |                                                               |
+|      Unsuck      |                                                                    |                                                               |
 |       Suck       |                                                                    |                                                               |
+|      FlagUp      |                                                                    |                                                               |
+|     FlagDown     |                                                                    |                                                               |
 |      LiftUp      |                                                                    |                                                               |
 |     LiftDown     |                                                                    |                                                               |
 |     GateOpen     |                                                                    |                                                               |
 |    GateClose     |                                                                    |                                                               |
-|      FlagUp      |                                                                    |                                                               |
-|     FlagDown     |                                                                    |                                                               |
+|      Gate90      |                                                                    |                                                               |
+|     Gate135      |                                                                    |                                                               |
 |    BrasStock     |                                                                    |                                                               |
 |    BrasEcueil    |                                                                    |                                                               |
 |    BrasDepot     |                                                                    |                                                               |

@@ -31,7 +31,7 @@ void ORDER_xyo::impl(Args args)
 
 void ORDER_d::impl(Args args)
 {
-    int16_t deplacement = strtod(args[0], nullptr);
+    int16_t deplacement = OrderManager::parseInt(args[0]);
     bool expectedWallImpact = false;
     if(args.nbrParams() == 2) {
         expectedWallImpact = ! strcmp(args[1], "true");
@@ -50,7 +50,7 @@ void ORDER_t::impl(Args args)
     if (!strcmp(args[0], "pi")) {
         angle = (float) PI;
     } else {
-        angle = strtof(args[0], nullptr);
+        angle = OrderManager::parseFloat(args[0]);
     }
     orderManager.highLevel.printfln(DEBUG_HEADER,"angle : %f", angle);
 
@@ -60,8 +60,8 @@ void ORDER_t::impl(Args args)
 
 void ORDER_goto::impl(Args args)
 {
-    float targetX = strtof(args[0],nullptr);
-    float targetY = strtof(args[1],nullptr);
+    float targetX = OrderManager::parseFloat(args[0]);
+    float targetY = OrderManager::parseFloat(args[1]);
     bool isSequential = false;
 
     if(args.nbrParams() == 3)
@@ -83,7 +83,7 @@ void ORDER_goto::impl(Args args)
 
 void ORDER_followTrajectory::impl(Args args)
 {
-    if(strtof(args[0], nullptr) == 0)
+    if(OrderManager::parseFloat(args[0]) == 0)
     {
         // FIXME orderManager.motionControlSystem.followTrajectory(trajectory_S_path[0],trajectory_S_path[1],trajectory_S_size);
     }
@@ -101,45 +101,45 @@ void ORDER_stop::impl(Args args)
 
 void ORDER_cx::impl(Args args)
 {
-    orderManager.motionControlSystem.setX(orderManager.parseFloat(args[0]));
+    orderManager.motionControlSystem.setX(OrderManager::parseFloat(args[0]));
 }
 
 void ORDER_cy::impl(Args args)
 {
-    orderManager.motionControlSystem.setY(orderManager.parseFloat(args[0]));
+    orderManager.motionControlSystem.setY(OrderManager::parseFloat(args[0]));
 }
 
 void ORDER_co::impl(Args args)
 {
-    orderManager.motionControlSystem.setAngle(orderManager.parseFloat(args[0]));
+    orderManager.motionControlSystem.setAngle(OrderManager::parseFloat(args[0]));
 }
 
 void ORDER_cxyo::impl(Args args)
 {
-    orderManager.motionControlSystem.setX(orderManager.parseFloat(args[0]));
-    orderManager.motionControlSystem.setY(orderManager.parseFloat(args[1]));
-    orderManager.motionControlSystem.setAngle(orderManager.parseFloat(args[2]));
+    orderManager.motionControlSystem.setX(OrderManager::parseFloat(args[0]));
+    orderManager.motionControlSystem.setY(OrderManager::parseFloat(args[1]));
+    orderManager.motionControlSystem.setAngle(OrderManager::parseFloat(args[2]));
 
     // Mise à jour de l'offset et du target des codeuses. Faut pas tourner parce que le HL te dit où t'es. Je sais il est pas gentil mais faut l'accepter
-    orderManager.motionControlSystem.setAngleOffset(orderManager.parseFloat(args[2]));
+    orderManager.motionControlSystem.setAngleOffset(OrderManager::parseFloat(args[2]));
     orderManager.motionControlSystem.resetEncoders();
     orderManager.highLevel.printfln(DEBUG_HEADER, "X,Y,O set");
 }
 
 void ORDER_ctv::impl(Args args)
 {
-    orderManager.motionControlSystem.setTranslationSpeed(orderManager.parseFloat(args[0]));
+    orderManager.motionControlSystem.setTranslationSpeed(OrderManager::parseFloat(args[0]));
 }
 
 void ORDER_crv::impl(Args args)
 {
-    orderManager.motionControlSystem.setRotationSpeed(orderManager.parseFloat(args[0]));
+    orderManager.motionControlSystem.setRotationSpeed(OrderManager::parseFloat(args[0]));
 }
 
 void ORDER_ctrv::impl(Args args)
 {
-    orderManager.motionControlSystem.setTranslationSpeed(orderManager.parseFloat(args[0]));
-    orderManager.motionControlSystem.setRotationSpeed(orderManager.parseFloat(args[1]));
+    orderManager.motionControlSystem.setTranslationSpeed(OrderManager::parseFloat(args[0]));
+    orderManager.motionControlSystem.setRotationSpeed(OrderManager::parseFloat(args[1]));
 }
 
 void ORDER_efm::impl(Args args)
@@ -207,7 +207,7 @@ void ORDER_pfdebug::impl(Args args)
 
 void ORDER_rawpwm::impl(Args args)
 {
-    //uint8_t rawpwm = orderManager.parseInt(args[0]);
+    //uint8_t rawpwm = OrderManager::parseInt(args[0]);
     // FIXME   orderManager.motionControlSystem.orderRawPwm(Side::LEFT, rawpwm);
     // FIXME  orderManager.motionControlSystem.orderRawPwm(Side::RIGHT, rawpwm);
 }
@@ -254,7 +254,7 @@ void ORDER_rawposdata::impl(Args args)
     */
     char s[50];
 
-    snprintf(s,50,"%d,%d,%f,%f,%d,%f,%d\n", xPos,yPos,angle,leftSpeed, leftSpeedGoal,rightSpeed,rightSpeedGoal);
+    snprintf(s,50,"%d,%d,%f,%f,%ld,%f,%ld\n", xPos,yPos,angle,leftSpeed, leftSpeedGoal,rightSpeed,rightSpeedGoal);
     Serial.print(s);
     //int32_t right, left;
     //motionControlSystem.getPWMS(left,right);
@@ -278,16 +278,16 @@ void ORDER_montlhery::impl(Args args)
 }
 
 void ORDER_maxtr::impl(Args args) {
-    orderManager.motionControlSystem.setMaxTranslationSpeed(orderManager.parseFloat(args[0]));
+    orderManager.motionControlSystem.setMaxTranslationSpeed(OrderManager::parseFloat(args[0]));
 }
 
 void ORDER_maxro::impl(Args args) {
-    orderManager.motionControlSystem.setMaxRotationSpeed(orderManager.parseFloat(args[0]));
+    orderManager.motionControlSystem.setMaxRotationSpeed(OrderManager::parseFloat(args[0]));
 }
 
 void ORDER_maxtrro::impl(Args args){
-    orderManager.motionControlSystem.setMaxTranslationSpeed(orderManager.parseFloat(args[0]));
-    orderManager.motionControlSystem.setMaxRotationSpeed(orderManager.parseFloat(args[1]));
+    orderManager.motionControlSystem.setMaxTranslationSpeed(OrderManager::parseFloat(args[0]));
+    orderManager.motionControlSystem.setMaxRotationSpeed(OrderManager::parseFloat(args[1]));
 }
 
 void ORDER_av::impl(Args args)
@@ -365,7 +365,7 @@ void ORDER_kpt::impl(Args args)
  /* FIXME   float kp, ki, kd;
     orderManager.highLevel.printfln(STD_HEADER,"kp_trans ?");
     orderManager.motionControlSystem.getTranslationTunings(kp, ki, kd);
-    kp = orderManager.parseFloat(args[0]);
+    kp = OrderManager::parseFloat(args[0]);
     orderManager.motionControlSystem.setTranslationTunings(kp, ki, kd);
     orderManager.highLevel.printfln(DEBUG_HEADER,"kp_trans = %g", kp);
 */
@@ -376,7 +376,7 @@ void ORDER_kdt::impl(Args args)
    /* FIXME float kp, ki, kd;
     orderManager.highLevel.printfln(STD_HEADER,"kd_trans ?");
     orderManager.motionControlSystem.getTranslationTunings(kp, ki, kd);
-    kd = orderManager.parseFloat(args[0]);
+    kd = OrderManager::parseFloat(args[0]);
     orderManager.motionControlSystem.setTranslationTunings(kp, ki, kd);
     orderManager.highLevel.printfln(DEBUG_HEADER,"kd_trans = %g", kd);
 */
@@ -387,7 +387,7 @@ void ORDER_kit::impl(Args args)
 /* FIXME    float kp, ki, kd;
     orderManager.highLevel.printfln(STD_HEADER,"ki_trans ?");
     orderManager.motionControlSystem.getTranslationTunings(kp, ki, kd);
-    ki = orderManager.parseFloat(args[0]);
+    ki = OrderManager::parseFloat(args[0]);
     orderManager.motionControlSystem.setTranslationTunings(kp, ki, kd);
     orderManager.highLevel.printfln(DEBUG_HEADER,"ki_trans = %g", ki);
 */
@@ -398,7 +398,7 @@ void ORDER_kpr::impl(Args args)
   /* FIXME  float kp, ki, kd;
     orderManager.highLevel.printfln(STD_HEADER,"kp_rot ?");
     orderManager.motionControlSystem.getRotationTunings(kp, ki, kd);
-    kp = orderManager.parseFloat(args[0]);
+    kp = OrderManager::parseFloat(args[0]);
     orderManager.motionControlSystem.setRotationTunings(kp, ki, kd);
     orderManager.highLevel.printfln(DEBUG_HEADER,"kp_rot = %g", kp);
 */
@@ -409,7 +409,7 @@ void ORDER_kir::impl(Args args)
 /* FIXME    float kp, ki, kd;
     orderManager.highLevel.printfln(STD_HEADER,"ki_rot ?");
     orderManager.motionControlSystem.getRotationTunings(kp, ki, kd);
-    ki = orderManager.parseFloat(args[0]);
+    ki = OrderManager::parseFloat(args[0]);
     orderManager.motionControlSystem.setRotationTunings(kp, ki, kd);
     orderManager.highLevel.printfln(DEBUG_HEADER,"ki_rot = %g", ki);
 */}
@@ -419,7 +419,7 @@ void ORDER_kdr::impl(Args args)
 /* FIXME    float kp, ki, kd;
     orderManager.highLevel.printfln(STD_HEADER,"kd_rot ?");
     orderManager.motionControlSystem.getRotationTunings(kp, ki, kd);
-    kd = orderManager.parseFloat(args[0]);
+    kd = OrderManager::parseFloat(args[0]);
     orderManager.motionControlSystem.setRotationTunings(kp, ki, kd);
     orderManager.highLevel.printfln(DEBUG_HEADER,"kd_rot = %g", kd);
 */
@@ -430,7 +430,7 @@ void ORDER_kpg::impl(Args args)
 /* FIXME    float kp, ki, kd;
     orderManager.highLevel.printfln(STD_HEADER,"kp_gauche ?");
     orderManager.motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
-    kp = orderManager.parseFloat(args[0]);
+    kp = OrderManager::parseFloat(args[0]);
     orderManager.motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
     orderManager.highLevel.printfln(DEBUG_HEADER,"kp_gauche = %g", kp);
 */}
@@ -440,7 +440,7 @@ void ORDER_kig::impl(Args args)
   /* FIXME  float kp, ki, kd;
     orderManager.highLevel.printfln(STD_HEADER,"ki_gauche ?");
     orderManager.motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
-    ki = orderManager.parseFloat(args[0]);
+    ki = OrderManager::parseFloat(args[0]);
     orderManager.motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
     orderManager.highLevel.printfln(DEBUG_HEADER,"ki_gauche = %g", ki);
 */}
@@ -450,7 +450,7 @@ void ORDER_kdg::impl(Args args)
  /* FIXME   float kp, ki, kd;
     orderManager.highLevel.printfln(STD_HEADER,"kd_gauche ?");
     orderManager.motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
-    kd = orderManager.parseFloat(args[0]);
+    kd = OrderManager::parseFloat(args[0]);
     orderManager.motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
     orderManager.highLevel.printfln(DEBUG_HEADER,"kd_gauche = %g", kd);
 */}
@@ -460,7 +460,7 @@ void ORDER_kpd::impl(Args args)
 /* FIXME    float kp, ki, kd;
     orderManager.highLevel.printfln(STD_HEADER,"kp_droite ?");
     orderManager.motionControlSystem.getRightSpeedTunings(kp, ki, kd);
-    kp = orderManager.parseFloat(args[0]);
+    kp = OrderManager::parseFloat(args[0]);
     orderManager.motionControlSystem.setRightSpeedTunings(kp, ki, kd);
     orderManager.highLevel.printfln(DEBUG_HEADER,"kp_droite = %g", kp);
 */
@@ -471,7 +471,7 @@ void ORDER_kid::impl(Args args)
   /* FIXME  float kp, ki, kd;
     orderManager.highLevel.printfln(STD_HEADER,"ki_droite ?");
     orderManager.motionControlSystem.getRightSpeedTunings(kp, ki, kd);
-    ki = orderManager.parseFloat(args[0]);
+    ki = OrderManager::parseFloat(args[0]);
     orderManager.motionControlSystem.setRightSpeedTunings(kp, ki, kd);
     orderManager.highLevel.printfln(DEBUG_HEADER,"ki_droite = %g", ki);
 */
@@ -482,7 +482,7 @@ void ORDER_kdd::impl(Args args)
 /* FIXME    float kp, ki, kd;
     orderManager.highLevel.printfln(STD_HEADER,"kd_droite ?");
     orderManager.motionControlSystem.getRightSpeedTunings(kp, ki, kd);
-    kd = orderManager.parseFloat(args[0]);
+    kd = OrderManager::parseFloat(args[0]);
     orderManager.motionControlSystem.setRightSpeedTunings(kp, ki, kd);
     orderManager.highLevel.printfln(DEBUG_HEADER,"kd_droite = %g", kd);
 */
@@ -495,12 +495,12 @@ void ORDER_nh::impl(Args args)
     int32_t x;
     uint32_t y, r;
     float angleHook, angleTolerance;
-        id = (uint8_t) orderManager.parseInt(args[0]);
-        x = (int32_t) orderManager.parseInt(args[1]);
-        y = (uint32_t) orderManager.parseInt(args[2]);
-        r = (uint32_t) orderManager.parseInt(args[3]);
-        angleHook = orderManager.parseFloat(args[4]);
-        angleTolerance = orderManager.parseFloat(args[5]);
+        id = (uint8_t) OrderManager::parseInt(args[0]);
+        x = (int32_t) OrderManager::parseInt(args[1]);
+        y = (uint32_t) OrderManager::parseInt(args[2]);
+        r = (uint32_t) OrderManager::parseInt(args[3]);
+        angleHook = OrderManager::parseFloat(args[4]);
+        angleTolerance = OrderManager::parseFloat(args[5]);
 
         char hookOrder[RX_BUFFER_SIZE] = "";
 
@@ -521,7 +521,7 @@ void ORDER_nh::impl(Args args)
 
 void ORDER_eh::impl(Args args)
 {
-    int hookId = orderManager.parseInt(args[0]);
+    int hookId = OrderManager::parseInt(args[0]);
     if(orderManager.hookList.hookWithId(hookId))
     {
         orderManager.hookList.enableHook((uint8_t)hookId); //Singe proof ?
@@ -533,7 +533,7 @@ void ORDER_eh::impl(Args args)
 }
 
 void ORDER_dh::impl(Args args) {
-    int hookId = orderManager.parseInt(args[0]);
+    int hookId = OrderManager::parseInt(args[0]);
 
     if (orderManager.hookList.hookWithId(hookId)) {
         orderManager.hookList.disableHook((uint8_t) hookId); //Singe proof ?
@@ -574,19 +574,19 @@ void ORDER_ptpdemoseq::impl(Args args)
 
 void ORDER_FlagDown::impl(Args args) {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    ////Servo* motorFlag = manager.motFlag;
-    //motorFlag->write(0);
+    Servo* motorFlag = manager.motFlag;
+    motorFlag->write(0);
 }
 
 void ORDER_FlagUp::impl(Args args) {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    ////Servo* motorFlag = manager.motFlag;
-    //motorFlag->write(90);
+    Servo* motorFlag = manager.motFlag;
+    motorFlag->write(90);
 }
 
 void ORDER_Valve::impl(Args args)
 {
-    uint8_t valve = strtol(args[0], nullptr, 10);
+    uint8_t valve = OrderManager::parseInt(args[0]);
     if ( !strcmp(args[1],"on"))  {
         switch(valve) {
             case 0:
@@ -612,7 +612,7 @@ void ORDER_Valve::impl(Args args)
 #endif
 
             default:
-                orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument %d donné n'est pas un entier entre 0 et 5.");
+                orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument %d donné n'est pas un entier entre 0 et 5.", valve);
         }
     }
     else if ( !strcmp(args[1], "off")) {
@@ -639,7 +639,7 @@ void ORDER_Valve::impl(Args args)
                 break;
 #endif
             default:
-                orderManager.highLevel.printfln(STD_HEADER, "ERREUR::L'argument donné (%d) n'est pas un entier entre 0 et 5.");
+                orderManager.highLevel.printfln(STD_HEADER, "ERREUR::L'argument donné (%d) n'est pas un entier entre 0 et 5.", valve);
         }
     }
 
@@ -668,7 +668,8 @@ void ORDER_BrasIn::impl(Args args) {
 
 void ORDER_Suck::impl(Args args) {
 
-    switch(strtol(args[0], nullptr, 10)) {
+    int pumpId = OrderManager::parseInt(args[0]);
+    switch(pumpId) {
         case 0:
             digitalWrite(PUMP_0, HIGH);
             break;
@@ -691,13 +692,14 @@ void ORDER_Suck::impl(Args args) {
             break;
 #endif
         default:
-            orderManager.highLevel.printfln(STD_HEADER,"ERREUR L'argument donné (%d) n'est pas un entier entre 0 et 5.");   //Renvoit un message d'erreur au HL, il faut vérifier si STD_HEADER convient.
+            orderManager.highLevel.printfln(STD_HEADER,"ERREUR L'argument donné (%d) n'est pas un entier entre 0 et 5.", pumpId);   //Renvoit un message d'erreur au HL, il faut vérifier si STD_HEADER convient.
     }
 }
 
 void ORDER_Unsuck::impl(Args args) {
 
-    switch(strtol(args[0], nullptr, 10)) {
+    int pumpId = OrderManager::parseInt(args[0]);
+    switch(pumpId) {
         case 0:
             digitalWrite(PUMP_0, LOW);
             break;
@@ -707,7 +709,7 @@ void ORDER_Unsuck::impl(Args args) {
             break;
         case 2:
             digitalWrite(PUMP_2, LOW);
-            break
+            break;
         case 3:
             digitalWrite(PUMP_3, LOW);
             break;
@@ -719,7 +721,7 @@ void ORDER_Unsuck::impl(Args args) {
             break;
 #endif
         default:
-            orderManager.highLevel.printfln(STD_HEADER, "ERREUR L'argument donné (%d) n'est pas un entier entre 0 et 5.");
+            orderManager.highLevel.printfln(STD_HEADER, "ERREUR L'argument donné (%d) n'est pas un entier entre 0 et 5.",pumpId);
     }
 
 }
@@ -796,79 +798,82 @@ void ORDER_Gate135::impl(Args args)
 void ORDER_BrasStock::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    switch ((int)args[0]){
+    XL430* mot = nullptr;
+    switch (OrderManager::parseInt(args[0])){
         case 1:
-            XL430* mot = manager.motor1;
+            mot = manager.motor1;
             break;
         case 2:
-            XL430* mot = manager.motor2;
+            mot = manager.motor2;
             break;
         case 3:
-            XL430* mot = manager.motor3;
+            mot = manager.motor3;
             break;
         case 4:
-            XL430* mot = manager.motor4;
+            mot = manager.motor4;
             break;
         case 5:
-            XL430* mot = manager.motor5;
+            mot = manager.motor5;
             break;
         case 6:
-            XL430* mot = manager.motor6;
+            mot = manager.motor6;
             break;
     }
-    mot->setGoalAngle(0);
+    if(mot) mot->setGoalAngle(0);
 }
 
 void ORDER_BrasEcueil::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    switch ((int)args[0]){
+    XL430* mot = nullptr;
+    switch (OrderManager::parseInt(args[0])){
         case 1:
-            XL430* mot = manager.motor1;
+            mot = manager.motor1;
             break;
         case 2:
-            XL430* mot = manager.motor2;
+            mot = manager.motor2;
             break;
         case 3:
-            XL430* mot = manager.motor3;
+            mot = manager.motor3;
             break;
         case 4:
-            XL430* mot = manager.motor4;
+            mot = manager.motor4;
             break;
         case 5:
-            XL430* mot = manager.motor5;
+            mot = manager.motor5;
             break;
         case 6:
-            XL430* mot = manager.motor6;
+            mot = manager.motor6;
             break;
     }
-    mot->setGoalAngle(90);
+    if(mot) mot->setGoalAngle(90);
 }
 
 void ORDER_BrasDepot::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    switch ((int)args[0]){
+    XL430* mot = nullptr;
+    switch (OrderManager::parseInt(args[0])){
         case 1:
-            XL430* mot = manager.motor1;
+            mot = manager.motor1;
             break;
         case 2:
-            XL430* mot = manager.motor2;
+            mot = manager.motor2;
             break;
         case 3:
-            XL430* mot = manager.motor3;
+            mot = manager.motor3;
             break;
         case 4:
-            XL430* mot = manager.motor4;
+            mot = manager.motor4;
             break;
         case 5:
-            XL430* mot = manager.motor5;
+            mot = manager.motor5;
             break;
         case 6:
-            XL430* mot = manager.motor6;
+            mot = manager.motor6;
             break;
     }
-    mot->setGoalAngle(100);
+    if(mot) mot->setGoalAngle(100);
 }
 
 void ORDER_oust::impl(Args args)
@@ -893,16 +898,16 @@ void ORDER_grnd::impl(Args args)
 void ORDER_XLm::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    uint8_t id = orderManager.parseInt(args[0]);
+    uint8_t id = OrderManager::parseInt(args[0]);
     XL430* motor = (XL430*)manager.dynamixelManager->getMotor(id);
-    motor->setGoalAngle(orderManager.parseFloat(args[1])+xlOffsets[id-1]);
+    motor->setGoalAngle(OrderManager::parseFloat(args[1])+xlOffsets[id-1]);
 }
 
 void ORDER_XLs::impl(Args args)
 {
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    XL430* motor = (XL430*)manager.dynamixelManager->getMotor(orderManager.parseInt(args[0]));
-    motor->setGoalVelocity(orderManager.parseFloat(args[1]));
+    XL430* motor = (XL430*)manager.dynamixelManager->getMotor(OrderManager::parseInt(args[0]));
+    motor->setGoalVelocity(OrderManager::parseFloat(args[1]));
 }
 
 void ORDER_posBras::impl(Args args) {
@@ -919,9 +924,9 @@ void ORDER_posBras::impl(Args args) {
 
 
 void ORDER_rangeSICK::impl(Args args) {
-    uint8_t index = (uint8_t) strtol(args[0], nullptr, DEC);
-    uint16_t min = (uint16_t) strtol(args[1], nullptr, DEC);
-    uint16_t max = (uint16_t) strtol(args[2], nullptr, DEC);
+    uint8_t index = (uint8_t) OrderManager::parseInt(args[0]);
+    uint16_t min = (uint16_t) OrderManager::parseInt(args[1]);
+    uint16_t max = (uint16_t) OrderManager::parseInt(args[2]);
     if(index < NBR_OF_DISTANCE_SENSOR) {
         SensorMgr::Instance().getDistanceSensor(index).setRange(min, max);
     } else {
@@ -932,7 +937,7 @@ void ORDER_rangeSICK::impl(Args args) {
 
 void ORDER_testSICK::impl(Args args) {
     if(args.size() > 0) {
-        uint8_t index = (uint8_t) orderManager.parseInt(args[0]);
+        uint8_t index = (uint8_t) OrderManager::parseInt(args[0]);
         if(index < NBR_OF_DISTANCE_SENSOR) {
             orderManager.highLevel.printf(SICK_HEADER, "%i\n", SensorMgr::Instance().getDistanceSensor(index).readDistance());
         } else {
@@ -1036,7 +1041,7 @@ void ORDER_torqueBras::impl(Args args)
 void ORDER_torqueXL :: impl(Args args){
     /* TODO
     ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    XL430* motor = (XL430*)manager.dynamixelManager->getMotor(orderManager.parseInt(args[0]));
+    XL430* motor = (XL430*)manager.dynamixelManager->getMotor(OrderManager::parseInt(args[0]));
     int couple;
     if(motor->getCurrentTorque(couple)) {
         orderManager.highLevel.printfln(SENSOR_HEADER,"%i",couple);

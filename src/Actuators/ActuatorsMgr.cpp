@@ -45,7 +45,7 @@ void stepperInterrupt(HardwareTimer* hardwareTimer) {
 }
 
 void ActuatorsMgr::initTorques() {
-    motor4->toggleTorque(true);
+// FIXME : À compléter pour utiliser correctement les moteurs
 }
 
 
