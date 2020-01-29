@@ -653,62 +653,45 @@ void ORDER_BrasIn::impl(Args args) {
 
 void ORDER_Suck::impl(Args args) {
 
-    int pumpId = OrderManager::parseInt(args[0]);
-    switch(pumpId) {
+    uint8_t idPump = OrderManager::parseInt(args[0]);
+    BufferedData arg(2);
+    bool state;
+
+    if ( !strcmp(args[1],"on"))
+        state = true;
+    else if ( !strcmp(args[1],"off"))
+        state = false;
+    else
+        orderManager.highLevel.printfln(STD_HEADER, "ERREUR::Il faut spécifier si on veut mettre la pompe sur on ou off.");
+
+    putData(idPump, &arg);
+    putData(state, &arg);
+
+    switch(idPump) {
         case 0:
-            digitalWrite(PUMP_0, HIGH);
-            break;
-
-#if defined(SLAVE)
+                executeRPC(ID_SLAVE_AVANT, ID_ORDER_SUCK, &arg);
+                break;
         case 1:
-            digitalWrite(PUMP_1, HIGH);
-            break;
+                executeRPC(ID_SLAVE_AVANT, ID_ORDER_SUCK, &arg);
+                break;
         case 2:
-            digitalWrite(PUMP_2, HIGH);
-            break;
+                executeRPC(ID_SLAVE_AVANT, ID_ORDER_SUCK, &arg);
+                break;
         case 3:
-            digitalWrite(PUMP_3, HIGH);
-            break;
+                executeRPC(ID_SLAVE_ARRIERE, ID_ORDER_SUCK, &arg);
+                break;
         case 4:
-            digitalWrite(PUMP_4, HIGH);
-            break;
+                executeRPC(ID_SLAVE_ARRIERE, ID_ORDER_SUCK, &arg);
+                break;
         case 5:
-            digitalWrite(PUMP_5, HIGH);
-            break;
-#endif
+                executeRPC(ID_SLAVE_ARRIERE, ID_ORDER_SUCK, &arg);
+                break;
+        case 6:
+                executeRPC(ID_MAIN, ID_ORDER_SUCK, &arg);
+                break;
         default:
-            orderManager.highLevel.printfln(STD_HEADER,"ERREUR L'argument donné (%d) n'est pas un entier entre 0 et 5.", pumpId);   //Renvoit un message d'erreur au HL, il faut vérifier si STD_HEADER convient.
-    }
-}
-
-void ORDER_Unsuck::impl(Args args) {
-
-    int pumpId = OrderManager::parseInt(args[0]);
-    switch(pumpId) {
-        case 0:
-            digitalWrite(PUMP_0, LOW);
-            break;
-#if defined(SLAVE)
-        case 1:
-            digitalWrite(PUMP_1, LOW);
-            break;
-        case 2:
-            digitalWrite(PUMP_2, LOW);
-            break;
-        case 3:
-            digitalWrite(PUMP_3, LOW);
-            break;
-        case 4:
-            digitalWrite(PUMP_4, LOW);
-            break;
-        case 5:
-            digitalWrite(PUMP_5, LOW);
-            break;
-#endif
-        default:
-            orderManager.highLevel.printfln(STD_HEADER, "ERREUR L'argument donné (%d) n'est pas un entier entre 0 et 5.",pumpId);
-    }
-
+            orderManager.highLevel.printfln(STD_HEADER, "ERREUR::L'argument donné (%d) n'est pas un entier entre 0 et 6.", idPump);
+     }
 }
 
 #if defined(MAIN)

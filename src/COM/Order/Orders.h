@@ -318,8 +318,7 @@ ORDER(torqueXL,1);
 /** Pour les pompes et électrovannes */
 
 ORDER(Valve, 2);
-ORDER(Unsuck,1);
-ORDER(Suck,1);
+ORDER(Suck,2);
 
 /** Pour le drapeau des deux robots */
 
