@@ -103,4 +103,16 @@ const unsigned int STEPPER_DELAY = static_cast<const unsigned int>(0.1 * STEPPER
 const unsigned int STEP_COUNT = (1600+200-60)*3*4; //nombre de pas par palet
 const unsigned int STEP_COUNT_OUST = (650)*3*4; //nombre de pas par palet
 
+/**
+ * Communication I2C
+ */
+ constexpr uint8_t ID_MAIN = 1;
+ constexpr uint8_t ID_SLAVE_AVANT = 2;
+ constexpr uint8_t ID_SLAVE_ARRIERE = 3;
+
+ constexpr uint8_t ID_ORDER_GATE = 1;
+ constexpr uint8_t ID_ORDER_VALVE = 2;
+ constexpr uint8_t ID_ORDER_SUCK = 3;
+
+
 #endif

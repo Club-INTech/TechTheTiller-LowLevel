@@ -4,7 +4,6 @@
 * @author caillou, sylvain, rémi, melanie, Ug
 *
 **/
-
 #include "Utils/Monitoring.h"
 #include "Config/PinMapping.h"
 #include "COM/InterruptStackPrint.h"

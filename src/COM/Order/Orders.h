@@ -14,6 +14,10 @@
 #include "Actuators/ActuatorsMgr.h"
 #include "Servo.h"
 #include "Stepper.h"
+#include "I2CC.h"
+#include <Arduino.h>
+#include <Wire.h>
+
 
 
 /**
@@ -327,10 +331,8 @@ ORDER(FlagDown,0);
 
 ORDER(LiftUp, 0);
 ORDER(LiftDown, 0);
-ORDER(GateOpen,0);
-ORDER(GateClose,0);
-ORDER(Gate90,0);
-ORDER(Gate135,0);
+ORDER(Gate,1);
+
 
 
 

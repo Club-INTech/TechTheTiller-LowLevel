@@ -4,7 +4,13 @@
 
 #include "Orders.h"
 
+
+
 // TODO : Nettoyer
+
+
+using namespace I2CC;
+
 
 void ORDER_ping::impl(Args args)
 {
@@ -587,67 +593,46 @@ void ORDER_FlagUp::impl(Args args) {
 void ORDER_Valve::impl(Args args)
 {
     uint8_t valve = OrderManager::parseInt(args[0]);
-    if ( !strcmp(args[1],"on"))  {
-        switch(valve) {
-            case 0:
-                digitalWrite(VALVE_0, HIGH);
-                break;
+    BufferedData arg(2);
+    bool state;
 
-#if defined(SLAVE)
-            case 1:
-                digitalWrite(VALVE_1, HIGH);
-                break;
-            case 2:
-                digitalWrite(VALVE_2, HIGH);
-                break;
-            case 3:
-                digitalWrite(VALVE_3, HIGH);
-                break;
-            case 4:
-                digitalWrite(VALVE_4, HIGH);
-                break;
-            case 5:
-                digitalWrite(VALVE_5, HIGH);
-                break;
-#endif
-
-            default:
-                orderManager.highLevel.printfln(STD_HEADER,"ERREUR::L'argument %d donné n'est pas un entier entre 0 et 5.", valve);
-        }
-    }
-    else if ( !strcmp(args[1], "off")) {
-        switch(valve) {
-            case 0:
-                digitalWrite(VALVE_0, LOW);
-                break;
-
-#if defined(SLAVE)
-            case 1:
-                digitalWrite(VALVE_1, LOW);
-                break;
-            case 2:
-                digitalWrite(VALVE_2, LOW);
-                break;
-            case 3:
-                digitalWrite(VALVE_3, LOW);
-                break;
-            case 4:
-                digitalWrite(VALVE_4, LOW);
-                break;
-            case 5:
-                digitalWrite(VALVE_5, LOW);
-                break;
-#endif
-            default:
-                orderManager.highLevel.printfln(STD_HEADER, "ERREUR::L'argument donné (%d) n'est pas un entier entre 0 et 5.", valve);
-        }
-    }
-
-    else {
+    if ( !strcmp(args[1],"on"))
+        state = true;
+    else if ( !strcmp(args[1],"off"))
+        state = false;
+    else
         orderManager.highLevel.printfln(STD_HEADER, "ERREUR::Il faut spécifier si on veut mettre la valve sur on ou off.");
-    }
 
+    putData(valve, &arg);
+    putData(state, &arg);
+
+    switch(valve) {
+        case 0:
+                executeRPC(ID_SLAVE_AVANT, ID_ORDER_VALVE, &arg);
+                break;
+        case 1:
+                executeRPC(ID_SLAVE_AVANT, ID_ORDER_VALVE, &arg);
+                break;
+        case 2:
+                executeRPC(ID_SLAVE_AVANT, ID_ORDER_VALVE, &arg);
+                break;
+        case 3:
+                executeRPC(ID_SLAVE_ARRIERE, ID_ORDER_VALVE, &arg);
+                break;
+        case 4:
+                executeRPC(ID_SLAVE_ARRIERE, ID_ORDER_VALVE, &arg);
+                break;
+        case 5:
+                executeRPC(ID_SLAVE_ARRIERE, ID_ORDER_VALVE, &arg);
+                break;
+        case 6:
+                executeRPC(ID_MAIN, ID_ORDER_VALVE, &arg);
+                break;
+        default:
+            orderManager.highLevel.printfln(STD_HEADER, "ERREUR::L'argument donné (%d) n'est pas un entier entre 0 et 6.", valve);
+     }
 }
+
 
 
 void ORDER_BrasOut::impl(Args args) {
@@ -739,58 +724,15 @@ void ORDER_LiftDown::impl(Args args)
     manager.stepper->step(-500);
 }
 
-void ORDER_GateOpen::impl(Args args)
+void ORDER_Gate::impl(Args args)
 {
-    ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    Servo* motR = manager.motRight;
-    Servo* motL = manager.motLeft;
-//    if (!strcmp(args[0],"left")) {
-        motL->write(120);
-//    }
-//    else {
-        motR->write(120);
-//    }
+    BufferedData arg(1);
+    uint8_t angle = OrderManager::parseInt(args[0]);
+    putData(angle, &arg);
+    executeRPC(ID_MAIN, ID_ORDER_GATE, &arg);
 
 }
 
-void ORDER_GateClose::impl(Args args)
-{
-    ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    Servo* motR = manager.motRight;
-    Servo* motL = manager.motLeft;
-//    if (!strcmp(args[0],"left")) {
-        motL->write(0);
-//    }
-//    else {
-        motR->write(0);
-//    }
-}
-
-void ORDER_Gate90::impl(Args args)
-{
-    ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    Servo* motR = manager.motRight;
-    Servo* motL = manager.motLeft;
-//    if (!strcmp(args[0],"left")) {
-        motL->write(90);
-//    }
-//    else {
-        motR->write(90);
-//    }
-}
-
-void ORDER_Gate135::impl(Args args)
-{
-    ActuatorsMgr& manager = ActuatorsMgr::Instance();
-    Servo* motR = manager.motRight;
-    Servo* motL = manager.motLeft;
-//    if (!strcmp(args[0],"left")) {
-        motL->write(135);
-//    }
-//    else {
-        motR->write(135);
-//    }
-}
 
 
 #elif defined(SLAVE)
