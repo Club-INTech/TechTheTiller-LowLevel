@@ -318,28 +318,65 @@ ORDER(torqueXL,1);
 /** Pour les pompes et électrovannes */
 
 ORDER(Valve, 2);
+/**
+ * @Description: Ouvre ou ferme l'électrovanne.
+ * @Arguments: ID de la vanne / on ou off
+ */
 ORDER(Suck,2);
+/**
+ * @Description: Allume ou éteint la pompe.
+ * @Arguments: ID de la pompe / on ou off
+ */
 
 /** Pour le drapeau des deux robots */
 
 ORDER(FlagUp,0);
+/**
+ * @Description: Lève de drapeau
+ * @Arguments: ID du drapeau
+ */
 ORDER(FlagDown,0);
+/**
+ * @Description: Baisse le drapeau
+ * @Arguments: ID du drapeau
+ */
 
 
 #if defined(MAIN)
 
 ORDER(LiftUp, 0);
+/**
+ * @Description: Monte l'ascenseur
+ */
 ORDER(LiftDown, 0);
+/**
+ * @Description: Baisse l'ascenseur
+ */
 ORDER(Gate,1);
-
+/**
+ * @Description: Bouge les portes du robot principal
+ * @Arguments: angle voulu
+ */
 
 
 
 #elif defined(SLAVE)
 
 ORDER(BrasStock, 1);
+/**
+ * @Description: Bouge un bras du robot secondaire en position haute
+ * @Arguments: ID du bras
+ */
 ORDER(BrasEcueil, 1);
+/**
+ * @Description: Bouge un bras du robot secondaire au niveau des écueils
+ * @Arguments: ID du bras
+ */
 ORDER(BrasDepot, 1);
+/**
+ * @Description: Bouge un bras du robot secondaire au niveau de la table
+ * @Arguments: ID du bras
+ */
 
 ORDER(grnd,1);
 

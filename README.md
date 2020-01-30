@@ -124,19 +124,15 @@ a été mit en place.
 |    torqueBras    |          Renvoie le couple mesuré par les XLs d'un bras.           |                 Côté du bras ("right"/"left")                 |
 |     torqueXL     |                     Renvoie le couple d'un XL.                     |                           ID du XL                            |
 |      Valve       |                                                                    |                                                               |
-|      Unsuck      |                                                                    |                                                               |
-|       Suck       |                                                                    |                                                               |
+|       Suck       |                   Ouvre ou ferme l'électrovanne.                   |                  ID de la vanne / on ou off                   |
 |      FlagUp      |                                                                    |                                                               |
-|     FlagDown     |                                                                    |                                                               |
+|     FlagDown     |                          Lève de drapeau                           |                         ID du drapeau                         |
 |      LiftUp      |                                                                    |                                                               |
-|     LiftDown     |                                                                    |                                                               |
-|     GateOpen     |                                                                    |                                                               |
-|    GateClose     |                                                                    |                                                               |
-|      Gate90      |                                                                    |                                                               |
-|     Gate135      |                                                                    |                                                               |
+|     LiftDown     |                         Monte l'ascenseur                          |                                                               |
+|       Gate       |                         Baisse l'ascenseur                         |                                                               |
 |    BrasStock     |                                                                    |                                                               |
-|    BrasEcueil    |                                                                    |                                                               |
-|    BrasDepot     |                                                                    |                                                               |
+|    BrasEcueil    |        Bouge un bras du robot secondaire en position haute         |                          ID du bras                           |
+|    BrasDepot     |      Bouge un bras du robot secondaire au niveau des écueils       |                          ID du bras                           |
 |       grnd       |                                                                    |                                                               |
 |       oust       |               Pousse palet en dehors des ascenceurs                |                                                               |
 |   lectureSICK    |       Renvoie les distances lues par les SICK (sens trigo).        |                                                               |
