@@ -123,16 +123,16 @@ a été mit en place.
 |      BrasIn      |                                                                    |                                                               |
 |    torqueBras    |          Renvoie le couple mesuré par les XLs d'un bras.           |                 Côté du bras ("right"/"left")                 |
 |     torqueXL     |                     Renvoie le couple d'un XL.                     |                           ID du XL                            |
-|      Valve       |                                                                    |                                                               |
-|       Suck       |                   Ouvre ou ferme l'électrovanne.                   |                  ID de la vanne / on ou off                   |
-|      FlagUp      |                                                                    |                                                               |
-|     FlagDown     |                          Lève de drapeau                           |                         ID du drapeau                         |
-|      LiftUp      |                                                                    |                                                               |
-|     LiftDown     |                         Monte l'ascenseur                          |                                                               |
-|       Gate       |                         Baisse l'ascenseur                         |                                                               |
-|    BrasStock     |                                                                    |                                                               |
-|    BrasEcueil    |        Bouge un bras du robot secondaire en position haute         |                          ID du bras                           |
-|    BrasDepot     |      Bouge un bras du robot secondaire au niveau des écueils       |                          ID du bras                           |
+|      Valve       |                   Ouvre ou ferme l'électrovanne.                   |                  ID de la vanne / on ou off                   |
+|       Suck       |                     Allume ou éteint la pompe.                     |                  ID de la pompe / on ou off                   |
+|      FlagUp      |                          Lève de drapeau                           |                         ID du drapeau                         |
+|     FlagDown     |                         Baisse le drapeau                          |                         ID du drapeau                         |
+|      LiftUp      |                         Monte l'ascenseur                          |                                                               |
+|     LiftDown     |                         Baisse l'ascenseur                         |                                                               |
+|       Gate       |                Bouge les portes du robot principal                 |                          angle voulu                          |
+|    BrasStock     |        Bouge un bras du robot secondaire en position haute         |                          ID du bras                           |
+|    BrasEcueil    |      Bouge un bras du robot secondaire au niveau des écueils       |                          ID du bras                           |
+|    BrasDepot     |      Bouge un bras du robot secondaire au niveau de la table       |                          ID du bras                           |
 |       grnd       |                                                                    |                                                               |
 |       oust       |               Pousse palet en dehors des ascenceurs                |                                                               |
 |   lectureSICK    |       Renvoie les distances lues par les SICK (sens trigo).        |                                                               |
