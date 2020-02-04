@@ -45,15 +45,15 @@ MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT)  {
 
 #elif defined(SLAVE)
 
-// asserve en vitesse
+/* asserv en vitesse */
     leftSpeedPID.setTunings(0.53, 0.00105, 30, 0);//0.0015
     leftSpeedPID.enableAWU(false);
     rightSpeedPID.setTunings(0.718591667, 0.00125, 30, 0);//0.0015
     rightSpeedPID.enableAWU(false);
-// asserve en translation
+/* asserv en translation */
     translationPID.setTunings(2.75,0,5,0);//2.75  0  5
     translationPID.enableAWU(false);
-// asserve en rotation
+/* asserv en rotation */
     rotationPID.setTunings(3.2,0.0000,0,0);  //3.2  0  0
     rotationPID.enableAWU(false);
 
@@ -105,7 +105,7 @@ void MCS::initSettings() {
 #if defined(MAIN)
     controlSettings.tolerancyDerivative = 7;
 #elif defined(SLAVE)
-    controlSettings.tolerancyDerivative = 10;
+    controlSettings.tolerancyDerivative = 0.0000001; //à laisser très petit sinon le robot ne s'arrete pas
 #endif
 
     /* patate */
@@ -132,8 +132,10 @@ void MCS::updatePositionOrientation() {
     if (robotStatus.inGoto) {
         float dx = targetX-robotStatus.x;
         float dy = targetY-robotStatus.y;
-        float translation = sqrtf(dx * dx + dy * dy); /* calcul de la translation à effectuer */
-        float rotation = atan2f(dy, dx); /* calcul de la rotation à effectuer */
+        /* calcul de la translation à effectuer */
+        float translation = sqrtf(dx * dx + dy * dy);
+        /* calcul de la rotation à effectuer */
+        float rotation = atan2f(dy, dx);
 
         float currentAngle = getAngle();
         if (ABS(currentAngle - rotation) > (float) PI) { /* évite de faire un tour de plus de PI rad */
@@ -148,15 +150,17 @@ void MCS::updatePositionOrientation() {
             translate(translation);
             InterruptStackPrint::Instance().push(EVENT_HEADER, "stoppedMoving");
         }
-
-        rotate(rotation); /* défini la consigne en rotation */
+        /* défini la consigne en rotation */
+        rotate(rotation);
 
         if (ABS(currentAngle - rotation) < 0.01) //0.654 /* si on est à moins de 0.01 rad de la consigne */
         {
-            robotStatus.translation = true; /* active la translation */
+            /* active la translation */
+            robotStatus.translation = true;
         }
         if (robotStatus.translation) {
-            translate(translation); /* défini la consigne en translation */
+            /* défini la consigne en translation */
+            translate(translation);
         }
     }
 
@@ -165,10 +169,11 @@ void MCS::updatePositionOrientation() {
 
     robotStatus.orientation = (rightTicks - leftTicks) / 2.0 * TICK_TO_RADIAN + angleOffset;
 
-    // somme des résultantes
+    /* somme des résultantes */
     int32_t distance = (leftDistance+rightDistance)/2;
 
     float distanceTravelled = ((rightTicks-previousRightTicks) + (leftTicks-previousLeftTicks))*TICK_TO_MM/2.0f;
+    /* le robot calcul sa position */
     robotStatus.x += distanceTravelled * cosf(getAngle());
     robotStatus.y += distanceTravelled * sinf(getAngle());
 
@@ -178,6 +183,7 @@ void MCS::updatePositionOrientation() {
 
 void MCS::updateSpeed()
 {
+    /* le robot calcul sa vitesse */
     averageLeftSpeed.add((leftTicks - previousLeftTicks) * TICK_TO_MM * MCS_FREQ);
     averageRightSpeed.add((rightTicks - previousRightTicks) * TICK_TO_MM  * MCS_FREQ);
     robotStatus.speedLeftWheel = averageLeftSpeed.value();
@@ -185,6 +191,7 @@ void MCS::updateSpeed()
 
     if(robotStatus.controlledTranslation)
     {
+        /* retourne la sortie du PID en translation */
         robotStatus.speedTranslation = translationPID.compute(currentDistance);
     }
     else if(!robotStatus.forcedMovement)
@@ -194,6 +201,7 @@ void MCS::updateSpeed()
 
     if(robotStatus.controlledRotation && !expectedWallImpact)
     {
+        /* retourne la sortie du PID en rotation */
         robotStatus.speedRotation = rotationPID.compute(robotStatus.orientation);
     }
     else if(!robotStatus.forcedMovement)
@@ -206,10 +214,12 @@ void MCS::updateSpeed()
     robotStatus.speedRotation = MAX(-controlSettings.maxRotationSpeed, MIN(controlSettings.maxRotationSpeed, robotStatus.speedRotation)) * DISTANCE_COD_GAUCHE_CENTRE;
 
     if (leftSpeedPID.active) {
-        leftSpeedPID.setGoal(robotStatus.speedTranslation - robotStatus.speedRotation);  /* défini la consigne en vitesse gauche */
+        /* défini la consigne en vitesse gauche */
+        leftSpeedPID.setGoal(robotStatus.speedTranslation - robotStatus.speedRotation);
     }
     if (rightSpeedPID.active) {
-        rightSpeedPID.setGoal(robotStatus.speedTranslation + robotStatus.speedRotation);  /* défini la consigne en vitesse droite */
+        /* défini la consigne en vitesse droite */
+        rightSpeedPID.setGoal(robotStatus.speedTranslation + robotStatus.speedRotation);
     }
 
 
@@ -232,7 +242,7 @@ void MCS::updateSpeed()
 }
 void MCS::control()
 {
-    if(!robotStatus.controlled)
+    if(!robotStatus.controlled) /* Si l'asserv est désactivé */
         return;
 
         leftTicks = encoderLeft->read();
@@ -252,9 +262,12 @@ void MCS::control()
 //	robotStatus.y += (deltaDistanceMm * sinf(getAngle()));
 //    float currentAngleRadian = getAngle();
 
+        /* retourne la sortie des PID en vitesse */
         int32_t leftPWM = leftSpeedPID.compute(robotStatus.speedLeftWheel);
         int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
-        leftMotor.run(leftPWM); /* change le courant envoyé aux moteurs */
+        /* run change la tension envoyée au moteur
+         * envoie la sortie des PID en vitesse en entrée des moteurs */
+        leftMotor.run(leftPWM);
         rightMotor.run(rightPWM);
         previousLeftTicks = leftTicks;
         previousRightTicks = rightTicks;
@@ -297,6 +310,7 @@ void MCS::manageStop() {
     if(robotStatus.controlledTranslation || robotStatus.controlledRotation) {
         averageRotationDerivativeError.add(rotationPID.getDerivativeError());
         averageTranslationDerivativeError.add(translationPID.getDerivativeError());
+        /* tolérance en translation et rotation */
         if (robotStatus.moving && !robotStatus.inGoto &&
             ABS(averageTranslationDerivativeError.value()) <= controlSettings.tolerancyDerivative &&
             ABS(translationPID.getCurrentState() - translationPID.getCurrentGoal()) <=controlSettings.tolerancyTranslation && (
@@ -314,6 +328,7 @@ void MCS::manageStop() {
             robotStatus.inRotationInGoto = ElBooly;
 
         }
+        /* tolérance en vitesse */
         if (ABS(robotStatus.speedLeftWheel) <= controlSettings.tolerancySpeed &&
             ABS(robotStatus.speedRightWheel) <= controlSettings.tolerancySpeed &&
             ABS(robotStatus.speedTranslation - robotStatus.speedRotation) <= 1 &&
@@ -380,12 +395,17 @@ void MCS::stop() {
 #elif defined(SLAVE)
     digitalWrite(LED2_1,LOW);
 #endif
+    /* on arrête les moteurs */
     leftMotor.stop();
     rightMotor.stop();
 
+    expectedWallImpact = false;
+
+    /* on remet les consignes en translation et rotation à 0 */
     translationPID.setGoal(currentDistance);
     rotationPID.setGoal(robotStatus.orientation);
 
+    /* reset des erreurs */
     translationPID.resetOutput(0);
     rotationPID.resetOutput(0);
     if (robotStatus.stuck)
