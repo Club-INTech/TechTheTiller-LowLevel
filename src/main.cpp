@@ -103,10 +103,22 @@ void __attribute__((noreturn)) loop() {
 	 * Les capteurs
 	 */
 
+	Wire.setSCL(D1);
+	Wire.setSDA(D0);
+	Wire.begin();
+
+//    I2CC::executeRPC(1, 4, nullptr);
+
+    Wire.beginTransmission(1);
+    Wire.write(4);
+    Wire.endTransmission();
+
     while (true) {
         interruptStackPrint.print();
         orderMgr.communicate();
+
     }
+
 }
 
                    /*``.           `-:--.`

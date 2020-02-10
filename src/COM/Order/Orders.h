@@ -343,7 +343,8 @@ ORDER(FlagUp,0);
  */
 ORDER(FlagDown,0);
 
-
+ORDER(DiodeOn,0);
+ORDER(DiodeOff,0);
 
 #if defined(MAIN)
 

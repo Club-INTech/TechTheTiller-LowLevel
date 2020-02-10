@@ -110,9 +110,9 @@ const unsigned int STEP_COUNT_OUST = (650)*3*4; //nombre de pas par palet
  constexpr uint8_t ID_SLAVE_AVANT = 2;
  constexpr uint8_t ID_SLAVE_ARRIERE = 3;
 
- constexpr uint8_t ID_ORDER_GATE = 1;
- constexpr uint8_t ID_ORDER_VALVE = 2;
- constexpr uint8_t ID_ORDER_SUCK = 3;
+ constexpr uint8_t ID_ORDER_GATE = 3;
+ constexpr uint8_t ID_ORDER_VALVE = 1;
+ constexpr uint8_t ID_ORDER_SUCK = 2;
 
 
 #endif

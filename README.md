@@ -127,6 +127,8 @@ a été mit en place.
 |       Suck       |                     Allume ou éteint la pompe.                     |                  ID de la pompe / on ou off                   |
 |      FlagUp      |                          Lève de drapeau                           |                         ID du drapeau                         |
 |     FlagDown     |                         Baisse le drapeau                          |                         ID du drapeau                         |
+|     DiodeOn      |                                                                    |                                                               |
+|     DiodeOff     |                                                                    |                                                               |
 |      LiftUp      |                         Monte l'ascenseur                          |                                                               |
 |     LiftDown     |                         Baisse l'ascenseur                         |                                                               |
 |       Gate       |                Bouge les portes du robot principal                 |                          angle voulu                          |
