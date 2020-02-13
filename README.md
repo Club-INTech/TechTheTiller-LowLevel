@@ -29,7 +29,7 @@ a été mit en place.
 ## TODO
 
 - [x] Asservissement de test
-- [ ] Test des ordres
+- [x] Test des ordres
 - [ ] Asservissement sur robot définitif
 - [ ] Refaire la détection de blocage (+recalage mécanique)
 - [ ] Refaire le goto
