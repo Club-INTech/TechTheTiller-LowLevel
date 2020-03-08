@@ -635,10 +635,10 @@ void ORDER_Valve::impl(Args args)
 
 void ORDER_DiodeOn::impl(Args args){
 
-    executeRPC(1, 4, nullptr);
+    executeRPC(OrderManager::parseInt(args[0]), 4, nullptr);
 }
 void ORDER_DiodeOff::impl(Args args){
-    executeRPC(1, 5, nullptr);
+    executeRPC(OrderManager::parseInt(args[0]), 5, nullptr);
 }
 
 

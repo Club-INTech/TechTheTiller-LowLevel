@@ -109,9 +109,11 @@ void __attribute__((noreturn)) loop() {
 
 //    I2CC::executeRPC(1, 4, nullptr);
 
-    Wire.beginTransmission(1);
-    Wire.write(4);
-    Wire.endTransmission();
+//    Wire.beginTransmission(2);
+//    Wire.write(4);
+//    orderMgr.execute("DiodeOn 2");
+//    Wire.endTransmission();
+
 
     while (true) {
         interruptStackPrint.print();

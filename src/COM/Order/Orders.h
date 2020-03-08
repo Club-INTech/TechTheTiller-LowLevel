@@ -298,7 +298,17 @@ ORDER(XLs,2);
  * @Arguments: Côté du bras ("right"/"left")
  */
 ORDER(posBras,1);
+
+/**
+ * @Description: Déploie le bras pour manches à air/phare.
+ * @Arguments: Côté du bras ("right"/"left")
+ */
 ORDER(BrasOut,1);
+
+/**
+ * @Description: Rentre le bras pour manches à air/phare.
+ * @Arguments: Côté du bras ("right"/"left")
+ */
 ORDER(BrasIn,1);
 
 
@@ -343,8 +353,16 @@ ORDER(FlagUp,0);
  */
 ORDER(FlagDown,0);
 
-ORDER(DiodeOn,0);
-ORDER(DiodeOff,0);
+
+/**
+ * @Description: Allume une diode via le protocole I2C
+ */
+ORDER(DiodeOn,1);
+
+/**
+ * @Description: Eteint une diode via le protocole I2C
+ */
+ORDER(DiodeOff,1);
 
 #if defined(MAIN)
 
