@@ -107,6 +107,8 @@ void __attribute__((noreturn)) loop() {
 	Wire.setSDA(D0);
 	Wire.begin();
 
+    Serial.println("Starting...");
+
 //    I2CC::executeRPC(1, 4, nullptr);
 
 //    Wire.beginTransmission(2);
