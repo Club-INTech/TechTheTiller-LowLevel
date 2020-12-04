@@ -92,9 +92,17 @@ void __attribute__((noreturn)) loop() {
     // FIXME: Pour le débug
     ActuatorsMgr::Instance().initTorques();
     Serial.println("Dynamixels OK");
+
+
+    /* lancement de la liaison I2C */
+    Wire.setSCL(D1);
+    Wire.setSDA(D0);
+    Wire.begin();
+    Serial.println("I2C OK");
+
     Serial.println("Setup DONE");
 
-	Serial.println("Starting...");
+    Serial.println("Starting...");
 
 	/**
 	 * Boucle principale, y est géré:
@@ -103,18 +111,7 @@ void __attribute__((noreturn)) loop() {
 	 * Les capteurs
 	 */
 
-	Wire.setSCL(D1);
-	Wire.setSDA(D0);
-	Wire.begin();
 
-    Serial.println("Starting...");
-
-//    I2CC::executeRPC(1, 4, nullptr);
-
-//    Wire.beginTransmission(2);
-//    Wire.write(4);
-//    orderMgr.execute("DiodeOn 2");
-//    Wire.endTransmission();
 
 
     while (true) {

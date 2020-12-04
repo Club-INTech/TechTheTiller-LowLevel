@@ -9,6 +9,7 @@ void ActuatorsMgr::init()
 {
     dynamixelManager = new DynamixelManager(PIN_RX_DYNAMIXEL,PIN_TX_DYNAMIXEL, &DebugSerial);
 
+    /* initialisation des XL */
     motor1 = (XL430*) dynamixelManager->createMotor(1, XL430GeneratorFunction);//new XL430(1,*manager);
     motor2 = (XL430*) dynamixelManager->createMotor(2, XL430GeneratorFunction);//new XL430(2,*manager);
     motor3 = (XL430*) dynamixelManager->createMotor(3, XL430GeneratorFunction);//new XL430(3,*manager);
@@ -17,19 +18,12 @@ void ActuatorsMgr::init()
 
 #if defined(MAIN)
 
-    motor4 = (XL430*) dynamixelManager->createMotor(254, XL430GeneratorFunction);//new XL430(1,*manager);
-    motor5 = (XL430*) dynamixelManager->createMotor(5, XL430GeneratorFunction);//new XL430(2,*manager);
-    motor6 = (XL430*) dynamixelManager->createMotor(6, XL430GeneratorFunction);//new XL430(3,*manager);
-
-
-    /*exemple d'initialisation d'un stepper*/
+    /* exemple d'initialisation d'un stepper */
     stepper = new Stepper(50, 3, 4, 5, 6);  //A CHECKER DANS LA DATASHEEEEEEEET, PARCE QUE 50 CA PUE DU CUL
     stepper->setSpeed(60);
 
 #elif defined(SLAVE)
 
-    motor4 = (XL430*) dynamixelManager->createMotor(4, XL430GeneratorFunction);//new XL430(4,*manager);
-    motor5 = (XL430*) dynamixelManager->createMotor(5, XL430GeneratorFunction);//new XL430(5,*manager);
 
 #endif
 }
@@ -39,7 +33,9 @@ void stepperInterrupt(HardwareTimer* hardwareTimer) {
 }
 
 void ActuatorsMgr::initTorques() {
-// FIXME : À compléter pour utiliser correctement les moteurs
+    motor1->toggleTorque(true);
+    motor2->toggleTorque(true);
+    motor3->toggleTorque(true);
 }
 
 
