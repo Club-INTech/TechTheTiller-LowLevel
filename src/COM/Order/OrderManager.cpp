@@ -48,15 +48,6 @@ void OrderManager::communicate() {
         }
     }
 
-    if(rebootXLs.check()) {
-        actuatorsMgr.rebootArms();
-    }
-
-    if(checkArms.check())
-    {
-        actuatorsMgr.checkArmMovements();
-    }
-
     if (checkHooksTimer.check() && hooksEnabled)
     {
         checkHooks();

@@ -13,8 +13,6 @@ void ActuatorsMgr::init()
     motor2 = (XL430*) dynamixelManager->createMotor(2, XL430GeneratorFunction);//new XL430(2,*manager);
     motor3 = (XL430*) dynamixelManager->createMotor(3, XL430GeneratorFunction);//new XL430(3,*manager);
 
-    rightArm = new Arm<XL430>("right", *dynamixelManager, new XL430[3]{*motor1, *motor2, *motor3});
-
 
 
 #if defined(MAIN)
@@ -23,12 +21,8 @@ void ActuatorsMgr::init()
     motor5 = (XL430*) dynamixelManager->createMotor(5, XL430GeneratorFunction);//new XL430(2,*manager);
     motor6 = (XL430*) dynamixelManager->createMotor(6, XL430GeneratorFunction);//new XL430(3,*manager);
 
-    leftArm = new Arm<XL430>("left", *dynamixelManager, new XL430[3]{*motor1,*motor2,*motor3});
 
-    motRight->attach(MG_COULOIR_D);
-    motLeft->attach(MG_COULOIR_G);
-    motFlag->attach(FLAG_PIN,1000,2000);
-
+    /*exemple d'initialisation d'un stepper*/
     stepper = new Stepper(50, 3, 4, 5, 6);  //A CHECKER DANS LA DATASHEEEEEEEET, PARCE QUE 50 CA PUE DU CUL
     stepper->setSpeed(60);
 
@@ -175,16 +169,3 @@ void ActuatorsMgr::moveRightStepperOust2(int32_t count, int32_t nextCount) {
 
 #endif
 
-void ActuatorsMgr::checkArmMovements() {
-#if defined(MAIN)
-    leftArm->update();
-#endif
-    rightArm->update();
-}
-
-void ActuatorsMgr::rebootArms() {
-#if defined(MAIN)
-    leftArm->rebootXLsIfNecessary();
-#endif
-    rightArm->rebootXLsIfNecessary();
-}
