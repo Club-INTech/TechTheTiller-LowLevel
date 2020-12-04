@@ -83,8 +83,6 @@ a été mit en place.
 |     rawspeed     |                                                                    |                                                               |
 |    rawposdata    | Retourne, dans l'ordre: x,y,angle, v_g, cible v_g, v_d, cible v_d. |                                                               |
 |     reseteth     |                 Force un reset du module ethernet.                 |                                                               |
-|  disableTorque   |              Désactive le couple du bras sélectionné.              |                 Côté du bras ("right"/"left")                 |
-|   enableTorque   |               Active le couple du bras sélectionné.                |                 Côté du bras ("right"/"left")                 |
 |    montlhery     |      Asservissement en vitesse seulement, mouvements forcés.       |                                                               |
 |        av        |    Impose une consigne de vitesse en translation vers l'avant.     |                                                               |
 |        rc        |   Impose une consigne de vitesse en translation vers l'arrière.    |                                                               |
@@ -118,25 +116,9 @@ a été mit en place.
 |    ptpdemoseq    |                                                                    |                                                               |
 |       XLm        |                 Bouge un XL à une position donnée.                 |                    ID du XL, position en °                    |
 |       XLs        |                     Change la vitesse d'un XL.                     |           ID du XL, vitesse en unités de vitesse XL           |
-|     posBras      |               Renvoie la position des XL d'un bras.                |                 Côté du bras ("right"/"left")                 |
-|     BrasOut      |             Déploie le bras pour manches à air/phare.              |                 Côté du bras ("right"/"left")                 |
-|      BrasIn      |              Rentre le bras pour manches à air/phare.              |                 Côté du bras ("right"/"left")                 |
-|    torqueBras    |          Renvoie le couple mesuré par les XLs d'un bras.           |                 Côté du bras ("right"/"left")                 |
 |     torqueXL     |                     Renvoie le couple d'un XL.                     |                           ID du XL                            |
-|      Valve       |                   Ouvre ou ferme l'électrovanne.                   |                  ID de la vanne / on ou off                   |
-|       Suck       |                     Allume ou éteint la pompe.                     |                  ID de la pompe / on ou off                   |
-|      FlagUp      |                          Lève de drapeau                           |                         ID du drapeau                         |
-|     FlagDown     |                         Baisse le drapeau                          |                         ID du drapeau                         |
 |     DiodeOn      |               Allume une diode via le protocole I2C                |                                                               |
 |     DiodeOff     |               Eteint une diode via le protocole I2C                |                                                               |
-|      LiftUp      |                         Monte l'ascenseur                          |                                                               |
-|     LiftDown     |                         Baisse l'ascenseur                         |                                                               |
-|       Gate       |                Bouge les portes du robot principal                 |                          angle voulu                          |
-|    BrasStock     |        Bouge un bras du robot secondaire en position haute         |                          ID du bras                           |
-|    BrasEcueil    |      Bouge un bras du robot secondaire au niveau des écueils       |                          ID du bras                           |
-|    BrasDepot     |      Bouge un bras du robot secondaire au niveau de la table       |                          ID du bras                           |
-|       grnd       |                                                                    |                                                               |
-|       oust       |               Pousse palet en dehors des ascenceurs                |                                                               |
 |   lectureSICK    |       Renvoie les distances lues par les SICK (sens trigo).        |                                                               |
 |     testSICK     |                 Renvoie la valeur lue par un SICK.                 |                        Indice du SICK.                        |
 |    rangeSICK     |               Règle la fenêtre de mesure d'un SICK.                |                Indice, valeur min, valeur max.                |

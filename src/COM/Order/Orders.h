@@ -161,16 +161,6 @@ ORDER(rawposdata,0);
  */
 ORDER(reseteth,0);
 
-/**
- * @Description: Désactive le couple du bras sélectionné.
- * @Arguments: Côté du bras ("right"/"left")
- */
-ORDER(disableTorque, 1);
-/**
- * @Description: Active le couple du bras sélectionné.
- * @Arguments: Côté du bras ("right"/"left")
- */
-ORDER(enableTorque, 1);
 
 /*			 ___________________________
 * 		   *|                           |*
@@ -293,30 +283,7 @@ ORDER(XLm,2);
  * @Arguments: ID du XL, vitesse en unités de vitesse XL
  */
 ORDER(XLs,2);
-/**
- * @Description: Renvoie la position des XL d'un bras.
- * @Arguments: Côté du bras ("right"/"left")
- */
-ORDER(posBras,1);
 
-/**
- * @Description: Déploie le bras pour manches à air/phare.
- * @Arguments: Côté du bras ("right"/"left")
- */
-ORDER(BrasOut,1);
-
-/**
- * @Description: Rentre le bras pour manches à air/phare.
- * @Arguments: Côté du bras ("right"/"left")
- */
-ORDER(BrasIn,1);
-
-
-/**
- * @Description: Renvoie le couple mesuré par les XLs d'un bras.
- * @Arguments: Côté du bras ("right"/"left")
- */
-ORDER(torqueBras,1);
 /**
  * @Description: Renvoie le couple d'un XL.
  * @Arguments: ID du XL
@@ -324,35 +291,6 @@ ORDER(torqueBras,1);
 ORDER(torqueXL,1);
 
 // This is horrible and should probably burn
-
-/** Pour les pompes et électrovannes */
-
-/**
- * @Description: Ouvre ou ferme l'électrovanne.
- * @Arguments: ID de la vanne / on ou off
- */
-ORDER(Valve, 2);
-
-/**
- * @Description: Allume ou éteint la pompe.
- * @Arguments: ID de la pompe / on ou off
- */
-ORDER(Suck,2);
-
-/** Pour le drapeau des deux robots */
-
-/**
-* @Description: Lève de drapeau
-* @Arguments: ID du drapeau
-*/
-ORDER(FlagUp,0);
-
-/**
- * @Description: Baisse le drapeau
- * @Arguments: ID du drapeau
- */
-ORDER(FlagDown,0);
-
 
 /**
  * @Description: Allume une diode via le protocole I2C
@@ -363,56 +301,6 @@ ORDER(DiodeOn,1);
  * @Description: Eteint une diode via le protocole I2C
  */
 ORDER(DiodeOff,1);
-
-#if defined(MAIN)
-
-/**
- * @Description: Monte l'ascenseur
- */
-ORDER(LiftUp, 0);
-
-/**
- * @Description: Baisse l'ascenseur
- */
-ORDER(LiftDown, 0);
-
-/**
- * @Description: Bouge les portes du robot principal
- * @Arguments: angle voulu
- */
-ORDER(Gate,1);
-
-
-
-
-#elif defined(SLAVE)
-/**
- * @Description: Bouge un bras du robot secondaire en position haute
- * @Arguments: ID du bras
- */
-ORDER(BrasStock, 1);
-
-/**
- * @Description: Bouge un bras du robot secondaire au niveau des écueils
- * @Arguments: ID du bras
- */
-ORDER(BrasEcueil, 1);
-
-/**
- * @Description: Bouge un bras du robot secondaire au niveau de la table
- * @Arguments: ID du bras
- */
-ORDER(BrasDepot, 1);
-
-
-ORDER(grnd,1);
-
-/*
- * @Description: Pousse palet en dehors des ascenceurs
- */
-ORDER(oust,0);
-
-#endif
 
 
 
@@ -441,23 +329,6 @@ ORDER(waitJumper, 0);
  */
 ORDER(endMatch, 0);
 
-// Permet de bouger un bras sans se soucier du type
-#if defined(MAIN)
-#define MOVE_ARM(side, actions)             \
-if(!strcmp(args[0], "right")) {             \
-    Arm<XL430>* arm = manager.rightArm;      \
-    actions;                                \
-} else {                                    \
-    Arm<XL430>* arm = manager.leftArm;      \
-    actions;                                \
-}
-#elif defined(SLAVE)
-#define MOVE_ARM(side, actions)             \
-if(!strcmp(args[0], "right")) {             \
-    Arm<XL430>* arm = manager.rightArm;      \
-    actions;                                \
-}
-#endif
 
 
 #endif //TECHTHETOWN_LOWLEVEL_ORDERS_H
