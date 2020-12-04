@@ -689,12 +689,6 @@ void ORDER_waitJumper::impl(Args args) {
 }
 
 void ORDER_endMatch::impl(Args args) {
-#if defined(MAIN)
-    digitalWrite(LEFT_PUMP_PIN, LOW);
-    digitalWrite(LEFT_VALVE_PIN, HIGH);
-#endif
-    digitalWrite(RIGHT_PUMP_PIN, LOW);
-    digitalWrite(RIGHT_VALVE_PIN, HIGH);
     orderManager.execute("stop");
     orderManager.execute("sstop");
 

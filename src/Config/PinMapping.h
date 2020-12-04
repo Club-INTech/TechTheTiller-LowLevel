@@ -36,11 +36,10 @@ constexpr uint8_t SICK_PINS[NBR_OF_DISTANCE_SENSOR] = {
         A1, // 6e
 };
 
-constexpr uint8_t PIN_TX_DYNAMIXEL = D2;
-constexpr uint8_t PIN_RX_DYNAMIXEL = D2;
+constexpr uint8_t PIN_TX_DYNAMIXEL = D9;
+constexpr uint8_t PIN_RX_DYNAMIXEL = D9;
 
-// TechTheTide
-/* Ascenceurs */
+
 
 // ! Inversées par rapport au pin mapping !
 constexpr uint8_t STEP_PIN_RIGHT = 22; //vitesse
@@ -51,17 +50,6 @@ constexpr uint8_t STEP_PIN_LEFT = 17; //vitesse
 constexpr uint8_t DIR_PIN_LEFT = 20; //direction
 constexpr uint8_t RST_PIN_LEFT = 99; //reset
 
-// ! Inversées par rapport au pin mapping !
-
-constexpr uint8_t RIGHT_VALVE_PIN = 26; // électrovanne droite
-constexpr uint8_t LEFT_VALVE_PIN = 24;  // électrovanne gauche
-
-
-
-
-constexpr uint8_t LEFT_PUMP_PIN = 7;
-constexpr uint8_t RIGHT_PUMP_PIN = 6;
-
 
 
 /* LEDs debug */
@@ -70,18 +58,6 @@ constexpr uint8_t LED2 = 14;
 constexpr uint8_t LED3 = 15;
 constexpr uint8_t LED4 = 31;
 
-// TechTheTide
-/* Drapeaux */
-constexpr uint8_t FLAG_PIN = A1;
-
-constexpr uint8_t PUMP_0 = D6;
-
-constexpr uint8_t VALVE_0 = D6;
-
-/* Ouverture couloirs gobeulets */
-
-constexpr uint8_t MG_COULOIR_G = 2;
-constexpr uint8_t MG_COULOIR_D = 3;
 
 #elif defined(SLAVE)
 
@@ -118,36 +94,14 @@ constexpr uint8_t SICK_PINS[NBR_OF_DISTANCE_SENSOR] = {
 constexpr uint8_t PIN_TX_DYNAMIXEL = 0;
 constexpr uint8_t PIN_RX_DYNAMIXEL = 0;
 
-// TechTheTide
-/* Ascenceurs */
 
 // ! Inversées par rapport au pin mapping !
 constexpr uint8_t STEP_PIN_RIGHT =5; //vitesse
 constexpr uint8_t DIR_PIN_RIGHT = 6; //direction
 
 
-// ! Inversées par rapport au pin mapping !
 
-constexpr uint8_t RIGHT_VALVE_PIN = 31; // électrovanne droite
-constexpr uint8_t LEFT_VALVE_PIN = 26; // électrovanne gauche
-
-constexpr uint8_t VALVE_0 = 999;
-constexpr uint8_t VALVE_1 = 999;
-constexpr uint8_t VALVE_2 = 999;
-constexpr uint8_t VALVE_3 = 999;
-constexpr uint8_t VALVE_4 = 999;
-constexpr uint8_t VALVE_5 = 999;
-constexpr uint8_t PUMP_0 = 999;
-constexpr uint8_t PUMP_1 = 999;
-constexpr uint8_t PUMP_2 = 999;
-constexpr uint8_t PUMP_3 = 999;
-constexpr uint8_t PUMP_4 = 999;
-constexpr uint8_t PUMP_5 = 999;
-
-
-constexpr uint8_t RIGHT_PUMP_PIN = 32;
-
-/* LEDs RGB debug ATTENTION logique inversée*/
+/* LEDs RGB debug ATTENTION logique inversée */
 constexpr uint8_t LED1_1 = 35;
 constexpr uint8_t LED1_2 = 36;
 constexpr uint8_t LED1_3 = 37;
@@ -157,10 +111,6 @@ constexpr uint8_t LED2_3 = 20;
 constexpr uint8_t LED3_1 = 21;
 constexpr uint8_t LED3_2 = 22;
 constexpr uint8_t LED3_3 = 23;
-
-// TechTheTide
-/* Drapeaux */
-constexpr uint8_t FLAG_PIN = 1;
 
 #endif
 

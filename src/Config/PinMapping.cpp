@@ -36,24 +36,6 @@ void InitAllPins() {
     pinMode(STEP_PIN_RIGHT, OUTPUT);
     digitalWrite(STEP_PIN_RIGHT, LOW);
 
-    // Pneumatique
-    pinMode(LEFT_VALVE_PIN, OUTPUT);
-    digitalWrite(LEFT_VALVE_PIN, LOW);
-    pinMode(RIGHT_VALVE_PIN, OUTPUT);
-    digitalWrite(RIGHT_VALVE_PIN, LOW);
-    pinMode(LEFT_PUMP_PIN, OUTPUT);
-    digitalWrite(LEFT_PUMP_PIN, LOW);
-    pinMode(RIGHT_PUMP_PIN, OUTPUT);
-    digitalWrite(RIGHT_PUMP_PIN, LOW);
-
-    //Pneumatique TechTheTide
-    pinMode(VALVE_0, OUTPUT);
-    digitalWrite(VALVE_0, LOW);
-    pinMode(PUMP_0,OUTPUT);
-    digitalWrite(PUMP_0, LOW);
-
-
-
 
 
     // Éclairages
@@ -95,40 +77,6 @@ void InitAllPins()
     digitalWrite(DIR_PIN_RIGHT, LOW);
     pinMode(STEP_PIN_RIGHT, OUTPUT);
     digitalWrite(STEP_PIN_RIGHT, LOW);
-
-    // Pneumatique
-    pinMode(LEFT_VALVE_PIN, OUTPUT);
-    digitalWrite(LEFT_VALVE_PIN, LOW);
-    pinMode(RIGHT_VALVE_PIN, OUTPUT);
-    digitalWrite(RIGHT_VALVE_PIN, LOW);
-    pinMode(RIGHT_PUMP_PIN, OUTPUT);
-    digitalWrite(RIGHT_PUMP_PIN, LOW);
-
-    // Pneumatique TechTheTide
-    pinMode(VALVE_0, OUTPUT);
-    digitalWrite(VALVE_0, LOW);
-    pinMode(VALVE_1,OUTPUT);
-    digitalWrite(VALVE_1, LOW);
-    pinMode(VALVE_2, OUTPUT);
-    digitalWrite(VALVE_2, LOW);
-    pinMode(VALVE_3,OUTPUT);
-    digitalWrite(VALVE_3, LOW);
-    pinMode(VALVE_4, OUTPUT);
-    digitalWrite(VALVE_4, LOW);
-    pinMode(VALVE_5,OUTPUT);
-    digitalWrite(VALVE_5, LOW);
-    pinMode(PUMP_0,OUTPUT);
-    digitalWrite(PUMP_0, LOW);
-    pinMode(PUMP_1,OUTPUT);
-    digitalWrite(PUMP_1, LOW);
-    pinMode(PUMP_2,OUTPUT);
-    digitalWrite(PUMP_2, LOW);
-    pinMode(PUMP_3,OUTPUT);
-    digitalWrite(PUMP_3, LOW);
-    pinMode(PUMP_4,OUTPUT);
-    digitalWrite(PUMP_4, LOW);
-    pinMode(PUMP_5,OUTPUT);
-    digitalWrite(PUMP_5, LOW);
 
 
     pinMode(LED1_1, OUTPUT);

@@ -105,6 +105,8 @@ const unsigned int STEP_COUNT_OUST = (650)*3*4; //nombre de pas par palet
 
 /**
  * Communication I2C
+ *
+ * IDs pour l'I2C
  */
  constexpr uint8_t ID_MAIN = 1;
  constexpr uint8_t ID_SLAVE_AVANT = 2;
