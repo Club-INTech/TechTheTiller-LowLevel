@@ -1,3 +1,6 @@
 [submodule "lib/Dynamixel-Com"]
 	path = lib/Dynamixel-Com
 	url = https://github.com/Club-INTech/Dynamixel-Com.git/
+[submodule "Carte-Hammers"]
+	path = Carte-Hammers
+	url = https://github.com/Club-INTech/Carte-Hammers
