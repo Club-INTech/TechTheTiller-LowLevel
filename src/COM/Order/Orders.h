@@ -18,7 +18,17 @@
 #include <Arduino.h>
 #include <Wire.h>
 
+#include "external.hpp"
 
+/*******************************************************************************
+  ORDER pour 2020-2021
+*******************************************************************************/
+
+ORDER(set_hammer_angle, 2);
+ORDER(raise_hammer, 1);
+ORDER(lower_hammer, 1);
+ORDER(toggle_valve, 2);
+ORDER(suck, 2);
 
 /**
  * @Description: Répond pong, utile pour tester la com.

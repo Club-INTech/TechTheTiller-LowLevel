@@ -5,12 +5,43 @@
 #include "Orders.h"
 
 
-
 // TODO : Nettoyer
 
 
 using namespace I2CC;
 
+void ORDER_set_hammer_angle::impl(Args args) {
+  auto sent_data_ptr = new BufferedData();
+  putData(OrderManager::parseInt(args[0]), sent_data_ptr);
+  putData(OrderManager::parseFloat(args[1]), sent_data_ptr);
+  executeRPC(hammers_id, set_hammer_angle, sent_data_ptr);
+}
+
+void ORDER_raise_hammer::impl(Args args) {
+  auto sent_data_ptr = new BufferedData();
+  putData(OrderManager::parseInt(args[0]), sent_data_ptr);
+  executeRPC(hammers_id, raise_hammer, sent_data_ptr);
+}
+
+void ORDER_lower_hammer::impl(Args args) {
+  auto sent_data_ptr = new BufferedData();
+  putData(OrderManager::parseInt(args[0]), sent_data_ptr);
+  executeRPC(hammers_id, lower_hammer, sent_data_ptr);
+}
+
+void ORDER_toggle_valve::impl(Args args) {
+  auto sent_data_ptr = new BufferedData();
+  putData(OrderManager::parseInt(args[0]), sent_data_ptr);
+  putData(OrderManager::parseInt(args[1]), sent_data_ptr);
+  executeRPC(pumps_id, toggle_valve, sent_data_ptr);
+}
+
+void ORDER_suck::impl(Args args) {
+  auto sent_data_ptr = new BufferedData();
+  putData(OrderManager::parseInt(args[0]), sent_data_ptr);
+  putData(OrderManager::parseInt(args[1]), sent_data_ptr);
+  executeRPC(pumps_id, suck, sent_data_ptr);
+}
 
 void ORDER_ping::impl(Args args)
 {
