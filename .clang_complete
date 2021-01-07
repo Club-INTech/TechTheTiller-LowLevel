@@ -1,9 +1,13 @@
 -I/home/utilisateur/Documents/tsp/1a/gate/TechTheTiller-LowLevel/include
 -I/home/utilisateur/Documents/tsp/1a/gate/TechTheTiller-LowLevel/src
--I/home/utilisateur/Documents/tsp/1a/gate/TechTheTiller-LowLevel/lib/Servo/src
+-I/home/utilisateur/Documents/tsp/1a/gate/TechTheTiller-LowLevel/lib/Dynamixel-Com/src
+-I/home/utilisateur/.platformio/packages/framework-arduinoststm32/libraries/SoftwareSerial/src
 -I/home/utilisateur/Documents/tsp/1a/gate/TechTheTiller-LowLevel/.pio/libdeps/main/Stepper/src
 -I/home/utilisateur/Documents/tsp/1a/gate/TechTheTiller-LowLevel/.pio/libdeps/main/Ethernet/src
 -I/home/utilisateur/.platformio/packages/framework-arduinoststm32/libraries/SPI/src
+-I/home/utilisateur/Documents/tsp/1a/gate/TechTheTiller-LowLevel/.pio/libdeps/main/Carte-Hammers/include
+-I/home/utilisateur/Documents/tsp/1a/gate/TechTheTiller-LowLevel/.pio/libdeps/main/Carte-Hammers/src
+-I/home/utilisateur/Documents/tsp/1a/gate/TechTheTiller-LowLevel/lib/Servo/src
 -I/home/utilisateur/Documents/tsp/1a/gate/TechTheTiller-LowLevel/.pio/libdeps/main/I2C-Callables/src
 -I/home/utilisateur/.platformio/packages/framework-arduinoststm32/libraries/Wire/src
 -I/home/utilisateur/.platformio/packages/framework-arduinoststm32/cores/arduino/avr
@@ -28,7 +32,6 @@
 -I/home/utilisateur/.platformio/packages/framework-cmsis/CMSIS/DSP/Include
 -I/home/utilisateur/.platformio/packages/framework-arduinoststm32/cores/arduino
 -I/home/utilisateur/.platformio/packages/framework-arduinoststm32/variants/NUCLEO_L432KC
--I/home/utilisateur/Documents/tsp/1a/gate/TechTheTiller-LowLevel/lib/Dynamixel-Com
 -I/home/utilisateur/Documents/tsp/1a/gate/TechTheTiller-LowLevel/lib/I2C-Callables/src
 -I/home/utilisateur/.platformio/packages/framework-arduinoststm32/libraries/CMSIS_DSP/src
 -I/home/utilisateur/.platformio/packages/framework-arduinoststm32/libraries/EEPROM/src
@@ -36,7 +39,6 @@
 -I/home/utilisateur/.platformio/packages/framework-arduinoststm32/libraries/Keyboard/src
 -I/home/utilisateur/.platformio/packages/framework-arduinoststm32/libraries/Mouse/src
 -I/home/utilisateur/.platformio/packages/framework-arduinoststm32/libraries/Servo/src
--I/home/utilisateur/.platformio/packages/framework-arduinoststm32/libraries/SoftwareSerial/src
 -I/home/utilisateur/.platformio/packages/framework-arduinoststm32/libraries/SrcWrapper/src
 -I/home/utilisateur/.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include/c++/9.2.1
 -I/home/utilisateur/.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include/c++/9.2.1/arm-none-eabi
@@ -44,7 +46,7 @@
 -I/home/utilisateur/.platformio/packages/toolchain-gccarmnoneeabi/lib/gcc/arm-none-eabi/9.2.1/include
 -I/home/utilisateur/.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include
 -I/home/utilisateur/.platformio/packages/tool-unity
--DPLATFORMIO=50003
+-DPLATFORMIO=50004
 -DSTM32L432xx
 -DPIO_FRAMEWORK_ARDUINO_NANOLIB_FLOAT_PRINTF
 -DMAIN
