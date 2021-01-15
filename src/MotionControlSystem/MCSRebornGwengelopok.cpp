@@ -240,68 +240,29 @@ void MCS::updateSpeed()
     previousLeftSpeedGoal = leftSpeedPID.getCurrentGoal();
     previousRightSpeedGoal = rightSpeedPID.getCurrentGoal();
 }
+
+/**
+ * Rafraîchit les consignes de vitesses enregistrées aux moteurs
+ * D'autres méthodes de MCS se chargent d'enregistrer les consignes. Les consignes sont maintenues jusqu'à un nouvel
+ * appel de 'control'
+ */
 void MCS::control()
 {
-    if(!robotStatus.controlled) /* Si l'asserv est désactivé */
-        return;
+    /* Si l'asserv est désactivé */
+    if(!robotStatus.controlled) return;
 
-        leftTicks = encoderLeft->read();
-        rightTicks = encoderRight->read();
+    leftTicks = encoderLeft->read();
+    rightTicks = encoderRight->read();
 
-        updatePositionOrientation();
+    updatePositionOrientation();
+    updateSpeed();
 
-        updateSpeed();
-
-
-//    static volatile int32_t lastDistance = 0;
-//
-//	float deltaDistanceMm = (currentDistance - lastDistance) * TICK_TO_MM;
-//	lastDistance = currentDistance;
-//
-//	robotStatus.x += (deltaDistanceMm * cosf(getAngle()));
-//	robotStatus.y += (deltaDistanceMm * sinf(getAngle()));
-//    float currentAngleRadian = getAngle();
-
-        /* retourne la sortie des PID en vitesse */
-        int32_t leftPWM = leftSpeedPID.compute(robotStatus.speedLeftWheel);
-        int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
-        /* run change la tension envoyée au moteur
-         * envoie la sortie des PID en vitesse en entrée des moteurs */
-        leftMotor.run(leftPWM);
-        rightMotor.run(rightPWM);
-        previousLeftTicks = leftTicks;
-        previousRightTicks = rightTicks;
-
-//    rotate(rotation);
-//
-//    if (ABS(robotStatus.orientation - targetAngle) <= 10){
-//        robotStatus.translation = true;
-//    }
-//    if (robotStatus.translation){
-//        translate(translatiion);
-//    }
-
-//#if defined(MAIN)
-//    digitalWrite(LED3, robotStatus.moving);
-//#elif defined(SLAVE)
-//    digitalWrite(LED3_2, !robotStatus.moving);
-//#endif
-//
-//    if(gotoTimer > 0)
-//        gotoTimer--;
-//    if(robotStatus.inRotationInGoto  && !robotStatus.moving && gotoTimer == 0) {//ABS(averageRotationDerivativeError.value()) <= controlSettings.tolerancyDerivative && ABS(rotationPID.getError())<=controlSettings.tolerancyAngle){
-//        float dx = (targetX - robotStatus.x);
-//        float dy = (targetY - robotStatus.y);
-//        float target = sqrtf(dx * dx + dy * dy);
-//
-//        //digitalWrite(LED2,HIGH);
-//        translate(target);
-//
-//        // Serial.printf("Target is %f current angle is %f (dx=%f dy=%f) (x=%f y=%f)\n", target, getAngle(), dx, dy, robotStatus.x, robotStatus.y);
-//        robotStatus.inRotationInGoto = false;
-//    }
-
-
+    int32_t leftPWM = leftSpeedPID.compute(robotStatus.speedLeftWheel);
+    int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
+    leftMotor.run(leftPWM);
+    rightMotor.run(rightPWM);
+    previousLeftTicks = leftTicks;
+    previousRightTicks = rightTicks;
 }
 
 void MCS::manageStop() {

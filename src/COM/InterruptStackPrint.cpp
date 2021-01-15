@@ -20,17 +20,7 @@ void InterruptStackPrint::push(const Header header, const String& str)
 
 void InterruptStackPrint::print()
 {
-    if( com_options & ETHERNET_RW )
-    {
-        if( ComMgr::Instance().connectedEthernet() )
-        {
-            doPrint();
-        }
-    }
-    else
-    {
-        doPrint();
-    }
+    doPrint();
 }
 
 inline void InterruptStackPrint::doPrint() {

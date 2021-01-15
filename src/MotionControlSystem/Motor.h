@@ -25,7 +25,7 @@
 
 enum class Direction
 {
-	BACKWARD, FORWARD, NONE, BRAKE
+		BACKWARD, FORWARD, NONE, BRAKE
 };
 
 enum class Side
@@ -34,28 +34,27 @@ enum class Side
 };
 
 class Motor {
-public:
-	Motor(Side);
-	int16_t pwm;
-	void setDirection(Direction);
-	void init();
-	void run(int16_t);
-
-	/**
-	 * Stoppe le moteur.
-	 *
-	 * C'est juste mettre le PWM à 0 mais c'est plus propre niveau code :)
-	 */
-	void stop();
-	void brake();
-
-
 private:
-    Side side;
-    Direction direction;
-    uint8_t pin_pwm;
-    uint8_t pin_ina;
-    uint8_t pin_inb;
+		Side side;
+		Direction direction;
+		uint8_t pin_fin;
+		uint8_t pin_bin;
+
+		void setPWM(uint8_t pin, int16_t pwm);
+
+public:
+		Motor(Side);
+		int16_t pwm;
+		void setDirection(Direction);
+		void init();
+		void run(int16_t);
+
+		/**
+	 	* Stoppe le moteur.
+	 	*
+	 	* C'est juste mettre le PWM à 0 mais c'est plus propre niveau code :)
+	 	*/
+		void stop();
 };
 
 #endif //COMPLETE_LOW_LEVEL_MOTOR_H

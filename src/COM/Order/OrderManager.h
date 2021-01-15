@@ -16,7 +16,6 @@
 #include "MotionControlSystem/MCS.h"
 #include "Sensors/SensorMgr.h"
 #include "COM/ComMgr.h"
-#include "Actuators/ActuatorsMgr.h"
 #include "Config/Defines.h"
 #include "Utils/Utils.h"
 #include "COM/Hooks/Hook.h"
@@ -27,48 +26,40 @@
 class OrderManager : public Singleton<OrderManager>
 {
 public:
-	HookList hookList;
-	OrderData orderData;
-	SensorMgr &sensorMgr;
-	MCS& motionControlSystem;
-	ActuatorsMgr &actuatorsMgr;
-	ComMgr& highLevel;
+		HookList hookList;
+		OrderData orderData;
+		SensorMgr &sensorMgr;
+		MCS& motionControlSystem;
+		ComMgr& highLevel;
 
     //Variables booleennes pour envoi de données au HL
     bool isSendingUS;
-	bool HLWaiting;
+		bool HLWaiting;
 
     OrderManager();
 
     void init();
 
     //COM&exec
-    inline void refreshUS(){
-	}
-	inline void sendUS(){
-	}
+    inline void refreshUS() {}
+		inline void sendUS() {}
     void communicate();
     void execute(const char*);	//public pour pouvoir executer des scripts de hook
-
 
     //Utilitaire
     static int8_t split(char* , OrderData& , const char* separator = " ");
     static int parseInt(const char*);
     static float parseFloat(const char*);
-	bool isHLWaiting();
-	void checkJumper();
+		bool isHLWaiting();
+		void checkJumper();
 
     //Hooks
     void checkHooks();
     void executeHooks();
     bool hooksEnabled;
 
-//    std::map<std::string,int> lookupTable;
-
-
 private:
-
-    std::map<String, AbstractOrder*> orders;
+		std::map<String, AbstractOrder*> orders;
 
     char readMessage[RX_BUFFER_SIZE];
     char charIDLastMessage;

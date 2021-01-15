@@ -6,7 +6,7 @@ SensorMgr::SensorMgr()
 }
 
 void SensorMgr::init() {
-	pinMode(PIN_JMPR,INPUT_PULLUP);
+	pinMode(PIN_JMPR, INPUT_PULLUP);
 	analogReadResolution(ANALOG_RESOLUTION);
 
 	//Wire.begin(); //TODO

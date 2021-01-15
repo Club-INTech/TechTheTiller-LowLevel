@@ -10,8 +10,7 @@
 #include "Utils/Utils.h"
 #include "Config/PinMapping.h"
 #include "MotionControlSystem/RobotStatus.h"
-#include "Actuators/ActuatorValues.h"
-#include "Actuators/ActuatorsMgr.h"
+//
 #include "Servo.h"
 #include "Stepper.h"
 #include "I2CC.h"
@@ -38,7 +37,6 @@ ORDER(ping,0);
  * @Description: Active l'attente de l'activation du jumper.
  */
 ORDER(j,0);
-ORDER(f,0);
 /**
  * @Description: Retourne la position (x,y) et en angle.
  */
@@ -58,14 +56,13 @@ ORDER(t,1);
  * @Arguments: x cible en mm, y cible en mm, [séquentiel: booléen]
  */
 ORDER(goto,2);
-ORDER(followTrajectory,1);
 /**
  * @Description: Essaye d'arrêter le robot à la position actuelle.
  */
 ORDER(stop,0);
 
 /*			 __________________
-* 		   *|                  |*
+* 		 *|                  |*
 *		   *|   POS & VITESSE  |*
 *		   *|__________________|*
 */
@@ -114,11 +111,11 @@ ORDER(efm,0);
  */
 ORDER(dfm,0);
 
-/*			 ___________________
-* 		   *|                   |*
-*		   *|  ASSERVISSEMENTS  |*
-*		   *|___________________|*
-*/
+/*		 	 ___________________
+ * 		 *|                   |*
+ *		 *|  ASSERVISSEMENTS  |*
+ *		 *|___________________|*
+ */
 
 /**
  * @Description: Désactive l'asservissement en translation.
@@ -146,10 +143,10 @@ ORDER(cv0,0);
 ORDER(cv1,0);
 
 /*			 ___________________________
-* 		   *|                           |*
-*		   *|					        |*
-*		   *|			DEBUG			|*
-*		   *|						    |*
+* 		 *|                           |*
+*		   *|					                  |*
+*		   *|			DEBUG			            |*
+*		   *|						                |*
 *		   *|___________________________|*
 */
 
@@ -157,23 +154,14 @@ ORDER(cv1,0);
  * @Description: Affiche les ticks de codeuse.
  */
 ORDER(cod,0);
-ORDER(pfdebug,0);
-ORDER(rawpwm,1);
-ORDER(getpwm,0);
-ORDER(errors,0);
-ORDER(rawspeed,0);
+
 /**
  * @Description: Retourne, dans l'ordre: x,y,angle, v_g, cible v_g, v_d, cible v_d.
  */
 ORDER(rawposdata,0);
-/**
- * @Description: Force un reset du module ethernet.
- */
-ORDER(reseteth,0);
-
 
 /*			 ___________________________
-* 		   *|                           |*
+* 		 *|                           |*
 *		   *|         MONTLHERY         |*
 *		   *|   DEPLACEMENT ET ROTATION |*
 *		   *|    SANS ASSERVISSEMENT    |*
@@ -222,31 +210,16 @@ ORDER(maxtrro,2);
 ORDER(trstop,0);
 ORDER(rostop,0);
 
-/*			 _________________________________
-* 		   *|                                 |*
-*		   *|CONSTANTES D'ASSERV (pour le PID)|*
-*    	   *|_________________________________|*
+/*			   _________________________________
+ * 		   *|                                 |*
+ *		   *|CONSTANTES D'ASSERV (pour le PID)|*
+ *    	 *|_________________________________|*
 */
 
-ORDER(toggle,0);
-ORDER(displayAsserv,0);
-ORDER(kpt,1);
-ORDER(kdt,1);
-ORDER(kit,1);
-ORDER(kpr,1);
-ORDER(kir,1);
-ORDER(kdr,1);
-ORDER(kpg,1);
-ORDER(kig,1);
-ORDER(kdg,1);
-ORDER(kpd,1);
-ORDER(kid,1);
-ORDER(kdd,1);
-
-/*			 _________________________________
-* 		   *|                                 |*
-*		   *|			   HOOKS	          |*
-*    	   *|_________________________________|*
+/*			   _________________________________
+ * 		   *|                                 |*
+ *		   *|			   HOOKS	                  |*
+ *    	 *|_________________________________|*
 */
 
 /**
@@ -265,54 +238,20 @@ ORDER(eh,1);
  */
 ORDER(dh,1);
 
-/*			 _________________________________
-* 		   *|                                 |*
- *		   *|	       ACKNOWLEDGEMENT        |*
+/*			     _________________________________
+ * 		     *|                                 |*
+ *		     *|	       ACKNOWLEDGEMENT          |*
  *    	   *|_________________________________|*
 */
 
-ORDER(demo,0);
 ORDER(ptpdemo,0);
 ORDER(ptpdemoseq,0);
 
-/*			 _________________________________
-* 		   *|                                 |*
- *		   *|	      NOUVEAUX ORDRES         |*
- *    	   *|_________________________________|*
-*/
-
-
-/* Bras */
-/**
- * @Description: Bouge un XL à une position donnée.
- * @Arguments: ID du XL, position en °
+/*			   _________________________________
+ * 		   *|                                 |*
+ *		   *|	      NOUVEAUX ORDRES           |*
+ *    	 *|_________________________________|*
  */
-ORDER(XLm,2);
-/**
- * @Description: Change la vitesse d'un XL.
- * @Arguments: ID du XL, vitesse en unités de vitesse XL
- */
-ORDER(XLs,2);
-
-/**
- * @Description: Renvoie le couple d'un XL.
- * @Arguments: ID du XL
- */
-ORDER(torqueXL,1);
-
-// This is horrible and should probably burn
-
-/**
- * @Description: Allume une diode via le protocole I2C
- */
-ORDER(DiodeOn,1);
-
-/**
- * @Description: Eteint une diode via le protocole I2C
- */
-ORDER(DiodeOff,1);
-
-
 
 /* SICK */
 /**

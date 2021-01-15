@@ -9,108 +9,96 @@
 #include "COM/InterruptStackPrint.h"
 #include "COM/Order/OrderManager.h"
 
-//#include "MotionControlSystem/HardwareEncoder_ISRDEF.h"
+void setup(){
+	InitAllPins();
 
-/* Interruptions d'asservissements */
-void motionControlInterrupt(HardwareTimer* hardwareTimer) {
-	static MCS &motionControlSystem = MCS::Instance();
-    motionControlSystem.control();
-	motionControlSystem.manageStop();
-}
+	ComMgr::Instance().init();
+	Serial.println("Com OK");
 
-void positionInterrupt() {
-	static MCS &motionControlSystem = MCS::Instance();
-	motionControlSystem.sendPositionUpdate();
-}
+	SensorMgr::Instance().init();
+	Serial.println("Capteurs OK");
 
-void setup(){}
+	MCS::Instance().init();
+	Serial.println("MCS OK");
 
-void __attribute__((noreturn)) loop() {
-	/*************************
-	 * Initialisation du LL, gère:
-	 * Les pins
-	 * La série
-	 * Les actionneurs
-	 * L'asservissement
-	 *************************/
-
-    InitAllPins();
-
-    // TODO : Automate init
-    ComMgr::Instance().init();
-    Serial.println("Com OK");
-    ActuatorsMgr::Instance().init();
-    Serial.println("Actuateurs OK");
-    SensorMgr::Instance().init();
-    Serial.println("Capteurs OK");
-    MCS::Instance().init();
-    Serial.println("MCS OK");
-    OrderManager& orderMgr = OrderManager::Instance();
-    orderMgr.init();
-    Serial.println("Ordres OK");
+	OrderManager::Instance().init();
+	Serial.println("Ordres OK");
 
 	Serial.println("Init OK");
-	delay(250);
+}
 
-	/* Actuators */
-	// Par sécurité on met tout les actuators à LOW quand on les initialise
+void __attribute__((noreturn)) loop() {
+	auto& mcs = MCS::Instance();
+	auto& orderManager = OrderManager::Instance();
 
-    /* InterruotStackPrint */
-    InterruptStackPrint& interruptStackPrint = InterruptStackPrint::Instance();
+	pinMode(A0, OUTPUT);
+	pinMode(A1, OUTPUT);
+	pinMode(A2, OUTPUT);
+	pinMode(A3, OUTPUT);
+	pinMode(A4, OUTPUT);
+	pinMode(A5, OUTPUT);
+	pinMode(A6, OUTPUT);
 
-    // MotionControlSystem interrupt on timer
-    // FIXME: Pour le débug
-//    HardwareTimer motionControlInterruptTimer(TIM6);
-//    motionControlInterruptTimer.setMode(1, TIMER_OUTPUT_COMPARE);
-//    motionControlInterruptTimer.setOverflow(MCS_FREQ,HERTZ_FORMAT);
-//    motionControlInterruptTimer.attachInterrupt(motionControlInterrupt);
-    // FIXME: Wait for upstream update
-    //    motionControlInterruptTimer.setInterruptPriority(0,0);
-//    motionControlInterruptTimer.resume();
+	pinMode(D2, OUTPUT);
+	pinMode(D3, OUTPUT);
+	pinMode(D4, OUTPUT);
+	pinMode(D5, OUTPUT);
+	pinMode(D6, OUTPUT);
+	pinMode(D7, OUTPUT);
+	pinMode(D8, OUTPUT);
+	pinMode(D9, OUTPUT);
+	pinMode(D10, OUTPUT);
+	pinMode(D11, OUTPUT);
+	pinMode(D12, OUTPUT);
 
+	while (true) {
+		digitalWrite(A0, HIGH);
+		digitalWrite(A1, HIGH);
+		digitalWrite(A2, HIGH);
+		digitalWrite(A3, HIGH);
+		digitalWrite(A4, HIGH);
+		digitalWrite(A5, HIGH);
+		digitalWrite(A6, HIGH);
 
-    // Timer pour steppers
-    // FIXME: Pour le débug
-//    HardwareTimer stepperTimer(TIM2);   // Check needed timers
-//    stepperTimer.setMode(1,TIMER_OUTPUT_COMPARE);
-//    stepperTimer.setOverflow(STEPPER_FREQUENCY, HERTZ_FORMAT);
-//    stepperTimer.attachInterrupt(stepperInterrupt);
-    // FIXME: Wait for upstream update
-    //    stepperTimer.setInterruptPriority(10,0);
-//    stepperTimer.resume();
+		digitalWrite(D2, HIGH);
+		digitalWrite(D3, HIGH);
+		digitalWrite(D4, HIGH);
+		digitalWrite(D5, HIGH);
+		digitalWrite(D6, HIGH);
+		digitalWrite(D7, HIGH);
+		digitalWrite(D8, HIGH);
+		digitalWrite(D9, HIGH);
+		digitalWrite(D10, HIGH);
+		digitalWrite(D11, HIGH);
+		digitalWrite(D12, HIGH);
+		delay(1000);
 
-    Serial.println("Interrupt Timers OK");
-    // FIXME: Pour le débug
-    ActuatorsMgr::Instance().initTorques();
-    Serial.println("Dynamixels OK");
+		digitalWrite(A0, LOW);
+		digitalWrite(A1, LOW);
+		digitalWrite(A2, LOW);
+		digitalWrite(A3, LOW);
+		digitalWrite(A4, LOW);
+		digitalWrite(A5, LOW);
+		digitalWrite(A6, LOW);
 
+		digitalWrite(D2, LOW);
+		digitalWrite(D3, LOW);
+		digitalWrite(D4, LOW);
+		digitalWrite(D5, LOW);
+		digitalWrite(D6, LOW);
+		digitalWrite(D7, LOW);
+		digitalWrite(D8, LOW);
+		digitalWrite(D9, LOW);
+		digitalWrite(D10, LOW);
+		digitalWrite(D11, LOW);
+		digitalWrite(D12, LOW);
+		delay(1000);
+	}
 
-    /* lancement de la liaison I2C */
-    Wire.setSCL(D1);
-    Wire.setSDA(D0);
-    Wire.begin();
-    Serial.println("I2C OK");
-
-    Serial.println("Setup DONE");
-
-    Serial.println("Starting...");
-
-	/**
-	 * Boucle principale, y est géré:
-	 * La communication HL
-	 * L'execution des ordres de ce dernier
-	 * Les capteurs
-	 */
-
-
-
-
-    while (true) {
-        interruptStackPrint.print();
-        orderMgr.communicate();
-
-    }
-
+	/*hile (true) {
+		mcs.control();
+		orderManager.communicate();
+	}*/
 }
 
                    /*``.           `-:--.`

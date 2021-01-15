@@ -51,14 +51,17 @@ a été mit en place.
 
 |      Ordre       |                            Description                             |                           Arguments                           |
 |:----------------:|:------------------------------------------------------------------:|:-------------------------------------------------------------:|
+| set_hammer_angle |                                                                    |                                                               |
+|   raise_hammer   |                                                                    |                                                               |
+|   lower_hammer   |                                                                    |                                                               |
+|   toggle_valve   |                                                                    |                                                               |
+|       suck       |                                                                    |                                                               |
 |       ping       |               Répond pong, utile pour tester la com.               |                                                               |
 |        j         |            Active l'attente de l'activation du jumper.             |                                                               |
-|        f         |                                                                    |                                                               |
 |       xyo        |              Retourne la position (x,y) et en angle.               |                                                               |
 |        d         |                       Lance une translation.                       |        Distance en mm, [excpectedWallImpact: booléen]         |
 |        t         |                        Lance une rotation.                         |                   Angle en radians ou 'pi'                    |
 |       goto       |        Goto a position by first rotating then translating.         |      x cible en mm, y cible en mm, [séquentiel: booléen]      |
-| followTrajectory |                                                                    |                                                               |
 |       stop       |         Essaye d'arrêter le robot à la position actuelle.          |                                                               |
 |        cx        |                   Change la position x actuelle.                   |                       Position x en mm                        |
 |        cy        |                   Change la position y actuelle.                   |                       Position y en mm                        |
@@ -76,13 +79,7 @@ a été mit en place.
 |       cv0        | Désactive l'asservissement en vitesse (/!\ : plus de déplacement)  |                                                               |
 |       cv1        |                Active l'asservissement en vitesse.                 |                                                               |
 |       cod        |                   Affiche les ticks de codeuse.                    |                                                               |
-|     pfdebug      |                                                                    |                                                               |
-|      rawpwm      |                                                                    |                                                               |
-|      getpwm      |                                                                    |                                                               |
-|      errors      |                                                                    |                                                               |
-|     rawspeed     |                                                                    |                                                               |
 |    rawposdata    | Retourne, dans l'ordre: x,y,angle, v_g, cible v_g, v_d, cible v_d. |                                                               |
-|     reseteth     |                 Force un reset du module ethernet.                 |                                                               |
 |    montlhery     |      Asservissement en vitesse seulement, mouvements forcés.       |                                                               |
 |        av        |    Impose une consigne de vitesse en translation vers l'avant.     |                                                               |
 |        rc        |   Impose une consigne de vitesse en translation vers l'arrière.    |                                                               |
@@ -94,31 +91,11 @@ a été mit en place.
 |     maxtrro      |     Change les vitesses maximales en translation et rotation.      | Vitesse de translation en mm/s, vitesse de rotation en rad/s  |
 |      trstop      |                                                                    |                                                               |
 |      rostop      |                                                                    |                                                               |
-|      toggle      |                                                                    |                                                               |
-|  displayAsserv   |                                                                    |                                                               |
-|       kpt        |                                                                    |                                                               |
-|       kdt        |                                                                    |                                                               |
-|       kit        |                                                                    |                                                               |
-|       kpr        |                                                                    |                                                               |
-|       kir        |                                                                    |                                                               |
-|       kdr        |                                                                    |                                                               |
-|       kpg        |                                                                    |                                                               |
-|       kig        |                                                                    |                                                               |
-|       kdg        |                                                                    |                                                               |
-|       kpd        |                                                                    |                                                               |
-|       kid        |                                                                    |                                                               |
-|       kdd        |                                                                    |                                                               |
 |        nh        |        Créé un nouvel hook et les conditions d'activation.         | ID, x, y, rayon, angle, écart max à l'angle, ordre à exécuter |
 |        eh        |                          Active un hook.                           |                     ID du hook à activer                      |
 |        dh        |                         Désactive un hook.                         |                   ID du hook à désactiver.                    |
-|       demo       |                                                                    |                                                               |
 |     ptpdemo      |                                                                    |                                                               |
 |    ptpdemoseq    |                                                                    |                                                               |
-|       XLm        |                 Bouge un XL à une position donnée.                 |                    ID du XL, position en °                    |
-|       XLs        |                     Change la vitesse d'un XL.                     |           ID du XL, vitesse en unités de vitesse XL           |
-|     torqueXL     |                     Renvoie le couple d'un XL.                     |                           ID du XL                            |
-|     DiodeOn      |               Allume une diode via le protocole I2C                |                                                               |
-|     DiodeOff     |               Eteint une diode via le protocole I2C                |                                                               |
 |   lectureSICK    |       Renvoie les distances lues par les SICK (sens trigo).        |                                                               |
 |     testSICK     |                 Renvoie la valeur lue par un SICK.                 |                        Indice du SICK.                        |
 |    rangeSICK     |               Règle la fenêtre de mesure d'un SICK.                |                Indice, valeur min, valeur max.                |

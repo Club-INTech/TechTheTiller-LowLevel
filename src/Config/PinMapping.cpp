@@ -11,42 +11,20 @@ void InitAllPins() {
     pinMode(PIN_JMPR, INPUT_PULLUP);
 
     // Moteurs
-    pinMode(PIN_PWM_LEFT, OUTPUT);
-    digitalWrite(PIN_PWM_LEFT, LOW);
-    pinMode(PIN_PWM_RIGHT, OUTPUT);
-    digitalWrite(PIN_PWM_RIGHT, LOW);
-
-    pinMode(INA_LEFT, OUTPUT);
-    digitalWrite(INA_LEFT, LOW);
-    pinMode(INB_LEFT, OUTPUT);
-    digitalWrite(INB_LEFT, LOW);
-
-    pinMode(INA_RIGHT, OUTPUT);
-    digitalWrite(INA_RIGHT, LOW);
-    pinMode(INB_RIGHT, OUTPUT);
-    digitalWrite(INB_RIGHT, LOW);
-
-    // Steppers
-    pinMode(DIR_PIN_LEFT, OUTPUT);
-    digitalWrite(DIR_PIN_LEFT, LOW);
-    pinMode(DIR_PIN_RIGHT, OUTPUT);
-    digitalWrite(DIR_PIN_RIGHT, LOW);
-    pinMode(STEP_PIN_LEFT, OUTPUT);
-    digitalWrite(STEP_PIN_LEFT, LOW);
-    pinMode(STEP_PIN_RIGHT, OUTPUT);
-    digitalWrite(STEP_PIN_RIGHT, LOW);
-
-
+    pinMode(FWD_LEFT, OUTPUT);
+    pinMode(BKW_LEFT, OUTPUT);
+    pinMode(FWD_RIGHT, OUTPUT);
+    pinMode(BKW_RIGHT, OUTPUT);
+    digitalWrite(FWD_LEFT, LOW);
+    digitalWrite(BKW_LEFT, LOW);
+    digitalWrite(FWD_RIGHT, LOW);
+    digitalWrite(BKW_RIGHT, LOW);
 
     // Éclairages
     pinMode(LED1,OUTPUT);
     digitalWrite(LED1,LOW);
     pinMode(LED2,OUTPUT);
     digitalWrite(LED2,LOW);
-    pinMode(LED3,OUTPUT);
-    digitalWrite(LED3,LOW);
-    pinMode(LED4,OUTPUT);
-    digitalWrite(LED4,LOW);
 }
 
 #elif defined(SLAVE)
@@ -62,15 +40,15 @@ void InitAllPins()
     pinMode(PIN_PWM_RIGHT, OUTPUT);
     digitalWrite(PIN_PWM_RIGHT, LOW);
 
-    pinMode(INA_LEFT, OUTPUT);
-    digitalWrite(INA_LEFT, LOW);
-    pinMode(INB_LEFT, OUTPUT);
-    digitalWrite(INB_LEFT, LOW);
+    pinMode(FWD_LEFT, OUTPUT);
+    digitalWrite(FWD_LEFT, LOW);
+    pinMode(BKW_LEFT, OUTPUT);
+    digitalWrite(BKW_LEFT, LOW);
 
-    pinMode(INA_RIGHT, OUTPUT);
-    digitalWrite(INA_RIGHT, LOW);
-    pinMode(INB_RIGHT, OUTPUT);
-    digitalWrite(INB_RIGHT, LOW);
+    pinMode(FWD_RIGHT, OUTPUT);
+    digitalWrite(FWD_RIGHT, LOW);
+    pinMode(BKW_RIGHT, OUTPUT);
+    digitalWrite(BKW_RIGHT, LOW);
 
     // Steppers
     pinMode(DIR_PIN_RIGHT, OUTPUT);

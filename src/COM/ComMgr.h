@@ -6,7 +6,7 @@
 #define TECHTHETOWN_LOWLEVEL_COMMGR_H
 
 #include "Interfaces/SerialInterface.h"
-#include "Interfaces/EthernetInterface.h"
+//
 #include "Utils/Singleton.hpp"
 #include "Utils/Median.h"
 #include "Config/ComOptions.h"
@@ -18,17 +18,14 @@ class ComMgr : public Singleton<ComMgr>
 public:
 
     ComMgr() = default;
-    ~ComMgr();
 
     void init() override;
 
-    template< typename T >
+    template<typename T>
     bool read(T data){
         static bool r1=false,r2=false;
-        if( com_options & COM_OPTIONS::ETHERNET_R )
-            r1 = ethernet->read(data);
         if( com_options & COM_OPTIONS::SERIAL_R && !r1 )
-            r2 = serial->read(data);
+            r2 = serial.read(data);
         return r1||r2;
     }
 
@@ -37,16 +34,9 @@ public:
     void printfln(Header header,const char*, ...) __attribute__((format(printf, 3, 4)));
     void printf(Header header,const char*,...) __attribute__((format(printf, 3, 4)));
     void printOnSerial(const char*);
-    void startMatch();
-
-
-    void resetEth();
-
-    bool connectedEthernet();
 
 private:
-    AbstractComInterface*    ethernet = nullptr;
-    AbstractComInterface*      serial = nullptr;
+    SerialInterface serial;
 
 };
 

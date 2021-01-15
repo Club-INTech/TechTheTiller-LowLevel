@@ -3,7 +3,7 @@
 #ifndef _HOOK_h
 #define _HOOK_h
 
-#include "COM/Interfaces/EthernetInterface.h"
+//
 #include "Arduino.h"
 
 class Hook

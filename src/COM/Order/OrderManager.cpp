@@ -5,7 +5,6 @@ OrderManager::OrderManager():
         orderData(OrderData()),
         sensorMgr(SensorMgr::Instance()),
         motionControlSystem(MCS::Instance()),
-        actuatorsMgr(ActuatorsMgr::Instance()),
         highLevel(ComMgr::Instance())
 {}
 
@@ -136,7 +135,6 @@ bool OrderManager::isHLWaiting() {
 void OrderManager::checkJumper() {
     if(sensorMgr.isReadyToGo() && HLWaiting)
     {
-        highLevel.startMatch();
         HLWaiting = false;
     }
 }
