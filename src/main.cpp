@@ -25,80 +25,26 @@ void setup(){
 	Serial.println("Ordres OK");
 
 	Serial.println("Init OK");
+
+	Wire.setSDA(D0);
+	Wire.setSCL(D1);
+	Wire.begin();
 }
 
 void __attribute__((noreturn)) loop() {
+	using namespace I2CC;
+	using namespace external;
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
 
-	pinMode(A0, OUTPUT);
-	pinMode(A1, OUTPUT);
-	pinMode(A2, OUTPUT);
-	pinMode(A3, OUTPUT);
-	pinMode(A4, OUTPUT);
-	pinMode(A5, OUTPUT);
-	pinMode(A6, OUTPUT);
-
-	pinMode(D2, OUTPUT);
-	pinMode(D3, OUTPUT);
-	pinMode(D4, OUTPUT);
-	pinMode(D5, OUTPUT);
-	pinMode(D6, OUTPUT);
-	pinMode(D7, OUTPUT);
-	pinMode(D8, OUTPUT);
-	pinMode(D9, OUTPUT);
-	pinMode(D10, OUTPUT);
-	pinMode(D11, OUTPUT);
-	pinMode(D12, OUTPUT);
-
 	while (true) {
-		digitalWrite(A0, HIGH);
-		digitalWrite(A1, HIGH);
-		digitalWrite(A2, HIGH);
-		digitalWrite(A3, HIGH);
-		digitalWrite(A4, HIGH);
-		digitalWrite(A5, HIGH);
-		digitalWrite(A6, HIGH);
-
-		digitalWrite(D2, HIGH);
-		digitalWrite(D3, HIGH);
-		digitalWrite(D4, HIGH);
-		digitalWrite(D5, HIGH);
-		digitalWrite(D6, HIGH);
-		digitalWrite(D7, HIGH);
-		digitalWrite(D8, HIGH);
-		digitalWrite(D9, HIGH);
-		digitalWrite(D10, HIGH);
-		digitalWrite(D11, HIGH);
-		digitalWrite(D12, HIGH);
-		delay(1000);
-
-		digitalWrite(A0, LOW);
-		digitalWrite(A1, LOW);
-		digitalWrite(A2, LOW);
-		digitalWrite(A3, LOW);
-		digitalWrite(A4, LOW);
-		digitalWrite(A5, LOW);
-		digitalWrite(A6, LOW);
-
-		digitalWrite(D2, LOW);
-		digitalWrite(D3, LOW);
-		digitalWrite(D4, LOW);
-		digitalWrite(D5, LOW);
-		digitalWrite(D6, LOW);
-		digitalWrite(D7, LOW);
-		digitalWrite(D8, LOW);
-		digitalWrite(D9, LOW);
-		digitalWrite(D10, LOW);
-		digitalWrite(D11, LOW);
-		digitalWrite(D12, LOW);
-		delay(1000);
+		// orderManager.communicate();
+		/*auto data_ptr = new BufferedData(2 * sizeof(int));
+		putData(OrderManager::parseInt(0), data_ptr);
+		putData(OrderManager::parseInt(0), data_ptr);
+		executeRPC(pumps_id, suck_id, data_ptr);*/
+		Serial.println(pumps_id);
 	}
-
-	/*hile (true) {
-		mcs.control();
-		orderManager.communicate();
-	}*/
 }
 
                    /*``.           `-:--.`
