@@ -7,7 +7,7 @@ from matplotlib.pyplot import *
 from PIL import *
 from math import pi
 
-Tmesures = 0.01 #en secondes   
+Tmesures = 0.01 #en secondes
 
 consigneAngle = 0.6
 consignePos = 250
@@ -83,9 +83,9 @@ while(ligne!="DATAEND" and ligne):
         except:
             print("Erreur de parsing pour "+ligneEntiere)
         i+=1
-    
+
     ligne = fileStream.readline()
-    
+
 if(mode == "pos" or mode == ""):
     Img = figure(figsize=(14,14))
     ax1 = subplot(211)
@@ -121,7 +121,7 @@ if(mode == "angle" or mode == ""):
     subplot(212)
     plot(abscisses[1:-1],[(float(angles[i+1])-float(angles[i-1]))/0.002 for i in range(1,len(angles)-1)])
     plot(abscisses,[0]*len(abscisses))
-    
+
 if(mode == "speed" or mode == ""):
     Img = figure(figsize=(14,14))
     speedSubs = (subplot(211),subplot(212))

@@ -31,19 +31,14 @@ void setup(){
 	Wire.begin();
 }
 
-void __attribute__((noreturn)) loop() {
-	using namespace I2CC;
-	using namespace external;
+[[noreturn]] void loop() {
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
 
 	while (true) {
-		// orderManager.communicate();
-		/*auto data_ptr = new BufferedData(2 * sizeof(int));
-		putData(OrderManager::parseInt(0), data_ptr);
-		putData(OrderManager::parseInt(0), data_ptr);
-		executeRPC(pumps_id, suck_id, data_ptr);*/
-		Serial.println(pumps_id);
+		mcs.control();
+		orderManager.communicate();
+		orderManager.execute("rawposdata");
 	}
 }
 

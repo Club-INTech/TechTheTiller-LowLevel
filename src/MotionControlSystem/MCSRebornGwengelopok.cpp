@@ -7,13 +7,9 @@
 
 MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT)  {
 
-#if defined(MAIN)
     encoderLeft = new Encoder(ENCODER_LEFT_B,ENCODER_LEFT_A);
     encoderRight = new Encoder(ENCODER_RIGHT_B,ENCODER_RIGHT_A);
-#elif defined(SLAVE)
-    encoderLeft = new Encoder(ENCODER_LEFT_A,ENCODER_LEFT_B);
-    encoderRight = new Encoder(ENCODER_RIGHT_A,ENCODER_RIGHT_B);
-#endif
+
 
     initSettings();
     initStatus();
@@ -33,9 +29,9 @@ MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT)  {
 
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(1, 0.00, 0, 0); //0.5   0.000755   21.5
+    leftSpeedPID.setTunings(1, 0, 0, 0); //0.5   0.000755   21.5
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(1.1, 0.00, 0, 0); //0.85 0.000755 0
+    rightSpeedPID.setTunings(1, 0, 0, 0); //0.85 0.000755 0
     rightSpeedPID.enableAWU(false);
 
     translationPID.setTunings(2,0,0,0);
@@ -48,7 +44,7 @@ MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT)  {
 /* asserv en vitesse */
     leftSpeedPID.setTunings(0.53, 0.00105, 30, 0);//0.0015
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(0.718591667, 0.00125, 30, 0);//0.0015
+    rightSpeedPID.setTunings(0.53, 0.00105, 30, 0);//0.0015
     rightSpeedPID.enableAWU(false);
 /* asserv en translation */
     translationPID.setTunings(2.75,0,5,0);//2.75  0  5
@@ -184,8 +180,8 @@ void MCS::updatePositionOrientation() {
 void MCS::updateSpeed()
 {
     /* le robot calcul sa vitesse */
-    averageLeftSpeed.add((leftTicks - previousLeftTicks) * TICK_TO_MM * MCS_FREQ);
-    averageRightSpeed.add((rightTicks - previousRightTicks) * TICK_TO_MM  * MCS_FREQ);
+    averageLeftSpeed.add((leftTicks - previousLeftTicks) * TICK_TO_MM / encoderLeft->get_delta() * 1e3);
+    averageRightSpeed.add((rightTicks - previousRightTicks) * TICK_TO_MM / encoderRight->get_delta() * 1e3);
     robotStatus.speedLeftWheel = averageLeftSpeed.value();
     robotStatus.speedRightWheel = averageRightSpeed.value();
 
@@ -250,6 +246,9 @@ void MCS::control()
 {
     /* Si l'asserv est désactivé */
     if(!robotStatus.controlled) return;
+
+    encoderLeft->tick();
+    encoderRight->tick();
 
     leftTicks = encoderLeft->read();
     rightTicks = encoderRight->read();

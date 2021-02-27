@@ -80,7 +80,7 @@ void OrderManager::communicate() {
 
          auto it = orders.find(str_order);
          if(it != orders.end()) {
-             highLevel.printfln(DEBUG_HEADER, "Received order str: '%s'", orderBuffer);
+             // highLevel.printfln(DEBUG_HEADER, "Received order str: '%s'", orderBuffer);
              it->second->exec(orderData);
              if(requiresConfirmation){
                  highLevel.printfln(DEBUG_HEADER, "Sending confirmation for '%s'", orderBuffer);

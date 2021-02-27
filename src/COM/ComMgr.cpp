@@ -9,7 +9,6 @@ void ComMgr::init() {
         while(!Serial);
         Serial.begin(115200);
     }
-    serial = SerialInterface();
 }
 
 void ComMgr::printfln(Header header,const char * data,...)
