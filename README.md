@@ -51,11 +51,11 @@ a été mit en place.
 
 |      Ordre       |                            Description                             |                           Arguments                           |
 |:----------------:|:------------------------------------------------------------------:|:-------------------------------------------------------------:|
-| set_hammer_angle |                                                                    |                                                               |
-|   raise_hammer   |                                                                    |                                                               |
-|   lower_hammer   |                                                                    |                                                               |
-|   toggle_valve   |                                                                    |                                                               |
-|       suck       |                                                                    |                                                               |
+| set_hammer_angle |                     Régle l'angle d'un marteau                     |           L'identifiant du marteau, l'angle en degré          |
+|   raise_hammer   |                   Lève complètement un marteau                     |                    L'identifiant du marteau                   |
+|   lower_hammer   |                        Abaisse un marteau                          |                    L'identifiant du marteau                   |
+|   toggle_valve   |                  Ouvre la valve d'une des pompes                   |   L'identifiant de la valve, un booléen indiquant l'ouverture |
+|       suck       |                   Fait aspirer une des ventouses                   |   L'identifiant de la pompe, un booléen indiquant la succion  |
 |       ping       |               Répond pong, utile pour tester la com.               |                                                               |
 |        j         |            Active l'attente de l'activation du jumper.             |                                                               |
 |       xyo        |              Retourne la position (x,y) et en angle.               |                                                               |
