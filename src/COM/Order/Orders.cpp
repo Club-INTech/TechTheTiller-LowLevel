@@ -48,6 +48,35 @@ void ORDER_suck::impl(Args args) {
   executeRPC(pumps_id, suck_id, data_ptr);
 }
 
+// TODO : C'est déprécié, mais je vois pas d'autre solution.
+// Si vous voulez réimplementer ça, effacez les deux ORDERs et 'motion_datum_string_size' ici et dans le .cpp et
+// supprimez 'DelayingBuffer.hpp'
+void ORDER_start_mda::impl(Args args) {
+  using namespace dbuf;
+  buffer = "";
+  capacity = motion_datum_string_size * OrderManager::parseInt(args[0]);
+  buffer.reserve(capacity);
+
+  auto& mcs = MCS::Instance();
+  mcs.setTranslationSpeed(50.0);
+}
+
+void ORDER_send_md::impl(Args args) {
+  Serial.print(dbuf::buffer);
+}
+
+void ORDER_set_pid::impl(Args args) {
+  auto left_kp = OrderManager::parseFloat(args[0]);
+  auto left_ki = OrderManager::parseFloat(args[1]);
+  auto left_kd = OrderManager::parseFloat(args[2]);
+  auto right_kp = OrderManager::parseFloat(args[3]);
+  auto right_ki = OrderManager::parseFloat(args[4]);
+  auto right_kd = OrderManager::parseFloat(args[5]);
+  auto& mcs = MCS::Instance();
+  mcs.setLeftTunings(left_kp, left_ki, left_kd);
+  mcs.setRightTunings(right_kp, right_ki, right_kd);
+}
+
 void ORDER_ping::impl(Args args)
 {
     orderManager.highLevel.printfln(EVENT_HEADER,"pong");
@@ -215,7 +244,7 @@ void ORDER_cod::impl(Args args)
 
 void ORDER_rawposdata::impl(Args args)
 {
-    int32_t leftSpeedGoal, rightSpeedGoal;
+    float leftSpeedGoal, rightSpeedGoal;
     orderManager.motionControlSystem.getSpeedGoals(leftSpeedGoal, rightSpeedGoal);
 
     int16_t xPos = orderManager.motionControlSystem.getX();
@@ -226,7 +255,7 @@ void ORDER_rawposdata::impl(Args args)
 
     char s[50];
 
-    snprintf(s,50,"%d,%d,%f,%f,%ld,%f,%ld\n", xPos,yPos,angle,leftSpeed, leftSpeedGoal,rightSpeed,rightSpeedGoal);
+    snprintf(s,50,"%d,%d,%f,%f,%f,%f,%f\n", xPos,yPos,angle,leftSpeed, leftSpeedGoal,rightSpeed,rightSpeedGoal);
     Serial.print(s);
 }
 

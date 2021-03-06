@@ -31,7 +31,7 @@ fi
 touch "$fileName"
 outFile=$(echo $fileName | cut -f 3 -d"/")
 
-
+echo send_md > /dev/ttyACM3
 if [ ! -e /dev/ttyACM3 ]; then
 	echo "Waiting for serial /dev/ttyACM3"
 	echo "Retrying every 100ms"

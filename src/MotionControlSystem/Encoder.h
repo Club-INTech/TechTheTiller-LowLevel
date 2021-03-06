@@ -23,7 +23,7 @@ public:
      */
     void tick();
     auto get_delta() const { return backingEncoder->getMillisBetweenRotations(); }
-    
+
 };
 
 

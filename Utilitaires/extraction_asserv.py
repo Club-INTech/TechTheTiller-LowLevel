@@ -133,7 +133,7 @@ if(mode == "speed" or mode == ""):
 
     for i in [0,1]:
         subplot(2,1,i+1)
-        plot(abscisses,speeds[i])
-        plot(abscisses,speedSetpoints[i])
+        plot(abscisses,speeds[i], 'r.')
+        plot(abscisses,speedSetpoints[i], 'b.')
 
 show()

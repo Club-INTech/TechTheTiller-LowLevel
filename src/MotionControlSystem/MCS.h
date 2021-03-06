@@ -80,7 +80,7 @@ public:
     float getLeftSpeed();
     float getRightSpeed();
 
-    void getSpeedGoals(long&,long&);
+    void getSpeedGoals(float&,float&);
 
     /**
      * Permet de définir une rotation à la fin d'un mouvement (au lieu de devoir attendre la fin du mouvement et de donner un ordre de rotation)
@@ -104,9 +104,10 @@ public:
     bool isMoveAbnormal();
     void setMoveAbnormalSent(bool);
 
+    inline void setLeftTunings(float kp, float ki, float kd) { leftSpeedPID.setTunings(kp, ki, kd); }
+    inline void setRightTunings(float kp, float ki, float kd) { rightSpeedPID.setTunings(kp, ki, kd); }
 
 private:
-
     Encoder* encoderRight = nullptr;
     Encoder* encoderLeft = nullptr;
 

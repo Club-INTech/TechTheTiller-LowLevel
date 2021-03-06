@@ -26,6 +26,8 @@ MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT)  {
     translationPID.active = false;
     robotStatus.translation = false;
 
+    leftSpeedPID.active = true;
+    rightSpeedPID.active = true;
 
 #if defined(MAIN)
 
@@ -204,7 +206,6 @@ void MCS::updateSpeed()
     {
         robotStatus.speedRotation = 0.0f;
     }
-
 
     robotStatus.speedTranslation = MAX(-controlSettings.maxTranslationSpeed, MIN(controlSettings.maxTranslationSpeed, robotStatus.speedTranslation));
     robotStatus.speedRotation = MAX(-controlSettings.maxRotationSpeed, MIN(controlSettings.maxRotationSpeed, robotStatus.speedRotation)) * DISTANCE_COD_GAUCHE_CENTRE;
@@ -700,7 +701,7 @@ float MCS::getRightSpeed() {
     return robotStatus.speedRightWheel;
 }
 
-void MCS::getSpeedGoals(long &leftGoal, long &rightGoal) {
+void MCS::getSpeedGoals(float &leftGoal, float &rightGoal) {
     leftGoal = leftSpeedPID.getCurrentGoal();
     rightGoal = rightSpeedPID.getCurrentGoal();
 }

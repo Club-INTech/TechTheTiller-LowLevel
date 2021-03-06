@@ -9,6 +9,22 @@
 #include "COM/InterruptStackPrint.h"
 #include "COM/Order/OrderManager.h"
 
+auto getMotionDatum() {
+  float leftSpeedGoal, rightSpeedGoal;
+	auto& orderManager = OrderManager::Instance();
+  orderManager.motionControlSystem.getSpeedGoals(leftSpeedGoal, rightSpeedGoal);
+
+  int16_t xPos = orderManager.motionControlSystem.getX();
+  int16_t yPos = orderManager.motionControlSystem.getY();
+  float angle = orderManager.motionControlSystem.getAngle();
+  float leftSpeed = orderManager.motionControlSystem.getLeftSpeed();
+  float rightSpeed = orderManager.motionControlSystem.getRightSpeed();
+
+  char s[50];
+  snprintf(s,50,"%f,%f,%f,%f\n", leftSpeed, leftSpeedGoal,rightSpeed,rightSpeedGoal);
+  return String(s);
+}
+
 void setup(){
 	InitAllPins();
 
@@ -34,11 +50,14 @@ void setup(){
 [[noreturn]] void loop() {
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
+  mcs.controlledTranslation(false);
+  mcs.setTranslationSpeed(50.0);
 
 	while (true) {
 		mcs.control();
 		orderManager.communicate();
-		orderManager.execute("rawposdata");
+    orderManager.execute("rawposdata");
+		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity) dbuf::buffer.concat(getMotionDatum());
 	}
 }
 
