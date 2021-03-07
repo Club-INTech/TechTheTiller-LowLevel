@@ -3,4 +3,4 @@
 	url = https://github.com/Club-INTech/Dynamixel-Com.git/
 [submodule "Carte-Hammers"]
 	path = Carte-Hammers
-	url = https://github.com/Club-INTech/Carte-Hammers
+	url = https://github.com/Club-INTech/Carte-Hammers.git/

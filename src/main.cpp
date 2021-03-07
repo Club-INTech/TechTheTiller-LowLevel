@@ -47,17 +47,17 @@ void setup(){
 	Wire.begin();
 }
 
-[[noreturn]] void loop() {
+void loop() {
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
-  mcs.controlledTranslation(false);
-  mcs.setTranslationSpeed(50.0);
+    mcs.controlledTranslation(false);
+    mcs.setTranslationSpeed(50.0);
 
 	while (true) {
 		mcs.control();
 		orderManager.communicate();
-    orderManager.execute("rawposdata");
-		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity) dbuf::buffer.concat(getMotionDatum());
+        orderManager.execute("rawposdata");
+		//if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity) dbuf::buffer.concat(getMotionDatum());
 	}
 }
 
