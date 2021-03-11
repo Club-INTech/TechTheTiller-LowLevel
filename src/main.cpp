@@ -8,6 +8,10 @@
 #include "Config/PinMapping.h"
 #include "COM/InterruptStackPrint.h"
 #include "COM/Order/OrderManager.h"
+#include <SimpleTimer.h>
+#include "Config/Defines.h"
+
+//SimpleTimer timer;
 
 auto getMotionDatum() {
   float leftSpeedGoal, rightSpeedGoal;
@@ -45,19 +49,25 @@ void setup(){
 	Wire.setSDA(D0);
 	Wire.setSCL(D1);
 	Wire.begin();
+	//timer.setInterval()
 }
 
 void loop() {
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
-    mcs.controlledTranslation(false);
-    mcs.setTranslationSpeed(50.0);
+	//mcs.speedBasedMovement(MOVEMENT::FORWARD);
+	orderManager.execute("montlhery");
+	delay(2000);
+	orderManager.execute("av");
+	orderManager.execute("start_mda 4096");
+
 
 	while (true) {
 		mcs.control();
 		orderManager.communicate();
-        orderManager.execute("rawposdata");
-		//if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity) dbuf::buffer.concat(getMotionDatum());
+        
+		//orderManager.execute("rawposdata");
+		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff && mcs.time_points_criteria >= 2100) dbuf::buffer.concat(getMotionDatum());
 	}
 }
 

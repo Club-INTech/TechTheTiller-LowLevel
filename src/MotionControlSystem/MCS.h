@@ -80,6 +80,8 @@ public:
     float getLeftSpeed();
     float getRightSpeed();
 
+    long time_points_criteria;
+
     void getSpeedGoals(float&,float&);
 
     /**

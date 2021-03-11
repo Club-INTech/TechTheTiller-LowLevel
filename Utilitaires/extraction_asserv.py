@@ -49,6 +49,9 @@ speedOver = [False,False]
 while(ligne!="DATAEND" and ligne):
     ligneEntiere = ligne
     ligne = ligne.split(",")
+    ligne.insert(0,0)
+    ligne.insert(0,0)
+    ligne.insert(0,0)
     if(len(ligne)==7):
         try:
             positions.append((float(ligne[0])**2+float(ligne[1])**2)**0.5)

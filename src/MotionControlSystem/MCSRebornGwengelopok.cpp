@@ -13,27 +13,12 @@ MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT)  {
 
     initSettings();
     initStatus();
-    // FIXME : ? Duplication de ce que fait initStatus ?
-    robotStatus.controlled = true;
-    robotStatus.controlledRotation = true;
-    robotStatus.controlledTranslation = true;
-    robotStatus.inRotationInGoto = false;
-    robotStatus.inGoto = false;
-    robotStatus.sentMoveAbnormal = false;
-    robotStatus.movement = MOVEMENT::NONE;
-    expectedWallImpact = false;
-    rotationPID.active = false;
-    translationPID.active = false;
-    robotStatus.translation = false;
-
-    leftSpeedPID.active = true;
-    rightSpeedPID.active = true;
-
+  
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(1, 0, 0, 0); //0.5   0.000755   21.5
+    leftSpeedPID.setTunings(2, 0, 0, 0); //0.5   0.000755   21.5
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(1, 0, 0, 0); //0.85 0.000755 0
+    rightSpeedPID.setTunings(2.5, 0, 0, 0); //0.85 0.000755 0
     rightSpeedPID.enableAWU(false);
 
     translationPID.setTunings(2,0,0,0);
@@ -66,51 +51,39 @@ void MCS::initSettings() {
     robotStatus.movement = MOVEMENT::NONE;
 
 
-    /* mm/s/MCS_PERIOD */
-    controlSettings.maxAcceleration = 1.5;//2;
-    controlSettings.maxDeceleration = 2;//2;
+    /* mm/s^2/MCS_PERIOD */
+    controlSettings.maxAcceleration = 0.5;//2;
+    controlSettings.maxDeceleration = 0.5;//2;
+
 
     /* rad/s */
     controlSettings.maxRotationSpeed = 2*PI;
 
 
     /* mm/s */
-    controlSettings.maxTranslationSpeed = 1000;
+    controlSettings.maxTranslationSpeed = 60; // probablement des cm/s ptdr
     controlSettings.tolerancySpeed = 5;
 
     /* rad */
-#if defined(MAIN)
     controlSettings.tolerancyAngle = 0.0005;
-#elif defined(SLAVE)
-    controlSettings.tolerancyAngle = 0.01;
-#endif
 
-    /* mm */
-#if defined(MAIN)
     controlSettings.tolerancyTranslation = 1;
     controlSettings.tolerancyX=10;
     controlSettings.tolerancyY=10;
-#elif defined(SLAVE)
-    controlSettings.tolerancyTranslation = 1;
-    controlSettings.tolerancyX=10;
-    controlSettings.tolerancyY=10;
-#endif
+
 
     /* ms */
     controlSettings.stopDelay = 25;
 
     /* mm/s */
-#if defined(MAIN)
     controlSettings.tolerancyDerivative = 7;
-#elif defined(SLAVE)
-    controlSettings.tolerancyDerivative = 0.0000001; //à laisser très petit sinon le robot ne s'arrete pas
-#endif
 
     /* patate */
     controlSettings.tolerancyDifferenceSpeed = 500*2;
 }
 
 void MCS::initStatus() {
+
     robotStatus.movement = MOVEMENT::NONE;
     robotStatus.moving = false;
     robotStatus.inRotationInGoto = false;
@@ -122,6 +95,15 @@ void MCS::initStatus() {
     previousRightSpeedGoal = 0;
     previousLeftTicks = 0;
     previousRightTicks = 0;
+    robotStatus.sentMoveAbnormal = false;
+    expectedWallImpact = false;
+    rotationPID.active = false;
+    translationPID.active = false;
+    robotStatus.translation = false;
+    leftSpeedPID.active = true;
+    rightSpeedPID.active = true;
+    robotStatus.forcedMovement = false;
+
 }
 
 void MCS::updatePositionOrientation() {
@@ -182,8 +164,8 @@ void MCS::updatePositionOrientation() {
 void MCS::updateSpeed()
 {
     /* le robot calcul sa vitesse */
-    averageLeftSpeed.add((leftTicks - previousLeftTicks) * TICK_TO_MM / encoderLeft->get_delta() * 1e3);
-    averageRightSpeed.add((rightTicks - previousRightTicks) * TICK_TO_MM / encoderRight->get_delta() * 1e3);
+    averageLeftSpeed.add((leftTicks - previousLeftTicks) * TICK_TO_MM * MCS_FREQ);
+    averageRightSpeed.add((rightTicks - previousRightTicks) * TICK_TO_MM * MCS_FREQ);
     robotStatus.speedLeftWheel = averageLeftSpeed.value();
     robotStatus.speedRightWheel = averageRightSpeed.value();
 
@@ -246,6 +228,7 @@ void MCS::updateSpeed()
 void MCS::control()
 {
     /* Si l'asserv est désactivé */
+    time_points_criteria = millis();
     if(!robotStatus.controlled) return;
 
     encoderLeft->tick();
@@ -265,7 +248,7 @@ void MCS::control()
     previousRightTicks = rightTicks;
 }
 
-void MCS::manageStop() {
+void MCS::manageStop() { //TODO :  a modifier pour moins de tolerance
     static int timeCounter =0;
 
     if(robotStatus.controlledTranslation || robotStatus.controlledRotation) {

@@ -19,5 +19,6 @@ namespace dbuf {
 
 extern String buffer;
 extern size_t capacity;
+extern bool init_buff;
 
 } // namespace dbuf
