@@ -50,6 +50,7 @@ void setup(){
 	Wire.setSCL(D1);
 	Wire.begin();
 	//timer.setInterval()
+
 }
 
 void loop() {
@@ -67,7 +68,7 @@ void loop() {
 		orderManager.communicate();
         
 		//orderManager.execute("rawposdata");
-		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff && mcs.time_points_criteria >= 2100) dbuf::buffer.concat(getMotionDatum());
+		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum()); //2105 offset mais c'est bizzare
 	}
 }
 
