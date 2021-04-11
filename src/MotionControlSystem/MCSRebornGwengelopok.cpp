@@ -7,6 +7,7 @@
 
 MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT)  {
 
+
     encoderLeft = new Encoder(ENCODER_LEFT_B,ENCODER_LEFT_A);
     encoderRight = new Encoder(ENCODER_RIGHT_B,ENCODER_RIGHT_A);
 
@@ -16,9 +17,9 @@ MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT)  {
   
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(0.87, 1e-6, 0, 0); //0.5   0.000755   21.5 ; 0.87 1e-6 0
+    leftSpeedPID.setTunings(0.95, 0, 0, 0); //0.5   0.000755   21.5 ; 0.87 1e-6 0
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(0.86, 1.6*1e-6, 0, 0); //0.85 0.000755 0 ; 0.86 1.6*1e-6 0
+    rightSpeedPID.setTunings(1.2, 0, 0, 0); //0.85 0.000755 0 ; 0.86 1.6*1e-6 0
     rightSpeedPID.enableAWU(false);
 
     translationPID.setTunings(2,0,0,0);
@@ -61,7 +62,7 @@ void MCS::initSettings() {
 
 
     /* mm/s */
-    controlSettings.maxTranslationSpeed = 0; // probablement des cm/s ptdr
+    controlSettings.maxTranslationSpeed = 40; // probablement des cm/s ptdr
     controlSettings.tolerancySpeed = 5;
 
     /* rad */
@@ -80,6 +81,8 @@ void MCS::initSettings() {
 
     /* patate */
     controlSettings.tolerancyDifferenceSpeed = 500*2;
+
+    filter.set_decade_attenuation(0.04f);
 }
 
 void MCS::initStatus() {
@@ -103,6 +106,8 @@ void MCS::initStatus() {
     leftSpeedPID.active = true;
     rightSpeedPID.active = true;
     robotStatus.forcedMovement = false;
+
+    clock::init();
 
 }
 
@@ -164,10 +169,23 @@ void MCS::updatePositionOrientation() {
 void MCS::updateSpeed()
 {
     /* le robot calcul sa vitesse */
-    averageLeftSpeed.add((leftTicks - previousLeftTicks) * TICK_TO_MM * MCS_FREQ);
-    averageRightSpeed.add((rightTicks - previousRightTicks) * TICK_TO_MM * MCS_FREQ);
-    robotStatus.speedLeftWheel = averageLeftSpeed.value();
-    robotStatus.speedRightWheel = averageRightSpeed.value();
+    /*if(leftTicks != previousLeftTicks) {
+        averageLeftSpeed.add((float) (leftTicks - previousLeftTicks) * 1e6 * (float) TICK_TO_MM / (float) encoderLeft->get_delta());
+    }
+    if(rightTicks != previousRightTicks) {
+        averageRightSpeed.add((float) (rightTicks - previousRightTicks) * 1e6 * (float) TICK_TO_MM / (float) encoderRight->get_delta());
+    }*/
+    
+    //robotStatus.speedLeftWheel = averageLeftSpeed.value();
+    //robotStatus.speedRightWheel = averageRightSpeed.value();
+    if(clock::ticks_left != 0) {
+        robotStatus.speedLeftWheel = (float) (clock::ticks_left) * 1e6 * (float) TICK_TO_MM / (float) clock::get_delta_left();
+        clock::reset_left_ticks();
+    }
+    if(clock::ticks_right != 0) {
+        robotStatus.speedRightWheel = (float) (clock::ticks_right) * 1e6 * (float) TICK_TO_MM / (float) clock::get_delta_right();
+        clock::reset_left_ticks();
+    }
 
     if(robotStatus.controlledTranslation)
     {
@@ -227,6 +245,7 @@ void MCS::updateSpeed()
  */
 void MCS::control()
 {
+    filter.reset_filter(robotStatus.speedTranslation);
     /* Si l'asserv est désactivé */
     time_points_criteria = millis();
     if(!robotStatus.controlled) return;
@@ -240,8 +259,8 @@ void MCS::control()
     updatePositionOrientation();
     updateSpeed();
 
-    int32_t leftPWM = leftSpeedPID.compute(robotStatus.speedLeftWheel);
-    int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
+    int32_t leftPWM = leftSpeedPID.compute(robotStatus.speedLeftWheel) * filter.filter(robotStatus.speedLeftWheel);
+    int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel) * filter.filter(robotStatus.speedLeftWheel);
     leftMotor.run(leftPWM);
     rightMotor.run(rightPWM);
     previousLeftTicks = leftTicks;

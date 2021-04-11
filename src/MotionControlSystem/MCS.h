@@ -19,8 +19,11 @@
 #include "PID.hpp"
 #include "SelfContainedPID.hpp"
 #include "PointToPointTrajectory.h"
+#include "Utils/Filter.hpp"
 #define ENCODER_OPTIMIZE_INTERRUPTS
 #include "Encoder.h"
+#include <Utils/Clock.h>
+
 
 #include <cmath>
 
@@ -143,6 +146,10 @@ private:
 
     Average<float, 100> averageLeftSpeed;
     Average<float, 100> averageRightSpeed;
+
+    Filter<float> filter;
+
+
 #if defined(MAIN)
     Average<float, 25> averageRotationDerivativeError;
     Average<float, 25> averageTranslationDerivativeError;

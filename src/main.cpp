@@ -10,7 +10,7 @@
 #include "COM/Order/OrderManager.h"
 #include "Config/Defines.h"
 
-//SimpleTimer timer;
+
 
 auto getMotionDatum() {
   float leftSpeedGoal, rightSpeedGoal;
@@ -48,28 +48,32 @@ void setup(){
 	Wire.setSDA(D0);
 	Wire.setSCL(D1);
 	Wire.begin();
-	//timer.setInterval()
 
+
+	attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_A), clock::inc_left_ticks, FALLING);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_B), clock::dec_left_ticks, FALLING);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_A), clock::inc_right_ticks, FALLING);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_B), clock::dec_right_ticks, FALLING);
 }
+
 
 void loop() {
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
-	//mcs.speedBasedMovement(MOVEMENT::FORWARD);
-	//orderManager.execute("montlhery");
-	//delay(2000);
-	//orderManager.execute("av");
-	//delay(100);
-	//orderManager.execute("av");
-	//orderManager.execute("start_mda 4096");
+	orderManager.execute("montlhery");
+	delay(5000);
+	orderManager.execute("av");
+	delay(10);
+	orderManager.execute("start_mda 4096");
 
 
 	while (true) {
+		//delay(5);
 		mcs.control();
 		orderManager.communicate();
         
 		//orderManager.execute("rawposdata");
-		//if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum()); //2105 offset mais c'est bizzare
+		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum()); //2105 offset mais c'est bizzare
 	}
 }
 
