@@ -22,9 +22,10 @@ auto getMotionDatum() {
   float angle = orderManager.motionControlSystem.getAngle();
   float leftSpeed = orderManager.motionControlSystem.getLeftSpeed();
   float rightSpeed = orderManager.motionControlSystem.getRightSpeed();
+  long time = clock::time_left;
 
-  char s[50];
-  snprintf(s,50,"%f,%f,%f,%f\n", leftSpeed, leftSpeedGoal,rightSpeed,rightSpeedGoal);
+  char s[60];
+  snprintf(s,60,"%ld,%f,%f,%f,%f\n", time, leftSpeed, leftSpeedGoal,rightSpeed,rightSpeedGoal);
   return String(s);
 }
 
@@ -48,6 +49,7 @@ void setup(){
 	Wire.setSDA(D0);
 	Wire.setSCL(D1);
 	Wire.begin();
+	pinMode(LED_BUILTIN, OUTPUT);
 
 
 	attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_A), clock::inc_left_ticks, FALLING);
@@ -61,14 +63,14 @@ void loop() {
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
 	orderManager.execute("montlhery");
-	delay(5000);
+	delay(2000);
 	orderManager.execute("av");
 	delay(10);
-	orderManager.execute("start_mda 4096");
+	orderManager.execute("start_mda 640");
 
 
 	while (true) {
-		//delay(5);
+		delay(5);
 		mcs.control();
 		orderManager.communicate();
         
