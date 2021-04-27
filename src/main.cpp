@@ -29,6 +29,9 @@ auto getMotionDatum() {
   return String(s);
 }
 
+long time_now = 0;
+long prev_time = 0;
+
 void setup(){
 	InitAllPins();
 
@@ -52,10 +55,13 @@ void setup(){
 	pinMode(LED_BUILTIN, OUTPUT);
 
 
-	attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_A), clock::inc_left_ticks, FALLING);
-	attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_B), clock::dec_left_ticks, FALLING);
-	attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_A), clock::inc_right_ticks, FALLING);
-	attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_B), clock::dec_right_ticks, FALLING);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_A), clock::inc_left_ticks, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_B), clock::dec_left_ticks, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_A), clock::inc_right_ticks, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_B), clock::dec_right_ticks, CHANGE);
+
+	time_now = millis();
+	prev_time = millis();
 }
 
 
@@ -66,16 +72,20 @@ void loop() {
 	delay(2000);
 	orderManager.execute("av");
 	delay(10);
-	orderManager.execute("start_mda 640");
+	orderManager.execute("start_mda 4096");
 
 
 	while (true) {
-		delay(5);
-		mcs.control();
+		/*if(time_now - prev_time >= 5) {
+			mcs.control();
+			prev_time = millis();
+			if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum()); //2105 offset mais c'est bizzare
+		}
 		orderManager.communicate();
+		time_now = millis();*/
+		mcs.leftMotor.run(35);
         
 		//orderManager.execute("rawposdata");
-		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum()); //2105 offset mais c'est bizzare
 	}
 }
 

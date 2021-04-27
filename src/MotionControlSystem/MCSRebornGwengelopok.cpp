@@ -17,9 +17,9 @@ MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT)  {
   
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(0.78, 0, 0, 0); //0.5   0.000755   21.5 ; 0.87 1e-6 0
+    leftSpeedPID.setTunings(1, 0, 0, 0); //0.5   0.000755   21.5 ; 0.87 1e-6 0
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(0.75, 0, 0, 0); //0.85 0.000755 0 ; 0.86 1.6*1e-6 0
+    rightSpeedPID.setTunings(1, 0, 0, 0); //0.85 0.000755 0 ; 0.86 1.6*1e-6 0
     rightSpeedPID.enableAWU(false);
 
     translationPID.setTunings(2,0,0,0);
@@ -53,8 +53,8 @@ void MCS::initSettings() {
 
 
     /* mm/s^2/MCS_PERIOD */
-    controlSettings.maxAcceleration = 0.5;//2;
-    controlSettings.maxDeceleration = 0.5;//2;
+    controlSettings.maxAcceleration = 2;//2;
+    controlSettings.maxDeceleration = 2;//2;
 
 
     /* rad/s */
@@ -184,7 +184,7 @@ void MCS::updateSpeed()
     }
     if(clock::ticks_right != 0) {
         robotStatus.speedRightWheel = (float) (clock::ticks_right) * 1e6 * (float) TICK_TO_MM / (float) clock::get_delta_right();
-        clock::reset_left_ticks();
+        clock::reset_right_ticks();
     }
 
     if(robotStatus.controlledTranslation)

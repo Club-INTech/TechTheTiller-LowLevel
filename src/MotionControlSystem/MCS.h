@@ -112,6 +112,9 @@ public:
     inline void setLeftTunings(float kp, float ki, float kd) { leftSpeedPID.setTunings(kp, ki, kd); }
     inline void setRightTunings(float kp, float ki, float kd) { rightSpeedPID.setTunings(kp, ki, kd); }
 
+    Motor leftMotor;
+    Motor rightMotor;
+
 private:
     Encoder* encoderRight = nullptr;
     Encoder* encoderLeft = nullptr;
@@ -119,8 +122,6 @@ private:
     RobotStatus robotStatus;
     ControlSettings controlSettings;
 
-    Motor leftMotor;
-    Motor rightMotor;
 
     SelfContainedPID<float> leftSpeedPID;
     SelfContainedPID<float> rightSpeedPID;
