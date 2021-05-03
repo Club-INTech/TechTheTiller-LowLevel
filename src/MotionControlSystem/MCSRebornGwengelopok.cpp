@@ -62,7 +62,7 @@ void MCS::initSettings() {
 
 
     /* mm/s */
-    controlSettings.maxTranslationSpeed = 80; // probablement des cm/s ptdr
+    controlSettings.maxTranslationSpeed = 100; // probablement des cm/s ptdr
     controlSettings.tolerancySpeed = 5;
 
     /* rad */

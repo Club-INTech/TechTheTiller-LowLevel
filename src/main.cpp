@@ -24,8 +24,8 @@ auto getMotionDatum() {
   float rightSpeed = orderManager.motionControlSystem.getRightSpeed();
   long time = clock::time_left;
 
-  char s[60];
-  snprintf(s,60,"%ld,%f,%f,%f,%f\n", time, leftSpeed, leftSpeedGoal,rightSpeed,rightSpeedGoal);
+  char s[50];
+  snprintf(s,50,"%f,%f,%f,%f\n", leftSpeed, leftSpeedGoal,rightSpeed,rightSpeedGoal);
   return String(s);
 }
 
@@ -55,10 +55,10 @@ void setup(){
 	pinMode(LED_BUILTIN, OUTPUT);
 
 
-	attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_A), clock::inc_left_ticks, CHANGE);
-	attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_B), clock::dec_left_ticks, CHANGE);
-	attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_A), clock::inc_right_ticks, CHANGE);
-	attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_B), clock::dec_right_ticks, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_A), clock::inc_left_ticks, RISING);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_B), clock::dec_left_ticks, RISING);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_A), clock::inc_right_ticks, RISING);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_B), clock::dec_right_ticks, RISING);
 
 	time_now = millis();
 	prev_time = millis();
@@ -76,14 +76,13 @@ void loop() {
 
 
 	while (true) {
-		/*if(time_now - prev_time >= 5) {
+		if(time_now - prev_time >= 5) {
 			mcs.control();
 			prev_time = millis();
 			if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum()); //2105 offset mais c'est bizzare
 		}
 		orderManager.communicate();
-		time_now = millis();*/
-		mcs.leftMotor.run(35);
+		time_now = millis();
         
 		//orderManager.execute("rawposdata");
 	}

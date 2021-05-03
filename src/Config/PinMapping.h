@@ -17,8 +17,8 @@ constexpr uint8_t BKW_RIGHT = A2;
 /* Roues codeuses */
 constexpr uint8_t ENCODER_LEFT_A = D2;
 constexpr uint8_t ENCODER_LEFT_B = A5;
-constexpr uint8_t ENCODER_RIGHT_A = A4;
-constexpr uint8_t ENCODER_RIGHT_B = D3;
+constexpr uint8_t ENCODER_RIGHT_A = D3;
+constexpr uint8_t ENCODER_RIGHT_B = A4;
 
 /* CAPTEURS */
 constexpr uint8_t PIN_JMPR = D4;
