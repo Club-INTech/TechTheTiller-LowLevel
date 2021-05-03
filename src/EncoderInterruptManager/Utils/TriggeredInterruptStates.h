@@ -1,0 +1,1 @@
+enum TriggeredInterruptStates {LEFT_FORWARD = 1, LEFT_BACKWARD = 2, RIGHT_FORWARD = 4, RIGHT_BACKWARD = 8};
