@@ -10,6 +10,12 @@ namespace clock {
     extern volatile int ticks_left;
     extern volatile int ticks_right;
 
+    extern bool left_trigo;
+    extern bool left_antitrigo;
+
+    extern bool right_trigo;
+    extern bool right_antitrigo;
+
     long get_delta_right();
     long get_delta_left();
     void inc_left_ticks();
