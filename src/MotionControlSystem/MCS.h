@@ -23,7 +23,7 @@
 #define ENCODER_OPTIMIZE_INTERRUPTS
 #include "Encoder.h"
 #include <Utils/Clock.h>
-
+#include "EncoderInterruptManager/EncoderInterruptManager.h"
 
 #include <cmath>
 
@@ -114,6 +114,8 @@ public:
 
     Motor leftMotor;
     Motor rightMotor;
+
+    EncoderInterruptManager& encoderInterruptManager;
 
 private:
     Encoder* encoderRight = nullptr;

@@ -5,7 +5,8 @@
 #include "MCS.h"
 
 
-MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT)  {
+MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT), 
+                encoderInterruptManager(EncoderInterruptManager::Instance())  {
 
 
     encoderLeft = new Encoder(ENCODER_LEFT_B,ENCODER_LEFT_A);
@@ -169,22 +170,13 @@ void MCS::updatePositionOrientation() {
 void MCS::updateSpeed()
 {
     /* le robot calcul sa vitesse */
-    /*if(leftTicks != previousLeftTicks) {
-        averageLeftSpeed.add((float) (leftTicks - previousLeftTicks) * 1e6 * (float) TICK_TO_MM / (float) encoderLeft->get_delta());
+    if(encoderInterruptManager.get_ticks<LEFT>() != 0) {
+        robotStatus.speedLeftWheel = (float) (encoderInterruptManager.get_ticks<LEFT>()) * 1e6 * (float) TICK_TO_MM / encoderInterruptManager.get_delta<LEFT>();
+        encoderInterruptManager.reset_ticks<LEFT>();
     }
-    if(rightTicks != previousRightTicks) {
-        averageRightSpeed.add((float) (rightTicks - previousRightTicks) * 1e6 * (float) TICK_TO_MM / (float) encoderRight->get_delta());
-    }*/
-    
-    //robotStatus.speedLeftWheel = averageLeftSpeed.value();
-    //robotStatus.speedRightWheel = averageRightSpeed.value();
-    if(clock::ticks_left != 0) {
-        robotStatus.speedLeftWheel = (float) (clock::ticks_left) * 1e6 * (float) TICK_TO_MM / (float) clock::get_delta_left();
-        clock::reset_left_ticks();
-    }
-    if(clock::ticks_right != 0) {
-        robotStatus.speedRightWheel = (float) (clock::ticks_right) * 1e6 * (float) TICK_TO_MM / (float) clock::get_delta_right();
-        clock::reset_right_ticks();
+    if(encoderInterruptManager.get_ticks<RIGHT>() != 0) {
+        robotStatus.speedLeftWheel = (float) (encoderInterruptManager.get_ticks<RIGHT>()) * 1e6 * (float) TICK_TO_MM / encoderInterruptManager.get_delta<RIGHT>();
+        encoderInterruptManager.reset_ticks<RIGHT>();
     }
 
     if(robotStatus.controlledTranslation)
