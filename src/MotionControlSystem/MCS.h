@@ -23,7 +23,7 @@
 #define ENCODER_OPTIMIZE_INTERRUPTS
 #include "Encoder.h"
 #include <Utils/Clock.h>
-#include "EncoderInterruptManager/EncoderInterruptManager.h"
+#include "EncoderInterruptManager/EncoderInterruptManager.hpp"
 
 #include <cmath>
 

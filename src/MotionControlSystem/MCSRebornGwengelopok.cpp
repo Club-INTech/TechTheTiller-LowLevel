@@ -171,11 +171,11 @@ void MCS::updateSpeed()
 {
     /* le robot calcul sa vitesse */
     if(encoderInterruptManager.get_ticks<LEFT>() != 0) {
-        robotStatus.speedLeftWheel = (float) (encoderInterruptManager.get_ticks<LEFT>()) * 1e6 * (float) TICK_TO_MM / encoderInterruptManager.get_delta<LEFT>();
+        robotStatus.speedLeftWheel = (-1.0f) * (float) (encoderInterruptManager.get_ticks<LEFT>()) * 1e6 * (float) TICK_TO_MM / encoderInterruptManager.get_delta<LEFT>();
         encoderInterruptManager.reset_ticks<LEFT>();
     }
     if(encoderInterruptManager.get_ticks<RIGHT>() != 0) {
-        robotStatus.speedLeftWheel = (float) (encoderInterruptManager.get_ticks<RIGHT>()) * 1e6 * (float) TICK_TO_MM / encoderInterruptManager.get_delta<RIGHT>();
+        robotStatus.speedRightWheel = (-1.0f) * (float) (encoderInterruptManager.get_ticks<RIGHT>()) * 1e6 * (float) TICK_TO_MM / encoderInterruptManager.get_delta<RIGHT>();
         encoderInterruptManager.reset_ticks<RIGHT>();
     }
 
