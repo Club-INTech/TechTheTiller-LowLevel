@@ -18,9 +18,9 @@ MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT),
   
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(1, 0, 0, 0); //0.5   0.000755   21.5 ; 0.87 1e-6 0
+    leftSpeedPID.setTunings(0.2, 0, 0, 0); //0.5   0.000755   21.5 ; 0.87 1e-6 0
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(1, 0, 0, 0); //0.85 0.000755 0 ; 0.86 1.6*1e-6 0
+    rightSpeedPID.setTunings(0.2, 0, 0, 0); //0.85 0.000755 0 ; 0.86 1.6*1e-6 0
     rightSpeedPID.enableAWU(false);
 
     translationPID.setTunings(2,0,0,0);
@@ -171,11 +171,11 @@ void MCS::updateSpeed()
 {
     /* le robot calcul sa vitesse */
     if(encoderInterruptManager.get_ticks<LEFT>() != 0) {
-        robotStatus.speedLeftWheel = (-1.0f) * (float) (encoderInterruptManager.get_ticks<LEFT>()) * 1e6 * (float) TICK_TO_MM / encoderInterruptManager.get_delta<LEFT>();
+        robotStatus.speedLeftWheel = (float) (encoderInterruptManager.get_ticks<LEFT>()) * 1e6 * (float) TICK_TO_MM / encoderInterruptManager.get_delta<LEFT>();
         encoderInterruptManager.reset_ticks<LEFT>();
     }
     if(encoderInterruptManager.get_ticks<RIGHT>() != 0) {
-        robotStatus.speedRightWheel = (-1.0f) * (float) (encoderInterruptManager.get_ticks<RIGHT>()) * 1e6 * (float) TICK_TO_MM / encoderInterruptManager.get_delta<RIGHT>();
+        robotStatus.speedRightWheel = (float) (encoderInterruptManager.get_ticks<RIGHT>()) * 1e6 * (float) TICK_TO_MM / encoderInterruptManager.get_delta<RIGHT>();
         encoderInterruptManager.reset_ticks<RIGHT>();
     }
 

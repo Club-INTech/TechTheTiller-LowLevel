@@ -22,7 +22,6 @@ auto getMotionDatum() {
   float angle = orderManager.motionControlSystem.getAngle();
   float leftSpeed = orderManager.motionControlSystem.getLeftSpeed();
   float rightSpeed = orderManager.motionControlSystem.getRightSpeed();
-  long time = clock::time_left;
 
   char s[50];
   snprintf(s,50,"%f,%f,%f,%f\n", leftSpeed, leftSpeedGoal,rightSpeed,rightSpeedGoal);
@@ -54,12 +53,6 @@ void setup(){
 	Wire.begin();
 	pinMode(LED_BUILTIN, OUTPUT);
 
-
-	// attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_A), clock::inc_left_ticks, RISING);
-	// attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_B), clock::dec_left_ticks, RISING);
-	// attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_A), clock::inc_right_ticks, RISING);
-	// attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_B), clock::dec_right_ticks, RISING);
-
 	time_now = millis();
 	prev_time = millis();
 }
@@ -73,18 +66,16 @@ void loop() {
 	orderManager.execute("av");
 	delay(10);
 	orderManager.execute("start_mda 4096");
-
-
+	delay(5000);
 	while (true) {
 		if(time_now - prev_time >= 1) {
 			mcs.control();
-			prev_time = millis();
 			if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum()); //2105 offset mais c'est bizzare
+			prev_time = millis();
 		}
 		orderManager.communicate();
 		time_now = millis();
         
-		//orderManager.execute("rawposdata");
 	}
 }
 

@@ -4,6 +4,7 @@
 
 #include "EncoderInterruptManager/Utils/EventMask.h"
 #include "EncoderInterruptManager/Utils/InterruptMask.h"
+#include <Arduino.h>
 
 class InterruptController {
     

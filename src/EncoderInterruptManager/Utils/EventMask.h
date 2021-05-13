@@ -10,8 +10,8 @@ struct EventMask {
     EventMask() : forward_event_trigger(false), backward_event_trigger(false) {}
 
     void operator+=(RotationDirection d) {
-        if(d == FORWARD && !backward_event_trigger) forward_event_trigger = true;
-        else if(d == BACKWARD && !forward_event_trigger) backward_event_trigger = true;
+        forward_event_trigger = (d == FORWARD && !backward_event_trigger || forward_event_trigger);
+        backward_event_trigger = (d == BACKWARD && !forward_event_trigger || backward_event_trigger);
     }
 
     void reset() {
