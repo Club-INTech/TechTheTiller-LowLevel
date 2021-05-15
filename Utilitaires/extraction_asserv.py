@@ -30,7 +30,7 @@ positionsY = []
 vitessesY = []
 abscisses = []
 
-#time=[]
+time=[]
 angles = []
 vitesseAngulaire = []
 
@@ -55,14 +55,13 @@ while(ligne!="DATAEND" and ligne):
     ligne = ligne.split(",")
     ligne.insert(0,0)
     ligne.insert(0,0)
-    ligne.insert(0,0)
+    #ligne.insert(0,0)
     if(len(ligne)==7):
         try:
             positions.append((float(ligne[0])**2+float(ligne[1])**2)**0.5)
             #angles.append(float(ligne[2]))
-            #t = int(ligne[2]) / 1000000.0
-            #if t >= 0.1:
-                #time.append(t)
+            t = int(ligne[2]) / 1000000.0
+            time.append(t)
             for i in [0,1]:
                 speeds[i].append(float(ligne[3+2*i]))
                 speedSetpoints[i].append(float(ligne[4+2*i]))
@@ -145,14 +144,14 @@ if(mode == "speed" or mode == ""):
         #point_nbr = int((end_t - start_t) / 0.05)
         #new_time_base.append([start_t + i*0.05 for i in range(point_nbr)])
         #graph.append([Interpolation.interpolation_output(t) for t in new_time_base])
-        speedSubs[i].plot(abscisses,speeds[i])
-        speedSubs[i].plot(abscisses,speedSetpoints[i])
+        speedSubs[i].plot(time,speeds[i])
+        speedSubs[i].plot(time,speedSetpoints[i])
     Img.savefig("serialOutput/"+file+"- speeds.png")
     clf()
 
     for i in [0,1]:
         subplot(2,1,i+1)
-        plot(abscisses, speeds[i], 'r.')
-        plot(abscisses,speedSetpoints[i], 'b.')
+        plot(time, speeds[i], 'r.')
+        plot(time,speedSetpoints[i], 'b.')
 
 show()
