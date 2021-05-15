@@ -13,15 +13,20 @@ class EncoderInterruptManager : public Singleton<EncoderInterruptManager> {
 public:
 
     EncoderInterruptManager() : leftController(), rightController() {
-        attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_A), [=](){Serial.println("lf/"); leftController.inc_ticks();}, RISING);
-        attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_B), [=](){Serial.println("lb/"); leftController.dec_ticks();}, RISING);
-        attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_A), [=](){Serial.println("rf/"); rightController.inc_ticks();}, FALLING);
-        attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_B), [=](){Serial.println("rb/"); rightController.dec_ticks();}, FALLING);
+        attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_A), [=](){Serial.println("lf"); leftController.inc_ticks();}, RISING);
+        attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_B), [=](){Serial.println("lb"); leftController.dec_ticks();}, RISING);
+        attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_A), [=](){Serial.println("rf"); rightController.inc_ticks();}, FALLING);
+        attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_B), [=](){Serial.println("rb"); rightController.dec_ticks();}, FALLING);
     }
 
     template<RobotSide S> int get_ticks() {
         if(S == LEFT)  return leftController.get_ticks();
         else if(S == RIGHT) return rightController.get_ticks();
+    }
+
+    template<RobotSide S> int get_all_ticks() {
+        if(S == LEFT)  return leftController.get_all_ticks();
+        else if(S == RIGHT) return rightController.get_all_ticks();
     }
 
     template<RobotSide S> long get_delta() {

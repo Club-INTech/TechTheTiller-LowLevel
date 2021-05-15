@@ -15,6 +15,7 @@ public:
     void dec_ticks();
     void reset_ticks();
     int get_ticks();
+    int get_all_ticks();
     
 private:
     InterruptMask interruptMask;
@@ -22,6 +23,7 @@ private:
     volatile long time;
     volatile long prev_time;
     volatile int ticks;
+    volatile int all_ticks;
 };
 
 #endif

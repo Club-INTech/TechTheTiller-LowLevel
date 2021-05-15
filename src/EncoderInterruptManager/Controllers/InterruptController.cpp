@@ -8,6 +8,7 @@ void InterruptController::inc_ticks() {
     if(this->eventMask.forward_event_trigger) {
         if(this->ticks < 0) this->ticks = 0;
         this->ticks++;
+        this->all_ticks++;
         this->time = micros();
     } else {
         this->eventMask.reset();
@@ -19,6 +20,7 @@ void InterruptController::dec_ticks() {
     if(this->eventMask.backward_event_trigger) {
         if(this->ticks > 0) this->ticks = 0;
         this->ticks--;
+        this->all_ticks--;
         this->time = micros();
     } else {
         this->eventMask.reset();
@@ -37,4 +39,8 @@ void InterruptController::reset_ticks() {
 
 int InterruptController::get_ticks() {
     return this->ticks;
+}
+
+int InterruptController::get_all_ticks() {
+    return this->all_ticks;
 }
