@@ -55,10 +55,16 @@ void setup(){
 
 	time_now = millis();
 	prev_time = millis();
+	// pinMode(A0, INPUT);
+	// Serial.begin(115200);
 }
 
 
 void loop() {
+	// int value = analogRead(A0);
+	// float tension = (float) value * 3.3f / 1024.0f;
+	// float distance = 11.36f * tension + 2.512f;
+	// Serial.printf("value: %i tension: %f distance: %f\n", value, tension, distance);
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
 	orderManager.execute("montlhery");
@@ -66,7 +72,7 @@ void loop() {
 	orderManager.execute("av");
 	delay(10);
 	orderManager.execute("start_mda 4096");
-	delay(5000);
+	delay(2000);
 	while (true) {
 		if(time_now - prev_time >= 1) {
 			mcs.control();

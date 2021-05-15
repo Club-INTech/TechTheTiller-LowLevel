@@ -18,9 +18,9 @@ MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT),
   
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(0.2, 0, 0, 0); //0.5   0.000755   21.5 ; 0.87 1e-6 0
+    leftSpeedPID.setTunings(1, 1e-6, 0, 0); //0.5   0.000755   21.5 ; 0.87 1e-6 0
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(0.2, 0, 0, 0); //0.85 0.000755 0 ; 0.86 1.6*1e-6 0
+    rightSpeedPID.setTunings(1, 1e-6, 0, 0); //0.85 0.000755 0 ; 0.86 1.6*1e-6 0
     rightSpeedPID.enableAWU(false);
 
     translationPID.setTunings(2,0,0,0);
@@ -251,8 +251,8 @@ void MCS::control()
     updatePositionOrientation();
     updateSpeed();
 
-    int32_t leftPWM = leftSpeedPID.compute(robotStatus.speedLeftWheel) * filter.filter(robotStatus.speedLeftWheel);
-    int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel) * filter.filter(robotStatus.speedLeftWheel);
+    int32_t leftPWM = (0.25 * leftSpeedPID.compute(robotStatus.speedLeftWheel) + 15); 
+    int32_t rightPWM = (0.25 * rightSpeedPID.compute(robotStatus.speedRightWheel) + 15);
     leftMotor.run(leftPWM);
     rightMotor.run(rightPWM);
     previousLeftTicks = leftTicks;
