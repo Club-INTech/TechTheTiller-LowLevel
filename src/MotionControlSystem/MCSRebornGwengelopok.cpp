@@ -18,9 +18,9 @@ MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT),
   
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(1, 1e-6, 0, 0); //0.5   0.000755   21.5 ; 0.87 1e-6 0
+    leftSpeedPID.setTunings(0.92, 3.73*1e-6, 1.15e-4, 0); //0.5   0.000755   21.5 ; 0.87 1e-6 0
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(1, 1e-6, 0, 0); //0.85 0.000755 0 ; 0.86 1.6*1e-6 0
+    rightSpeedPID.setTunings(0.89, 3.65*1e-6, 1.15e-4, 0); //0.85 0.000755 0 ; 0.86 1.6*1e-6 0
     rightSpeedPID.enableAWU(false);
 
     translationPID.setTunings(2,0,0,0);
@@ -54,8 +54,8 @@ void MCS::initSettings() {
 
 
     /* mm/s^2/MCS_PERIOD */
-    controlSettings.maxAcceleration = 2;//2;
-    controlSettings.maxDeceleration = 2;//2;
+    controlSettings.maxAcceleration = 10;//2;
+    controlSettings.maxDeceleration = 10;//2;
 
 
     /* rad/s */
@@ -63,7 +63,7 @@ void MCS::initSettings() {
 
 
     /* mm/s */
-    controlSettings.maxTranslationSpeed = 100; // probablement des cm/s ptdr
+    controlSettings.maxTranslationSpeed = 400; 
     controlSettings.tolerancySpeed = 5;
 
     /* rad */
