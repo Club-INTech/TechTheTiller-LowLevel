@@ -22,7 +22,6 @@
 #include "Utils/Filter.hpp"
 #define ENCODER_OPTIMIZE_INTERRUPTS
 #include "Encoder.h"
-#include <Utils/Clock.h>
 #include "EncoderInterruptManager/EncoderInterruptManager.hpp"
 
 #include <cmath>
@@ -82,6 +81,12 @@ public:
     int32_t getRightTicks();
     float getLeftSpeed();
     float getRightSpeed();
+
+    float getXLeftWheel();
+    float getYLeftWheel();
+
+    float getXRightWheel();
+    float getYRightWheel();
 
     long time_points_criteria;
 

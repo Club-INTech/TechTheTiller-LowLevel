@@ -3,6 +3,5 @@
 //
 #include "RobotStatus.h"
 
-RobotStatus::RobotStatus() {
-
+RobotStatus::RobotStatus() : leftWheelX(-161.3395f), rightWheelX(161.3395f) {
 }

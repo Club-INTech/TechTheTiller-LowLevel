@@ -18,9 +18,9 @@ MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT),
   
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(0.92, 3.73*1e-6, 1.15*1e-4, 0); //0.92 3.73*1e-6 1.15e-4
+    leftSpeedPID.setTunings(0.25, 1.88*1e-5, 2.5*1e-4, 0); //0.92 3.73*1e-6 1.15e-4
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(0.89, 3.65*1e-6, 1.15*1e-4, 0); //0.89 3.65*1e-6 1.15e-4
+    rightSpeedPID.setTunings(0.1, 1.9*1e-5, 1e-4, 0); //0.89 3.65*1e-6 1.15e-4
     rightSpeedPID.enableAWU(false);
 
     translationPID.setTunings(2,0,0,0);
@@ -54,8 +54,8 @@ void MCS::initSettings() {
 
 
     /* mm/s^2/MCS_PERIOD */
-    controlSettings.maxAcceleration = 2;//2;
-    controlSettings.maxDeceleration = 2;//2;
+    controlSettings.maxAcceleration = 4;//2;
+    controlSettings.maxDeceleration = 4;//2;
 
 
     /* rad/s */
@@ -63,7 +63,7 @@ void MCS::initSettings() {
 
 
     /* mm/s */
-    controlSettings.maxTranslationSpeed = 1000; 
+    controlSettings.maxTranslationSpeed = 400; 
     controlSettings.tolerancySpeed = 5;
 
     /* rad */
@@ -108,62 +108,38 @@ void MCS::initStatus() {
     rightSpeedPID.active = true;
     robotStatus.forcedMovement = false;
 
-    clock::init();
-
 }
 
 void MCS::updatePositionOrientation() {
 
-//    digitalWrite(LED2,LOW);
-    if (robotStatus.inGoto) {
-        float dx = targetX-robotStatus.x;
-        float dy = targetY-robotStatus.y;
-        /* calcul de la translation à effectuer */
-        float translation = sqrtf(dx * dx + dy * dy);
-        /* calcul de la rotation à effectuer */
-        float rotation = atan2f(dy, dx);
+    float leftDistance = (float) encoderInterruptManager.get_ticks<LEFT>() * TICK_TO_MM;
+    float rightDistance = (float) encoderInterruptManager.get_ticks<RIGHT>() * TICK_TO_MM;
 
-        float currentAngle = getAngle();
-        if (ABS(currentAngle - rotation) > (float) PI) { /* évite de faire un tour de plus de PI rad */
-            if (rotation < 0) {
-                rotation += 2 * PI;
-            } else {
-                rotation -= 2 * PI;
-            }
-        }
-        if (translation < 100) {
-            robotStatus.inGoto = false;
-            translate(translation);
-            InterruptStackPrint::Instance().push(EVENT_HEADER, "stoppedMoving");
-        }
-        /* défini la consigne en rotation */
-        rotate(rotation);
+    float current_angle = getAngle();
 
-        if (ABS(currentAngle - rotation) < 0.01) //0.654 /* si on est à moins de 0.01 rad de la consigne */
-        {
-            /* active la translation */
-            robotStatus.translation = true;
-        }
-        if (robotStatus.translation) {
-            /* défini la consigne en translation */
-            translate(translation);
-        }
-    }
+    float dxLeft = leftDistance * sinf(current_angle);
+    float dyLeft = leftDistance * cosf(current_angle);
 
-    int32_t leftDistance = leftTicks * TICK_TO_MM;
-    int32_t rightDistance = rightTicks * TICK_TO_MM;
+    float dxRight = rightDistance * sinf(current_angle);
+    float dyRight = rightDistance * cosf(current_angle);
 
-    robotStatus.orientation = (encoderInterruptManager.get_all_ticks<LEFT>() - encoderInterruptManager.get_all_ticks<RIGHT>()) / 2.0 * TICK_TO_RADIAN + angleOffset;
+    robotStatus.leftWheelX -= dxLeft;
+    robotStatus.leftWheelY += dyLeft;
+
+    robotStatus.rightWheelX -= dxRight;
+    robotStatus.rightWheelY += dyRight; 
+
+    robotStatus.orientation = atan((robotStatus.rightWheelY - robotStatus.leftWheelY) / (robotStatus.rightWheelX - robotStatus.leftWheelX)) + angleOffset;
 
     /* somme des résultantes */
-    int32_t distance = (leftDistance+rightDistance)/2;
+    //int32_t distance += (int32_t)((leftDistance+rightDistance) / 2);
 
     float distanceTravelled = (encoderInterruptManager.get_ticks<RIGHT>() + encoderInterruptManager.get_ticks<LEFT>())*TICK_TO_MM/2.0f;
     /* le robot calcul sa position */
-    robotStatus.x += distanceTravelled * cosf(getAngle());
-    robotStatus.y += distanceTravelled * sinf(getAngle());
+    robotStatus.x = (robotStatus.leftWheelX + robotStatus.rightWheelX) / 2.0f;
+    robotStatus.y = (robotStatus.leftWheelY + robotStatus.rightWheelY) / 2.0f;
 
-    currentDistance = distance;
+    
 
 }
 
@@ -252,8 +228,8 @@ void MCS::control()
     updatePositionOrientation();
     updateSpeed();
 
-    int32_t leftPWM = (0.25 * leftSpeedPID.compute(robotStatus.speedLeftWheel) + 15); 
-    int32_t rightPWM = (0.25 * rightSpeedPID.compute(robotStatus.speedRightWheel) + 15);
+    int32_t leftPWM = ((400 / (robotStatus.speedTranslation - robotStatus.speedRotation)) * leftSpeedPID.compute(robotStatus.speedLeftWheel) + 15); 
+    int32_t rightPWM = ((400 / (robotStatus.speedTranslation + robotStatus.speedRotation)) * rightSpeedPID.compute(robotStatus.speedRightWheel) + 15);
     leftMotor.run(leftPWM);
     rightMotor.run(rightPWM);
 }
@@ -570,6 +546,22 @@ float MCS::getLeftSpeed() {
 
 float MCS::getRightSpeed() {
     return robotStatus.speedRightWheel;
+}
+
+float MCS::getXLeftWheel() {
+    return robotStatus.leftWheelX;
+}
+
+float MCS::getYLeftWheel() {
+    return robotStatus.leftWheelY;
+}
+
+float MCS::getXRightWheel() {
+    return robotStatus.rightWheelX;
+}
+
+float MCS::getYRightWheel() {
+    return robotStatus.rightWheelY;
 }
 
 void MCS::getSpeedGoals(float &leftGoal, float &rightGoal) {

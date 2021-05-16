@@ -25,6 +25,12 @@ struct RobotStatus
     float y;
     float orientation;
 
+    float leftWheelX;
+    float leftWheelY;
+
+    float rightWheelX;
+    float rightWheelY;
+
     MOVEMENT movement;
 
     float speedTranslation;

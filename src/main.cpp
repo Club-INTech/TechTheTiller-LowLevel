@@ -23,9 +23,13 @@ auto getMotionDatum() {
   float leftSpeed = orderManager.motionControlSystem.getLeftSpeed();
   float rightSpeed = orderManager.motionControlSystem.getRightSpeed();
 
-  long t = micros();
-  char s[60];
-  snprintf(s,60,"%ld,%f,%f,%f,%f\n", t, leftSpeed, leftSpeedGoal, rightSpeed,rightSpeedGoal);
+  float xlw = orderManager.motionControlSystem.getXLeftWheel();
+  float ylw = orderManager.motionControlSystem.getYLeftWheel();
+  float xrw = orderManager.motionControlSystem.getXRightWheel();
+  float yrw = orderManager.motionControlSystem.getYRightWheel();
+
+  char s[50];
+  snprintf(s,50,"%f,%f,%f,%f\n", xlw, ylw, xrw, yrw);
   return String(s);
 }
 
@@ -68,7 +72,7 @@ void loop() {
 	// Serial.printf("value: %i tension: %f distance: %f\n", value, tension, distance);
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
-	// orderManager.execute("montlhery");
+	//orderManager.execute("montlhery");
 	orderManager.execute("ct0");
 	orderManager.execute("cr1");
 	delay(2000);
