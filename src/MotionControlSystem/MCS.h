@@ -21,8 +21,7 @@
 #include "PointToPointTrajectory.h"
 #include "Utils/Filter.hpp"
 #define ENCODER_OPTIMIZE_INTERRUPTS
-#include "Encoder.h"
-#include "EncoderInterruptManager/EncoderInterruptManager.hpp"
+#include "EncoderInterruptManager/Encoder.hpp"
 
 #include <cmath>
 
@@ -120,11 +119,9 @@ public:
     Motor leftMotor;
     Motor rightMotor;
 
-    EncoderInterruptManager& encoderInterruptManager;
-
 private:
-    Encoder* encoderRight = nullptr;
-    Encoder* encoderLeft = nullptr;
+    Encoder<RIGHT> encoderRight;
+    Encoder<LEFT> encoderLeft;
 
     RobotStatus robotStatus;
     ControlSettings controlSettings;

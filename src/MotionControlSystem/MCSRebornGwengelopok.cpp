@@ -5,12 +5,10 @@
 #include "MCS.h"
 
 
-MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT), 
-                encoderInterruptManager(EncoderInterruptManager::Instance())  {
-
-
-    encoderLeft = new Encoder(ENCODER_LEFT_B,ENCODER_LEFT_A);
-    encoderRight = new Encoder(ENCODER_RIGHT_B,ENCODER_RIGHT_A);
+MCS::MCS() 
+    : leftMotor(Side::LEFT), rightMotor(Side::RIGHT), 
+      encoderLeft(), encoderRight() 
+    {
 
 
     initSettings();
@@ -46,6 +44,13 @@ MCS::MCS(): leftMotor(Side::LEFT), rightMotor(Side::RIGHT),
 
     leftMotor.init();
     rightMotor.init();
+
+    encoderLeft.begin();
+    encoderRight.begin();
+
+    encoderLeft.initInterrupt();
+    encoderRight.initInterrupt();
+
 }
 
 void MCS::initSettings() {
@@ -112,8 +117,8 @@ void MCS::initStatus() {
 
 void MCS::updatePositionOrientation() {
 
-    float leftDistance = (float) encoderInterruptManager.get_ticks<LEFT>() * TICK_TO_MM;
-    float rightDistance = (float) encoderInterruptManager.get_ticks<RIGHT>() * TICK_TO_MM;
+    float leftDistance = (float) encoderLeft.get_ticks() * TICK_TO_MM;
+    float rightDistance = (float) encoderRight.get_ticks() * TICK_TO_MM;
 
     float current_angle = getAngle();
 
@@ -134,7 +139,7 @@ void MCS::updatePositionOrientation() {
     /* somme des résultantes */
     //int32_t distance += (int32_t)((leftDistance+rightDistance) / 2);
 
-    float distanceTravelled = (encoderInterruptManager.get_ticks<RIGHT>() + encoderInterruptManager.get_ticks<LEFT>())*TICK_TO_MM/2.0f;
+    //float distanceTravelled = (encoderInterruptManager.get_ticks<RIGHT>() + encoderInterruptManager.get_ticks<LEFT>())*TICK_TO_MM/2.0f;
     /* le robot calcul sa position */
     robotStatus.x = (robotStatus.leftWheelX + robotStatus.rightWheelX) / 2.0f;
     robotStatus.y = (robotStatus.leftWheelY + robotStatus.rightWheelY) / 2.0f;
@@ -146,14 +151,11 @@ void MCS::updatePositionOrientation() {
 void MCS::updateSpeed()
 {
     /* le robot calcul sa vitesse */
-    if(encoderInterruptManager.get_ticks<LEFT>() != 0) {
-        robotStatus.speedLeftWheel = (float) (encoderInterruptManager.get_ticks<LEFT>()) * 1e6 * (float) TICK_TO_MM / encoderInterruptManager.get_delta<LEFT>();
-        encoderInterruptManager.reset_ticks<LEFT>();
-    }
-    if(encoderInterruptManager.get_ticks<RIGHT>() != 0) {
-        robotStatus.speedRightWheel = (float) (encoderInterruptManager.get_ticks<RIGHT>()) * 1e6 * (float) TICK_TO_MM / encoderInterruptManager.get_delta<RIGHT>();
-        encoderInterruptManager.reset_ticks<RIGHT>();
-    }
+    robotStatus.speedLeftWheel = (float) encoderLeft.get_ticks() * (float) TICK_TO_MM * (float) MCS_FREQ;
+    robotStatus.speedRightWheel = (float) encoderRight.get_ticks() * (float) TICK_TO_MM * (float) MCS_FREQ;
+
+    encoderLeft.reset_ticks();
+    encoderRight.reset_ticks();
 
     if(robotStatus.controlledTranslation)
     {
@@ -213,17 +215,9 @@ void MCS::updateSpeed()
  */
 void MCS::control()
 {
-    //filter.reset_filter(robotStatus.speedTranslation);
     /* Si l'asserv est désactivé */
     time_points_criteria = millis();
     if(!robotStatus.controlled) return;
-
-    if (encoderInterruptManager.get_ticks<LEFT>() != 0) {
-        leftTicks = encoderInterruptManager.get_ticks<LEFT>();
-    }
-    if (encoderInterruptManager.get_ticks<RIGHT>() != 0) {
-        rightTicks = encoderInterruptManager.get_ticks<RIGHT>();
-    }
 
     updatePositionOrientation();
     updateSpeed();
@@ -458,8 +452,8 @@ void MCS::sendPositionUpdate() {
 void MCS::resetEncoders() {
     leftTicks = 0;
     rightTicks = 0;
-    encoderLeft->write(0);
-    encoderRight->write(0);
+    encoderLeft.reset_ticks();
+    encoderRight.reset_ticks();
     previousLeftTicks = 0;
     previousRightTicks = 0;
     currentDistance = 0;

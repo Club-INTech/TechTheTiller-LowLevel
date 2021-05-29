@@ -9,7 +9,10 @@
 #include "COM/InterruptStackPrint.h"
 #include "COM/Order/OrderManager.h"
 #include "Config/Defines.h"
+#include <SimpleTimer.h>
 
+
+SimpleTimer timer;
 
 
 auto getMotionDatum() {
@@ -29,7 +32,7 @@ auto getMotionDatum() {
   float yrw = orderManager.motionControlSystem.getYRightWheel();
 
   char s[50];
-  snprintf(s,50,"%f,%f,%f,%f\n", xlw, ylw, xrw, yrw);
+  snprintf(s,50,"%f,%f,%f,%f\n", leftSpeed, leftSpeedGoal, rightSpeed, rightSpeedGoal);
   return String(s);
 }
 
@@ -37,6 +40,7 @@ long time_now = 0;
 long prev_time = 0;
 
 void setup(){
+	//noInterrupts();
 	InitAllPins();
 
 	ComMgr::Instance().init();
@@ -56,41 +60,41 @@ void setup(){
 	Wire.setSDA(D0);
 	Wire.setSCL(D1);
 	Wire.begin();
-	pinMode(LED_BUILTIN, OUTPUT);
-
-	time_now = millis();
-	prev_time = millis();
-	// pinMode(A0, INPUT);
-	// Serial.begin(115200);
+	//interrupts();
 }
 
 
 void loop() {
-	// int value = analogRead(A0);
-	// float tension = (float) value * 3.3f / 1024.0f;
-	// float distance = 11.36f * tension + 2.512f;
-	// Serial.printf("value: %i tension: %f distance: %f\n", value, tension, distance);
+	//noInterrupts();
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
-	//orderManager.execute("montlhery");
-	orderManager.execute("ct0");
-	orderManager.execute("cr1");
+
+	// mcs.leftMotor.run(40);
+	// mcs.rightMotor.run(40);
+
+	timer.setInterval(1000 / MCS_FREQ, [&](){
+		mcs.control();
+		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum());
+	});
+	orderManager.execute("montlhery");
+
+	// orderManager.execute("ct0");
+	// orderManager.execute("cr1");
 	delay(2000);
-	// orderManager.execute("av");
-	mcs.rotate(PI);
-	delay(10);
+	orderManager.execute("av");
+	// mcs.rotate(PI);
 	orderManager.execute("start_mda 4096");
-	delay(2000);
+	//interrupts();
+	delay(4000);
 	while (true) {
-		if(time_now - prev_time >= 1) {
-			mcs.control();
-			if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum()); //2105 offset mais c'est bizzare
-			prev_time = millis();
-		}
+		timer.run();
 		orderManager.communicate();
-		time_now = millis();
         
 	}
+	// int stateR = static_cast<int>(((GPIOA->IDR & 0x0020) >> 5) | ((GPIOB->IDR & 0x0001) << 1));
+	// int stateL = static_cast<int>(((GPIOA->IDR & 0x0040) >> 5) | ((GPIOA->IDR & 0x1000) >> 12));
+	// Serial.printf("%i, %i\n", stateL, stateR);
+	// delay(100);
 }
 
                    /*``.           `-:--.`
