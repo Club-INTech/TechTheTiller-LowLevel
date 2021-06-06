@@ -32,6 +32,7 @@ auto getMotionDatum() {
   float yrw = orderManager.motionControlSystem.getYRightWheel();
 
   char s[50];
+  //snprintf(s,50,"%f,%f,%f,%f\n", xlw, ylw, xrw, yrw);
   snprintf(s,50,"%f,%f,%f,%f\n", leftSpeed, leftSpeedGoal, rightSpeed, rightSpeedGoal);
   return String(s);
 }
@@ -69,8 +70,8 @@ void loop() {
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
 
-	// mcs.leftMotor.run(40);
-	// mcs.rightMotor.run(40);
+	//mcs.leftMotor.run(40);
+	//mcs.rightMotor.run(40);
 
 	timer.setInterval(1000 / MCS_FREQ, [&](){
 		mcs.control();
@@ -78,19 +79,22 @@ void loop() {
 	});
 	orderManager.execute("montlhery");
 
-	// orderManager.execute("ct0");
-	// orderManager.execute("cr1");
+	// // orderManager.execute("ct0");
+	// // orderManager.execute("cr1");
 	delay(2000);
 	orderManager.execute("av");
-	// mcs.rotate(PI);
+	
+	// // mcs.rotate(PI);
 	orderManager.execute("start_mda 4096");
-	//interrupts();
+	
+	// //interrupts();
 	delay(4000);
 	while (true) {
 		timer.run();
 		orderManager.communicate();
         
 	}
+
 	// int stateR = static_cast<int>(((GPIOA->IDR & 0x0020) >> 5) | ((GPIOB->IDR & 0x0001) << 1));
 	// int stateL = static_cast<int>(((GPIOA->IDR & 0x0040) >> 5) | ((GPIOA->IDR & 0x1000) >> 12));
 	// Serial.printf("%i, %i\n", stateL, stateR);

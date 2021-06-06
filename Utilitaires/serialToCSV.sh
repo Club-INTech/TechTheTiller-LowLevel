@@ -33,7 +33,7 @@ outFile=$(echo $fileName | cut -f 3 -d"/")
 
 echo send_md > /dev/ttyACM0
 if [ ! -e /dev/ttyACM0 ]; then
-	echo "Waiting for serial /dev/ttyACM3"
+	echo "Waiting for serial /dev/ttyACM0"
 	echo "Retrying every 100ms"
 
 	while [ ! -e /dev/ttyACM0 ]; do

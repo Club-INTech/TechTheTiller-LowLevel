@@ -12,7 +12,7 @@
 #include "Utils/Singleton.hpp"
 #include "Config/PinMapping.h"
 #include "MotionControlSystem/MCS.h"
-#include "MotionControlSystem/RobotStatus.h"
+#include "MotionControlSystem/RobotInfo/RobotStatus.h"
 #include "COM/ComMgr.h"
 #include "AbstractSensorUS.h"
 #include "SICKDT35_B15851.h"

@@ -58,6 +58,11 @@ constexpr uint8_t F_ENV_POS = 50;
 * Asservissement
 */
 
+#define REDUCTION_COEFFICENT(translation_speed) \
+            ((400 / (translation_speed))
+
+constexpr int MIN_PWM_REACTION = 15;
+
 constexpr int quadrature_state[]={0,1,-1,0,-1,0,0,1,1,0,0,-1,0,-1,1,0};
  
 constexpr uint16_t  MCS_FREQ = 100; //100hz
@@ -69,6 +74,7 @@ constexpr double    POSITION_UPDATE_PERIOD = 1000000.0 / POSITION_UPDATE_FREQUEN
 
 constexpr uint16_t  TICKS_PER_TURN =            1024;   // Unité : ticks
 constexpr float     COD_WHEEL_DIAMETER =        67.29;  // Unité : mm 63.57
+constexpr float     MEAN_TICKS_PER_PERIOD =     3.0f;
 
 //distance roue codeuse pneu = 14.36mm
 

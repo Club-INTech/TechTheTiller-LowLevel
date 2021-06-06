@@ -9,10 +9,10 @@
  */
 
 /* Moteurs */
-constexpr uint8_t FWD_LEFT = D5;
-constexpr uint8_t BKW_LEFT = D9;
-constexpr uint8_t FWD_RIGHT = D10;
-constexpr uint8_t BKW_RIGHT = A2;
+constexpr uint8_t FWD_LEFT = D9;
+constexpr uint8_t BKW_LEFT = D5;
+constexpr uint8_t FWD_RIGHT = A2;
+constexpr uint8_t BKW_RIGHT = D10;
 
 /* Roues codeuses */
 constexpr uint8_t ENCODER_LEFT_A = A5;

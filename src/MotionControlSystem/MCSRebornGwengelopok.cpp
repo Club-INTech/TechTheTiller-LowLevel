@@ -7,7 +7,9 @@
 
 MCS::MCS() 
     : leftMotor(Side::LEFT), rightMotor(Side::RIGHT), 
-      encoderLeft(), encoderRight() 
+      encoderLeft(ENCODER_LEFT_A, ENCODER_LEFT_B), encoderRight(ENCODER_RIGHT_A, ENCODER_RIGHT_B), 
+      leftTicks(0), previousLeftTicks(0),
+      rightTicks(0), previousRightTicks(0)
     {
 
 
@@ -16,9 +18,9 @@ MCS::MCS()
   
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(0.25, 1.88*1e-5, 2.5*1e-4, 0); //0.92 3.73*1e-6 1.15e-4
+    leftSpeedPID.setTunings(1.3, 5*1e-6, 0, 0); //0.92 3.73*1e-6 1.15e-4
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(0.1, 1.9*1e-5, 1e-4, 0); //0.89 3.65*1e-6 1.15e-4
+    rightSpeedPID.setTunings(0.65, 1.2*1e-6, 0, 0); //0.89 3.65*1e-6 1.15e-4
     rightSpeedPID.enableAWU(false);
 
     translationPID.setTunings(2,0,0,0);
@@ -59,8 +61,8 @@ void MCS::initSettings() {
 
 
     /* mm/s^2/MCS_PERIOD */
-    controlSettings.maxAcceleration = 4;//2;
-    controlSettings.maxDeceleration = 4;//2;
+    controlSettings.maxAcceleration = 2;//2;
+    controlSettings.maxDeceleration = 2;//2;
 
 
     /* rad/s */
@@ -68,7 +70,7 @@ void MCS::initSettings() {
 
 
     /* mm/s */
-    controlSettings.maxTranslationSpeed = 400; 
+    controlSettings.maxTranslationSpeed = 500; 
     controlSettings.tolerancySpeed = 5;
 
     /* rad */
@@ -88,7 +90,7 @@ void MCS::initSettings() {
     /* patate */
     controlSettings.tolerancyDifferenceSpeed = 500*2;
 
-    filter.set_decade_attenuation(0.04f);
+    //filter.set_decade_attenuation(0.04f);
 }
 
 void MCS::initStatus() {
@@ -117,8 +119,8 @@ void MCS::initStatus() {
 
 void MCS::updatePositionOrientation() {
 
-    float leftDistance = (float) encoderLeft.get_ticks() * TICK_TO_MM;
-    float rightDistance = (float) encoderRight.get_ticks() * TICK_TO_MM;
+    leftDistance = (float) (encoderLeft.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD;
+    rightDistance = (float) (encoderRight.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD; 
 
     float current_angle = getAngle();
 
@@ -134,13 +136,11 @@ void MCS::updatePositionOrientation() {
     robotStatus.rightWheelX -= dxRight;
     robotStatus.rightWheelY += dyRight; 
 
+    //Serial.printf("l: %f, r: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY);
+
     robotStatus.orientation = atan((robotStatus.rightWheelY - robotStatus.leftWheelY) / (robotStatus.rightWheelX - robotStatus.leftWheelX)) + angleOffset;
 
     /* somme des résultantes */
-    //int32_t distance += (int32_t)((leftDistance+rightDistance) / 2);
-
-    //float distanceTravelled = (encoderInterruptManager.get_ticks<RIGHT>() + encoderInterruptManager.get_ticks<LEFT>())*TICK_TO_MM/2.0f;
-    /* le robot calcul sa position */
     robotStatus.x = (robotStatus.leftWheelX + robotStatus.rightWheelX) / 2.0f;
     robotStatus.y = (robotStatus.leftWheelY + robotStatus.rightWheelY) / 2.0f;
 
@@ -151,11 +151,22 @@ void MCS::updatePositionOrientation() {
 void MCS::updateSpeed()
 {
     /* le robot calcul sa vitesse */
-    robotStatus.speedLeftWheel = (float) encoderLeft.get_ticks() * (float) TICK_TO_MM * (float) MCS_FREQ;
-    robotStatus.speedRightWheel = (float) encoderRight.get_ticks() * (float) TICK_TO_MM * (float) MCS_FREQ;
+    robotStatus.speedLeftWheel = leftDistance * (float) MCS_FREQ;
+    robotStatus.speedRightWheel = rightDistance * (float) MCS_FREQ;
+
+    if(robotStatus.speedLeftWheel > 1500 || robotStatus.speedRightWheel > 1500 || robotStatus.speedLeftWheel < -1500 || robotStatus.speedRightWheel < -1500) {
+        robotStatus.speedLeftWheel = 0;
+        robotStatus.speedRightWheel = 0;
+    }
+    if(robotStatus.speedLeftWheel != 0) {
+        Serial.printf("l: %f, r: %f\n", robotStatus.speedLeftWheel, robotStatus.speedRightWheel);
+    }
 
     encoderLeft.reset_ticks();
     encoderRight.reset_ticks();
+
+    //previousLeftTicks = leftTicks;
+    //previousRightTicks = rightTicks;
 
     if(robotStatus.controlledTranslation)
     {
@@ -219,13 +230,20 @@ void MCS::control()
     time_points_criteria = millis();
     if(!robotStatus.controlled) return;
 
+    //leftTicks = encoderLeft.get_ticks();
+    //rightTicks = encoderRight.get_ticks();
+
     updatePositionOrientation();
     updateSpeed();
 
-    int32_t leftPWM = ((400 / (robotStatus.speedTranslation - robotStatus.speedRotation)) * leftSpeedPID.compute(robotStatus.speedLeftWheel) + 15); 
-    int32_t rightPWM = ((400 / (robotStatus.speedTranslation + robotStatus.speedRotation)) * rightSpeedPID.compute(robotStatus.speedRightWheel) + 15);
+    int32_t leftPWM = ((255 / robotStatus.speedTranslation) * leftSpeedPID.compute(robotStatus.speedLeftWheel) + MIN_PWM_REACTION); 
+    int32_t rightPWM = ((255 / robotStatus.speedTranslation) * rightSpeedPID.compute(robotStatus.speedRightWheel) + MIN_PWM_REACTION);
     leftMotor.run(leftPWM);
     rightMotor.run(rightPWM);
+    // if(robotStatus.speedLeftWheel != 0 ) {
+    //     Serial.printf("l: %i, r: %i \n", leftPWM, rightPWM);
+    // }
+    
 }
 
 void MCS::manageStop() { //TODO :  a modifier pour moins de tolerance

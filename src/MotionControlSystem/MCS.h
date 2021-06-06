@@ -13,15 +13,15 @@
 #include "COM/ComMgr.h"
 #include "COM/InterruptStackPrint.h"
 
-#include "ControlSettings.h"
-#include "RobotStatus.h"
-#include "Motor.h"
-#include "PID.hpp"
-#include "SelfContainedPID.hpp"
+#include "RobotInfo/ControlSettings.h"
+#include "RobotInfo/RobotStatus.h"
+#include "Motors/Motor.h"
+#include "PID/PID.hpp"
+#include "PID/SelfContainedPID.hpp"
 #include "PointToPointTrajectory.h"
 #include "Utils/Filter.hpp"
 #define ENCODER_OPTIMIZE_INTERRUPTS
-#include "EncoderInterruptManager/Encoder.hpp"
+#include "Encoders/Encoder.hpp"
 
 #include <cmath>
 
@@ -142,6 +142,8 @@ private:
     int32_t rightTicks;
     int32_t previousLeftTicks;
     int32_t previousRightTicks;
+    float leftDistance;
+    float rightDistance;
     float previousLeftSpeedGoal;
     float previousRightSpeedGoal;
     int16_t targetDistance;
@@ -149,10 +151,10 @@ private:
     float angleOffset;
     bool expectedWallImpact;
 
-    Average<float, 100> averageLeftSpeed;
-    Average<float, 100> averageRightSpeed;
+    //Average<float, 100> averageLeftSpeed;
+    //Average<float, 100> averageRightSpeed;
 
-    Filter<float> filter;
+    //Filter<float> filter;
 
 
 #if defined(MAIN)
