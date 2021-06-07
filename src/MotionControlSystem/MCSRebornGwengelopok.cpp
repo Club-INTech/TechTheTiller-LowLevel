@@ -136,7 +136,7 @@ void MCS::updatePositionOrientation() {
     robotStatus.rightWheelX -= dxRight;
     robotStatus.rightWheelY += dyRight; 
 
-    //Serial.printf("l: %f, r: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY);
+    Serial.printf("l: %f, r: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY);
 
     robotStatus.orientation = atan((robotStatus.rightWheelY - robotStatus.leftWheelY) / (robotStatus.rightWheelX - robotStatus.leftWheelX)) + angleOffset;
 

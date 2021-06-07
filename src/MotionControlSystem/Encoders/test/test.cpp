@@ -6,7 +6,7 @@
 #ifdef TEST
 
 int main() {
-    assert (pin_mask(A5) == 0x0050);
+    assert (pin_mask(A5) == 0x0040);
     assert (pin_mask(D2) == 0x1000);
     assert (pin_mask(D3) == 0x0001);
     assert (pin_mask(A4) == 0x0020);
