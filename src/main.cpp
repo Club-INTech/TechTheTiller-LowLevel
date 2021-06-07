@@ -37,61 +37,62 @@ auto getMotionDatum() {
   return String(s);
 }
 
-long time_now = 0;
-long prev_time = 0;
 
 void setup(){
 	//noInterrupts();
-	InitAllPins();
+	// InitAllPins();
 
-	ComMgr::Instance().init();
-	Serial.println("Com OK");
+	// ComMgr::Instance().init();
+	// Serial.println("Com OK");
 
-	SensorMgr::Instance().init();
-	Serial.println("Capteurs OK");
+	// SensorMgr::Instance().init();
+	// Serial.println("Capteurs OK");
 
-	MCS::Instance().init();
-	Serial.println("MCS OK");
+	// MCS::Instance().init();
+	// Serial.println("MCS OK");
 
-	OrderManager::Instance().init();
-	Serial.println("Ordres OK");
+	// OrderManager::Instance().init();
+	// Serial.println("Ordres OK");
 
-	Serial.println("Init OK");
+	// Serial.println("Init OK");
 
-	Wire.setSDA(D0);
-	Wire.setSCL(D1);
-	Wire.begin();
+	// Wire.setSDA(D0);
+	// Wire.setSCL(D1);
+	// Wire.begin();
+	Serial.begin(115200);
 	//interrupts();
 }
 
 
 void loop() {
 	//noInterrupts();
-	auto& mcs = MCS::Instance();
-	auto& orderManager = OrderManager::Instance();
+	// auto& mcs = MCS::Instance();
+	// auto& orderManager = OrderManager::Instance();
 
 	//mcs.leftMotor.run(40);
 	//mcs.rightMotor.run(40);
 
-	timer.setInterval(1000 / MCS_FREQ, [&](){
-		mcs.control();
-		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum());
-	});
-	orderManager.execute("montlhery");
+	// timer.setInterval(1000 / MCS_FREQ, [&](){
+	// 	mcs.control();
+	// 	if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum());
+	// });
+	// orderManager.execute("montlhery");
 
 	// // orderManager.execute("ct0");
 	// // orderManager.execute("cr1");
-	delay(2000);
-	orderManager.execute("av");
+	// delay(2000);
+	// orderManager.execute("av");
 	
 	// // mcs.rotate(PI);
-	orderManager.execute("start_mda 4096");
+	//orderManager.execute("start_mda 4096");
 	
 	// //interrupts();
-	delay(4000);
+	//delay(4000);
 	while (true) {
-		timer.run();
-		orderManager.communicate();
+		Serial.print('K');
+		delay(2000);
+		//timer.run();
+		//orderManager.communicate();
         
 	}
 
