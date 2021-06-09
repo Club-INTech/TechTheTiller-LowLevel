@@ -8,6 +8,7 @@
 #include "Utils/Singleton.hpp"
 #include "Utils/Average.hpp"
 #include "Utils/Utils.h"
+#include "Utils/Debug.h"
 #include "Config/Defines.h"
 #include "Config/PinMapping.h"
 #include "COM/ComMgr.h"

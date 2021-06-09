@@ -12,15 +12,14 @@ MCS::MCS()
       rightTicks(0), previousRightTicks(0)
     {
 
-
     initSettings();
     initStatus();
   
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(1.3, 5*1e-6, 0, 0); //0.92 3.73*1e-6 1.15e-4
+    leftSpeedPID.setTunings(0.45, 4*1e-4, 1e-2, 0); //0.45, 4*1e-4, 1e-2, 0
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(0.65, 1.2*1e-6, 0, 0); //0.89 3.65*1e-6 1.15e-4
+    rightSpeedPID.setTunings(0.35, 2.9*1e-4, 4*1e-2, 0); //0.35, 2.9*1e-4, 4*1e-2, 0
     rightSpeedPID.enableAWU(false);
 
     translationPID.setTunings(2,0,0,0);
@@ -66,11 +65,11 @@ void MCS::initSettings() {
 
 
     /* rad/s */
-    controlSettings.maxRotationSpeed = 0.5 *PI;
+    controlSettings.maxRotationSpeed = 0.04 * PI;
 
 
     /* mm/s */
-    controlSettings.maxTranslationSpeed = 500; 
+    controlSettings.maxTranslationSpeed = 400; 
     controlSettings.tolerancySpeed = 5;
 
     /* rad */
@@ -122,6 +121,8 @@ void MCS::updatePositionOrientation() {
     leftDistance = (float) (encoderLeft.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD;
     rightDistance = (float) (encoderRight.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD; 
 
+    //DEBUG("l: %i, r: %i\n", encoderLeft.get_ticks(), encoderRight.get_ticks());
+
     float current_angle = getAngle();
 
     float dxLeft = leftDistance * sinf(current_angle);
@@ -136,7 +137,8 @@ void MCS::updatePositionOrientation() {
     robotStatus.rightWheelX -= dxRight;
     robotStatus.rightWheelY += dyRight; 
 
-    Serial.printf("l: %f, r: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY);
+    // Serial.printf("l: %f, r: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY);
+    // DEBUG("l: %f, r: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY);
 
     robotStatus.orientation = atan((robotStatus.rightWheelY - robotStatus.leftWheelY) / (robotStatus.rightWheelX - robotStatus.leftWheelX)) + angleOffset;
 
@@ -158,9 +160,18 @@ void MCS::updateSpeed()
         robotStatus.speedLeftWheel = 0;
         robotStatus.speedRightWheel = 0;
     }
-    if(robotStatus.speedLeftWheel != 0) {
-        Serial.printf("l: %f, r: %f\n", robotStatus.speedLeftWheel, robotStatus.speedRightWheel);
-    }
+
+    // if(robotStatus.speedLeftWheel > 2*robotStatus.speedTranslation || robotStatus.speedLeftWheel < -2*robotStatus.speedTranslation) {
+    //     robotStatus.speedLeftWheel = robotStatus.speedTranslation;
+    // }
+
+    // if(robotStatus.speedRightWheel > 2*robotStatus.speedTranslation || robotStatus.speedRightWheel < -2*robotStatus.speedTranslation) {
+    //     robotStatus.speedRightWheel = robotStatus.speedTranslation;
+    // }
+
+    // if(robotStatus.speedLeftWheel != 0 || robotStatus.speedRightWheel != 0) {
+    //     DEBUG("l: %f, r: %f\n", robotStatus.speedLeftWheel, robotStatus.speedRightWheel);
+    // }
 
     encoderLeft.reset_ticks();
     encoderRight.reset_ticks();
@@ -193,11 +204,11 @@ void MCS::updateSpeed()
 
     if (leftSpeedPID.active) {
         /* défini la consigne en vitesse gauche */
-        leftSpeedPID.setGoal(robotStatus.speedTranslation - robotStatus.speedRotation);
+        leftSpeedPID.setGoal(robotStatus.speedTranslation - robotStatus.speedRotation * 36.325f); //on travaille en vitesse, ptdr les vieux vous etes en vacances ou quoi?
     }
     if (rightSpeedPID.active) {
         /* défini la consigne en vitesse droite */
-        rightSpeedPID.setGoal(robotStatus.speedTranslation + robotStatus.speedRotation);
+        rightSpeedPID.setGoal(robotStatus.speedTranslation + robotStatus.speedRotation * 36.325f);
     }
 
 
@@ -217,6 +228,8 @@ void MCS::updateSpeed()
 
     previousLeftSpeedGoal = leftSpeedPID.getCurrentGoal();
     previousRightSpeedGoal = rightSpeedPID.getCurrentGoal();
+
+    //DEBUG("l: %f, r: %f\n", previousLeftSpeedGoal, previousRightSpeedGoal);
 }
 
 /**
@@ -236,12 +249,19 @@ void MCS::control()
     updatePositionOrientation();
     updateSpeed();
 
-    int32_t leftPWM = ((255 / robotStatus.speedTranslation) * leftSpeedPID.compute(robotStatus.speedLeftWheel) + MIN_PWM_REACTION); 
-    int32_t rightPWM = ((255 / robotStatus.speedTranslation) * rightSpeedPID.compute(robotStatus.speedRightWheel) + MIN_PWM_REACTION);
+    int32_t leftPWM = ((255 / (ABS(robotStatus.speedTranslation) + ABS(robotStatus.speedRotation) * 36.325f)) * leftSpeedPID.compute(robotStatus.speedLeftWheel));
+    int32_t rightPWM = ((255 / (ABS(robotStatus.speedTranslation) + ABS(robotStatus.speedRotation) * 36.325f)) * rightSpeedPID.compute(robotStatus.speedRightWheel));
+    // if (robotStatus.speedTranslation != 0 || robotStatus.speedRotation != 0)  {
+    //     leftPWM = ((255 / (ABS(leftSpeedPID.getCurrentGoal()))) * leftSpeedPID.compute(robotStatus.speedLeftWheel) + SIGN(leftSpeedPID.getCurrentGoal() - robotStatus.speedLeftWheel)* MIN_PWM_REACTION); 
+    //     rightPWM = ((255 / (ABS(rightSpeedPID.getCurrentGoal()))) * rightSpeedPID.compute(robotStatus.speedRightWheel) + SIGN(rightSpeedPID.getCurrentGoal() - robotStatus.speedRightWheel)* MIN_PWM_REACTION);
+    // } else {
+    //     leftPWM = ((255 / (controlSettings.maxTranslationSpeed)) * leftSpeedPID.compute(robotStatus.speedLeftWheel) + SIGN(leftSpeedPID.getCurrentGoal() - robotStatus.speedLeftWheel)* MIN_PWM_REACTION); 
+    //     rightPWM = ((255 / (controlSettings.maxTranslationSpeed)) * rightSpeedPID.compute(robotStatus.speedRightWheel) + SIGN(rightSpeedPID.getCurrentGoal() - robotStatus.speedRightWheel)* MIN_PWM_REACTION); 
+    // }
     leftMotor.run(leftPWM);
     rightMotor.run(rightPWM);
     // if(robotStatus.speedLeftWheel != 0 ) {
-    //     Serial.printf("l: %i, r: %i \n", leftPWM, rightPWM);
+    //     DEBUG("lpid: %f, rpid: %f \n", leftSpeedPID.compute(robotStatus.speedLeftWheel), rightSpeedPID.compute(robotStatus.speedRightWheel));
     // }
     
 }
@@ -454,9 +474,13 @@ void MCS::speedBasedMovement(MOVEMENT movement) {
         default:
             leftSpeedPID.setGoal(0);
             rightSpeedPID.setGoal(0);
+            leftSpeedPID.resetErrors();
+            rightSpeedPID.resetErrors();
             robotStatus.speedRotation = 0;
             robotStatus.speedTranslation = 0;
             robotStatus.movement = MOVEMENT::NONE;
+            encoderLeft.reset_ticks();
+            encoderRight.reset_ticks();
             return;
     }
     robotStatus.movement = movement;

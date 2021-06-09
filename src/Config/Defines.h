@@ -10,6 +10,8 @@
 *COMMUNICATION
 */
 
+#define SIGN(var) ABS(var) / var
+
 
 constexpr uint32_t MIN_TIME_BETWEEN_GOTO_TR_ROT = 100; // en ticks d'asserv'
 // Nombre d'octets acceptables depuis le HL
@@ -74,7 +76,7 @@ constexpr double    POSITION_UPDATE_PERIOD = 1000000.0 / POSITION_UPDATE_FREQUEN
 
 constexpr uint16_t  TICKS_PER_TURN =            1024;   // Unité : ticks
 constexpr float     COD_WHEEL_DIAMETER =        67.29;  // Unité : mm 63.57
-constexpr float     MEAN_TICKS_PER_PERIOD =     3.0f;
+constexpr float     MEAN_TICKS_PER_PERIOD =     3.6f;
 
 //distance roue codeuse pneu = 14.36mm
 

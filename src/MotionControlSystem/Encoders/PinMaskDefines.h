@@ -8,7 +8,6 @@
 #ifndef TECH_THE_TILLER_PIN_MASK_DEFINES
 #define TECH_THE_TILLER_PIN_MASK_DEFINES
 
-#include <assert.h>
 
 #ifdef TEST
 
@@ -95,7 +94,6 @@ inline volatile int pin_mask(uint8_t pin) {
 inline volatile int get_shift(uint8_t pin, ENCODER_ORIENTATION orientation) {
     switch(pin) {
         case A0: case D3: // A0 and D3 can only be forward pins
-            assert (orientation == FORWARD); 
             return 0;
         case A1:
             return (pin - A0) - 1 + orientation;

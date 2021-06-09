@@ -56,13 +56,17 @@ class Encoder {
 
 public:
 
-    Encoder(uint32_t fwd_pin, uint32_t bwd_pin) : pinA(fwd_pin), pinB(bwd_pin) {
-        ports[0] = get_pin_gpio(pinA);
-        ports[1] = get_pin_gpio(pinB);
+    Encoder(uint32_t fwd_pin, uint32_t bwd_pin) {
+        pinA = fwd_pin;
+        pinB = bwd_pin;
+        ports[0] = S == LEFT ? GPIOA : GPIOB;
+        ports[1] = GPIOA;
         pin_maskA = pin_mask(pinA);
         pin_maskB = pin_mask(pinB);
         shiftA = get_shift(pinA, FORWARD);
-        shiftB = get_shift(pinA, BACKWARD);
+        shiftB = get_shift(pinB, BACKWARD);
+        //Serial.printf("pA: %i, pB: %i, sA: %i, sB: %i\n", pin_maskA, pin_maskB, shiftA, shiftB);
+        //Serial.println(ports[0] == ports[1]);
         ticks = 0;
         //init state
         state = ((ports[0]->IDR & pin_maskA) >> shiftA) | ((ports[1]->IDR & pin_maskB) >> shiftB);

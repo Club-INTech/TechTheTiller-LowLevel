@@ -136,25 +136,25 @@ if(mode == "speed" or mode == ""):
     speedSubs = (subplot(211),subplot(212))
     
     time_base = [i*10 for i in range(len(speeds[0]))]
-    graph = []
-    new_time_base = []
+    # graph = []
+    # new_time_base = []
 
     for i in [0,1]:
         
-        sample_time_base = time_base[:]
-        sample_speed = speeds[i][:]
+        # sample_time_base = time_base[:]
+        # sample_speed = speeds[i][:]
     
-        Interpolation.set_points(x=sample_time_base, y=sample_speed)
-        Interpolation.sampling()
+        # Interpolation.set_points(x=sample_time_base, y=sample_speed)
+        # Interpolation.sampling()
 
 
-        start_t, end_t = time_base[0], time_base[len(time_base) - 1]
-        point_nbr = int((end_t - start_t) / 1.0)
-        new_time_base.append([start_t + i*1.0 for i in range(point_nbr)])
+        # start_t, end_t = time_base[0], time_base[len(time_base) - 1]
+        # point_nbr = int((end_t - start_t) / 1.0)
+        # new_time_base.append([start_t + i*1.0 for i in range(point_nbr)])
     
-        graph.append([Interpolation.interpolation_output(t) for t in new_time_base[i]])
+        # graph.append([Interpolation.interpolation_output(t) for t in new_time_base[i]])
 
-        speedSubs[i].plot(new_time_base[i], graph[i])
+        speedSubs[i].plot(time_base, speeds[i])
         speedSubs[i].plot(time_base,speedSetpoints[i])
     
     Img.savefig("serialOutput/"+file+"- speeds.png")
@@ -162,7 +162,7 @@ if(mode == "speed" or mode == ""):
 
     for i in [0,1]:
         subplot(2,1,i+1)
-        plot(new_time_base[i], graph[i], 'r.')
+        plot(time_base, speeds[i], 'r.')
         plot(time_base,speedSetpoints[i], 'b.')
 
 show()
