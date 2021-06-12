@@ -39,18 +39,18 @@ void ORDER_toggle_valve::impl(Args args) {
   using namespace external;
   static BufferedData data(2 * sizeof(int));
 
-  putData(OrderManager::parseInt(args[0]), data_ptr);
-  putData(OrderManager::parseInt(args[1]), data_ptr);
-  executeRPC(pumps_id, toggle_valve_id, data_ptr);
+  putData(OrderManager::parseInt(args[0]), &data);
+  putData(OrderManager::parseInt(args[1]), &data);
+  executeRPC(pumps_id, toggle_valve_id, &data);
 }
 
 void ORDER_suck::impl(Args args) {
   using namespace external;
   static BufferedData data(2 * sizeof(int));
 
-  putData(OrderManager::parseInt(args[0]), data_ptr);
-  putData(OrderManager::parseInt(args[1]), data_ptr);
-  executeRPC(pumps_id, suck_id, data_ptr);
+  putData(OrderManager::parseInt(args[0]), &data);
+  putData(OrderManager::parseInt(args[1]), &data);
+  executeRPC(pumps_id, suck_id, &data);
 }
 
 // TODO : C'est déprécié, mais je vois pas d'autre solution.
