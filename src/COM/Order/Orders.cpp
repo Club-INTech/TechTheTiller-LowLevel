@@ -12,29 +12,33 @@ using namespace I2CC;
 
 void ORDER_set_hammer_angle::impl(Args args) {
   using namespace external;
-  auto data_ptr = new BufferedData(sizeof(int) + sizeof(float));
-  putData(OrderManager::parseInt(args[0]), data_ptr);
-  putData(OrderManager::parseFloat(args[1]), data_ptr);
-  executeRPC(hammers_id, set_hammer_angle_id, data_ptr);
+  static BufferedData data(sizeof(int) + sizeof(float));
+
+  putData(OrderManager::parseInt(args[0]), &data);
+  putData(OrderManager::parseFloat(args[1]), &data);
+  executeRPC(hammers_id, set_hammer_angle_id, &data);
 }
 
 void ORDER_raise_hammer::impl(Args args) {
   using namespace external;
-  auto data_ptr = new BufferedData(sizeof(int));
-  putData(OrderManager::parseInt(args[0]), data_ptr);
-  executeRPC(hammers_id, raise_hammer_id, data_ptr);
+  static BufferedData data(sizeof(int));
+
+  putData(OrderManager::parseInt(args[0]), &data);
+  executeRPC(hammers_id, raise_hammer_id, &data);
 }
 
 void ORDER_lower_hammer::impl(Args args) {
   using namespace external;
-  auto data_ptr = new BufferedData(sizeof(int));
-  putData(OrderManager::parseInt(args[0]), data_ptr);
-  executeRPC(hammers_id, lower_hammer_id, data_ptr);
+  static BufferedData data(sizeof(int));
+
+  putData(OrderManager::parseInt(args[0]), &data);
+  executeRPC(hammers_id, lower_hammer_id, &data);
 }
 
 void ORDER_toggle_valve::impl(Args args) {
   using namespace external;
-  auto data_ptr = new BufferedData(2 * sizeof(int));
+  static BufferedData data(2 * sizeof(int));
+
   putData(OrderManager::parseInt(args[0]), data_ptr);
   putData(OrderManager::parseInt(args[1]), data_ptr);
   executeRPC(pumps_id, toggle_valve_id, data_ptr);
@@ -42,7 +46,8 @@ void ORDER_toggle_valve::impl(Args args) {
 
 void ORDER_suck::impl(Args args) {
   using namespace external;
-  auto data_ptr = new BufferedData(2 * sizeof(int));
+  static BufferedData data(2 * sizeof(int));
+
   putData(OrderManager::parseInt(args[0]), data_ptr);
   putData(OrderManager::parseInt(args[1]), data_ptr);
   executeRPC(pumps_id, suck_id, data_ptr);
