@@ -56,7 +56,7 @@ void loop() {
 	while (true) {
 		mcs.control();
 		orderManager.communicate();
-        orderManager.execute("rawposdata");
+    //    orderManager.execute("rawposdata");
 		//if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity) dbuf::buffer.concat(getMotionDatum());
 	}
 }

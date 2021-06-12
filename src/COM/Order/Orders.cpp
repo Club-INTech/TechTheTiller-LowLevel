@@ -11,15 +11,16 @@
 using namespace I2CC;
 
 void ORDER_hammers::impl(Args args) {
-  for (size_t i = 0; i < 5; i++) {
-    OrderData forwarded_args;
+  using namespace external;
 
-    forwarded_args.push_back(args[0]);
-    forwarded_args.push_back(String(i));
-    if (OrderManager::parseInt(args[1]))
-      __ORDER_raise_hammer.impl(forwarded_args);
+  for (int i = 0; i < 5; i++) {
+    BufferedData data(sizeof(int));
+    putData(i, &data);
+
+    if (OrderManager::parseInt(args[0]))
+      executeRPC(hammers_id, raise_hammer_id, &data);
     else
-      __ORDER_lower_hammer.impl(forwarded_args);
+      executeRPC(hammers_id, lower_hammer_id, &data);
   }
 }
 
