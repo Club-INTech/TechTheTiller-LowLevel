@@ -75,13 +75,14 @@ constexpr uint16_t  POSITION_UPDATE_FREQUENCY = 20; // 20 Hz
 constexpr double    POSITION_UPDATE_PERIOD = 1000000.0 / POSITION_UPDATE_FREQUENCY; // Durée en µs entre deux mesures
 
 constexpr uint16_t  TICKS_PER_TURN =            1024;   // Unité : ticks
-constexpr float     COD_WHEEL_DIAMETER =        67.29;  // Unité : mm 63.57
+constexpr float     COD_WHEEL_DIAMETER =        66.82f;  // Unité : mm 63.57
+constexpr float     COD_WHEEL_RADIUS =          33.41f;
 constexpr float     MEAN_TICKS_PER_PERIOD =     3.6f;
 
 //distance roue codeuse pneu = 14.36mm
 
-constexpr uint8_t   DISTANCE_COD_GAUCHE_CENTRE = 160; // Unité : mm
-constexpr uint8_t   DISTANCE_COD_DROITE_CENTRE = 160; // Unité : mm
+constexpr uint8_t   DISTANCE_COD_GAUCHE_CENTRE = 161; // Unité : mm
+constexpr uint8_t   DISTANCE_COD_DROITE_CENTRE = 161; // Unité : mm
 
 constexpr float TICK_TO_MM = static_cast<float>(PI*COD_WHEEL_DIAMETER/TICKS_PER_TURN); // Unité : mm/ticks
 constexpr float TICK_TO_RADIAN = TICK_TO_MM / DISTANCE_COD_GAUCHE_CENTRE; // Unité : rad/ticks

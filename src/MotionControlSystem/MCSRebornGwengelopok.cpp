@@ -8,8 +8,7 @@
 MCS::MCS() 
     : leftMotor(Side::LEFT), rightMotor(Side::RIGHT), 
       encoderLeft(ENCODER_LEFT_A, ENCODER_LEFT_B), encoderRight(ENCODER_RIGHT_A, ENCODER_RIGHT_B), 
-      leftTicks(0), previousLeftTicks(0),
-      rightTicks(0), previousRightTicks(0)
+      leftTicks(0), rightTicks(0)
     {
 
     initSettings();
@@ -101,6 +100,8 @@ void MCS::initStatus() {
     robotStatus.controlled = true;
     robotStatus.controlledRotation = true;
     robotStatus.controlledTranslation = true;
+    robotStatus.currentLeftSpeedGoal = 0;
+    robotStatus.currentRightSpeedGoal = 0;
     previousLeftSpeedGoal = 0;
     previousRightSpeedGoal = 0;
     previousLeftTicks = 0;
@@ -142,7 +143,7 @@ void MCS::control()
     // if(robotStatus.speedLeftWheel != 0 ) {
     //     DEBUG("lpid: %f, rpid: %f \n", leftSpeedPID.compute(robotStatus.speedLeftWheel), rightSpeedPID.compute(robotStatus.speedRightWheel));
     // }
-    
+
     encoderLeft.reset_ticks();
     encoderRight.reset_ticks();
     
@@ -188,37 +189,14 @@ void MCS::updateSpeed()
     robotStatus.speedLeftWheel = leftDistance * (float) MCS_FREQ;
     robotStatus.speedRightWheel = rightDistance * (float) MCS_FREQ;
 
-    if(robotStatus.speedLeftWheel > 1500 || robotStatus.speedRightWheel > 1500 || robotStatus.speedLeftWheel < -1500 || robotStatus.speedRightWheel < -1500) {
-        robotStatus.speedLeftWheel = 0;
-        robotStatus.speedRightWheel = 0;
-    }
-
-    // if(ABS(robotStatus.speedLeftWheel) <= 8) {
+    // if(robotStatus.speedLeftWheel > 1500 || robotStatus.speedRightWheel > 1500 || robotStatus.speedLeftWheel < -1500 || robotStatus.speedRightWheel < -1500) {
     //     robotStatus.speedLeftWheel = 0;
-    // }
-
-    // if(ABS(robotStatus.speedRightWheel) <= 8) {
     //     robotStatus.speedRightWheel = 0;
     // }
 
-    // if(robotStatus.speedLeftWheel > 2*robotStatus.speedTranslation || robotStatus.speedLeftWheel < -2*robotStatus.speedTranslation) {
-    //     robotStatus.speedLeftWheel = robotStatus.speedTranslation;
-    // }
-
-    // if(robotStatus.speedRightWheel > 2*robotStatus.speedTranslation || robotStatus.speedRightWheel < -2*robotStatus.speedTranslation) {
-    //     robotStatus.speedRightWheel = robotStatus.speedTranslation;
-    // }
-
-    // if(robotStatus.speedLeftWheel != 0 || robotStatus.speedRightWheel != 0) {
-    //     DEBUG("l: %f, r: %f\n", robotStatus.speedLeftWheel, robotStatus.speedRightWheel);
-    // }
-
-    //previousLeftTicks = leftTicks;
-    //previousRightTicks = rightTicks;
 
     if(robotStatus.controlledTranslation)
     {
-        /* retourne la sortie du PID en translation */
         robotStatus.speedTranslation = translationPID.compute(currentDistance);
     }
     else if(!robotStatus.forcedMovement)
@@ -228,7 +206,6 @@ void MCS::updateSpeed()
 
     if(robotStatus.controlledRotation && !expectedWallImpact)
     {
-        /* retourne la sortie du PID en rotation */
         robotStatus.speedRotation = rotationPID.compute(robotStatus.orientation);
     }
     else if(!robotStatus.forcedMovement)
@@ -239,32 +216,38 @@ void MCS::updateSpeed()
     robotStatus.speedTranslation = MAX(-controlSettings.maxTranslationSpeed, MIN(controlSettings.maxTranslationSpeed, robotStatus.speedTranslation));
     robotStatus.speedRotation = MAX(-controlSettings.maxRotationSpeed, MIN(controlSettings.maxRotationSpeed, robotStatus.speedRotation)) * DISTANCE_COD_GAUCHE_CENTRE;
 
+    robotStatus.finalLeftSpeedGoal = robotStatus.speedTranslation - robotStatus.speedRotation * 36.325f;
+    robotStatus.finalRightSpeedGoal = robotStatus.speedTranslation + robotStatus.speedRotation * 36.325f;
+
     if (leftSpeedPID.active) {
-        /* défini la consigne en vitesse gauche */
-        leftSpeedPID.setGoal(robotStatus.speedTranslation - robotStatus.speedRotation * 36.325f); //on travaille en vitesse, ptdr les vieux vous etes en vacances ou quoi?
+        
+        if( robotStatus.currentLeftSpeedGoal + controlSettings.maxAcceleration <= robotStatus.finalLeftSpeedGoal) {
+            robotStatus.currentLeftSpeedGoal += controlSettings.maxAcceleration;
+        }
+
+        if(robotStatus.currentLeftSpeedGoal - controlSettings.maxDeceleration >= robotStatus.finalLeftSpeedGoal && !robotStatus.stuck) {
+            robotStatus.currentLeftSpeedGoal -= controlSettings.maxDeceleration;
+        }
+
+
+        leftSpeedPID.setGoal(robotStatus.currentLeftSpeedGoal);
+    
     }
+
     if (rightSpeedPID.active) {
-        /* défini la consigne en vitesse droite */
-        rightSpeedPID.setGoal(robotStatus.speedTranslation + robotStatus.speedRotation * 36.325f);
-    }
+        
+        if( robotStatus.currentRightSpeedGoal + controlSettings.maxAcceleration <= robotStatus.finalRightSpeedGoal) {
+            robotStatus.currentRightSpeedGoal += controlSettings.maxAcceleration;
+        }
+
+        if(robotStatus.currentRightSpeedGoal - controlSettings.maxDeceleration >= robotStatus.finalRightSpeedGoal && !robotStatus.stuck) {
+            robotStatus.currentRightSpeedGoal -= controlSettings.maxDeceleration;
+        }
 
 
-    if( leftSpeedPID.getCurrentGoal() - previousLeftSpeedGoal > controlSettings.maxAcceleration ) {
-        leftSpeedPID.setGoal( previousLeftSpeedGoal + controlSettings.maxAcceleration );
+        rightSpeedPID.setGoal(robotStatus.currentRightSpeedGoal);
+    
     }
-    if( previousLeftSpeedGoal - leftSpeedPID.getCurrentGoal() > controlSettings.maxDeceleration && !robotStatus.stuck) {
-        leftSpeedPID.setGoal( previousLeftSpeedGoal - controlSettings.maxDeceleration );
-    }
-
-    if( rightSpeedPID.getCurrentGoal() - previousRightSpeedGoal > controlSettings.maxAcceleration ) {
-        rightSpeedPID.setGoal( previousRightSpeedGoal + controlSettings.maxAcceleration );
-    }
-    if( previousRightSpeedGoal - rightSpeedPID.getCurrentGoal() > controlSettings.maxDeceleration && !robotStatus.stuck) {
-        rightSpeedPID.setGoal( previousRightSpeedGoal - controlSettings.maxDeceleration );
-    }
-
-    previousLeftSpeedGoal = leftSpeedPID.getCurrentGoal();
-    previousRightSpeedGoal = rightSpeedPID.getCurrentGoal();
 
     //DEBUG("l: %f, r: %f\n", previousLeftSpeedGoal, previousRightSpeedGoal);
 }
