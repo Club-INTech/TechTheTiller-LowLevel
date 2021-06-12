@@ -10,6 +10,19 @@
 
 using namespace I2CC;
 
+void ORDER_hammers::impl(Args args) {
+  for (size_t i = 0; i < 5; i++) {
+    OrderData forwarded_args;
+
+    forwarded_args.push_back(args[0]);
+    forwarded_args.push_back(String(i));
+    if (OrderManager::parseInt(args[1]))
+      __ORDER_raise_hammer.impl(forwarded_args);
+    else
+      __ORDER_lower_hammer.impl(forwarded_args);
+  }
+}
+
 void ORDER_set_hammer_angle::impl(Args args) {
   using namespace external;
   static BufferedData data(sizeof(int) + sizeof(float));

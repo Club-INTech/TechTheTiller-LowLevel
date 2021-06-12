@@ -24,6 +24,9 @@
   ORDER pour 2020-2021
 *******************************************************************************/
 
+// HL crew requests
+ORDER(hammers, 1);
+
 // Actionators
 ORDER(set_hammer_angle, 2);
 ORDER(raise_hammer, 1);
