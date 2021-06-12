@@ -17,9 +17,9 @@ MCS::MCS()
   
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(0.45, 4*1e-4, 1e-2, 0); //0.45, 4*1e-4, 1e-2, 0
+    leftSpeedPID.setTunings(0.45, 4.2*1e-4, 1e-2, 0); //0.45, 4*1e-4, 1e-2, 0
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(0.35, 2.9*1e-4, 4*1e-2, 0); //0.35, 2.9*1e-4, 4*1e-2, 0
+    rightSpeedPID.setTunings(0.3, 8*1e-5, 6*1e-3, 0); //0.35, 2.9*1e-4, 4*1e-2, 0
     rightSpeedPID.enableAWU(false);
 
     translationPID.setTunings(2,0,0,0);
@@ -60,8 +60,8 @@ void MCS::initSettings() {
 
 
     /* mm/s^2/MCS_PERIOD */
-    controlSettings.maxAcceleration = 2;//2;
-    controlSettings.maxDeceleration = 2;//2;
+    controlSettings.maxAcceleration = 5;//2;
+    controlSettings.maxDeceleration = 5;//2;
 
 
     /* rad/s */
@@ -69,7 +69,7 @@ void MCS::initSettings() {
 
 
     /* mm/s */
-    controlSettings.maxTranslationSpeed = 400; 
+    controlSettings.maxTranslationSpeed = 500; 
     controlSettings.tolerancySpeed = 5;
 
     /* rad */
@@ -116,12 +116,44 @@ void MCS::initStatus() {
 
 }
 
+/**
+ * Rafraîchit les consignes de vitesses enregistrées aux moteurs
+ * D'autres méthodes de MCS se chargent d'enregistrer les consignes. Les consignes sont maintenues jusqu'à un nouvel
+ * appel de 'control'
+ */
+void MCS::control()
+{
+    /* Si l'asserv est désactivé */
+    time_points_criteria = millis();
+    if(!robotStatus.controlled) return;
+
+
+    updatePositionOrientation();
+    updateSpeed();
+
+    // normalisation ((255 / (ABS(robotStatus.speedTranslation) + ABS(robotStatus.speedRotation) * 36.325f)) *
+
+    int32_t leftPWM =  leftSpeedPID.compute(robotStatus.speedLeftWheel);
+    int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
+    
+    leftMotor.run(leftPWM);
+    rightMotor.run(rightPWM);
+
+    // if(robotStatus.speedLeftWheel != 0 ) {
+    //     DEBUG("lpid: %f, rpid: %f \n", leftSpeedPID.compute(robotStatus.speedLeftWheel), rightSpeedPID.compute(robotStatus.speedRightWheel));
+    // }
+    
+    encoderLeft.reset_ticks();
+    encoderRight.reset_ticks();
+    
+}
+
 void MCS::updatePositionOrientation() {
 
     leftDistance = (float) (encoderLeft.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD;
     rightDistance = (float) (encoderRight.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD; 
 
-    //DEBUG("l: %i, r: %i\n", encoderLeft.get_ticks(), encoderRight.get_ticks());
+    // DEBUG("l: %i, r: %i\n", encoderLeft.get_ticks(), encoderRight.get_ticks());
 
     float current_angle = getAngle();
 
@@ -138,7 +170,7 @@ void MCS::updatePositionOrientation() {
     robotStatus.rightWheelY += dyRight; 
 
     // Serial.printf("l: %f, r: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY);
-    // DEBUG("l: %f, r: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY);
+    //DEBUG("l: %f, r: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY);
 
     robotStatus.orientation = atan((robotStatus.rightWheelY - robotStatus.leftWheelY) / (robotStatus.rightWheelX - robotStatus.leftWheelX)) + angleOffset;
 
@@ -161,6 +193,14 @@ void MCS::updateSpeed()
         robotStatus.speedRightWheel = 0;
     }
 
+    // if(ABS(robotStatus.speedLeftWheel) <= 8) {
+    //     robotStatus.speedLeftWheel = 0;
+    // }
+
+    // if(ABS(robotStatus.speedRightWheel) <= 8) {
+    //     robotStatus.speedRightWheel = 0;
+    // }
+
     // if(robotStatus.speedLeftWheel > 2*robotStatus.speedTranslation || robotStatus.speedLeftWheel < -2*robotStatus.speedTranslation) {
     //     robotStatus.speedLeftWheel = robotStatus.speedTranslation;
     // }
@@ -172,9 +212,6 @@ void MCS::updateSpeed()
     // if(robotStatus.speedLeftWheel != 0 || robotStatus.speedRightWheel != 0) {
     //     DEBUG("l: %f, r: %f\n", robotStatus.speedLeftWheel, robotStatus.speedRightWheel);
     // }
-
-    encoderLeft.reset_ticks();
-    encoderRight.reset_ticks();
 
     //previousLeftTicks = leftTicks;
     //previousRightTicks = rightTicks;
@@ -232,39 +269,6 @@ void MCS::updateSpeed()
     //DEBUG("l: %f, r: %f\n", previousLeftSpeedGoal, previousRightSpeedGoal);
 }
 
-/**
- * Rafraîchit les consignes de vitesses enregistrées aux moteurs
- * D'autres méthodes de MCS se chargent d'enregistrer les consignes. Les consignes sont maintenues jusqu'à un nouvel
- * appel de 'control'
- */
-void MCS::control()
-{
-    /* Si l'asserv est désactivé */
-    time_points_criteria = millis();
-    if(!robotStatus.controlled) return;
-
-    //leftTicks = encoderLeft.get_ticks();
-    //rightTicks = encoderRight.get_ticks();
-
-    updatePositionOrientation();
-    updateSpeed();
-
-    int32_t leftPWM = ((255 / (ABS(robotStatus.speedTranslation) + ABS(robotStatus.speedRotation) * 36.325f)) * leftSpeedPID.compute(robotStatus.speedLeftWheel));
-    int32_t rightPWM = ((255 / (ABS(robotStatus.speedTranslation) + ABS(robotStatus.speedRotation) * 36.325f)) * rightSpeedPID.compute(robotStatus.speedRightWheel));
-    // if (robotStatus.speedTranslation != 0 || robotStatus.speedRotation != 0)  {
-    //     leftPWM = ((255 / (ABS(leftSpeedPID.getCurrentGoal()))) * leftSpeedPID.compute(robotStatus.speedLeftWheel) + SIGN(leftSpeedPID.getCurrentGoal() - robotStatus.speedLeftWheel)* MIN_PWM_REACTION); 
-    //     rightPWM = ((255 / (ABS(rightSpeedPID.getCurrentGoal()))) * rightSpeedPID.compute(robotStatus.speedRightWheel) + SIGN(rightSpeedPID.getCurrentGoal() - robotStatus.speedRightWheel)* MIN_PWM_REACTION);
-    // } else {
-    //     leftPWM = ((255 / (controlSettings.maxTranslationSpeed)) * leftSpeedPID.compute(robotStatus.speedLeftWheel) + SIGN(leftSpeedPID.getCurrentGoal() - robotStatus.speedLeftWheel)* MIN_PWM_REACTION); 
-    //     rightPWM = ((255 / (controlSettings.maxTranslationSpeed)) * rightSpeedPID.compute(robotStatus.speedRightWheel) + SIGN(rightSpeedPID.getCurrentGoal() - robotStatus.speedRightWheel)* MIN_PWM_REACTION); 
-    // }
-    leftMotor.run(leftPWM);
-    rightMotor.run(rightPWM);
-    // if(robotStatus.speedLeftWheel != 0 ) {
-    //     DEBUG("lpid: %f, rpid: %f \n", leftSpeedPID.compute(robotStatus.speedLeftWheel), rightSpeedPID.compute(robotStatus.speedRightWheel));
-    // }
-    
-}
 
 void MCS::manageStop() { //TODO :  a modifier pour moins de tolerance
     static int timeCounter =0;
@@ -474,8 +478,8 @@ void MCS::speedBasedMovement(MOVEMENT movement) {
         default:
             leftSpeedPID.setGoal(0);
             rightSpeedPID.setGoal(0);
-            leftSpeedPID.resetErrors();
-            rightSpeedPID.resetErrors();
+            leftSpeedPID.fullReset();
+            rightSpeedPID.fullReset();
             robotStatus.speedRotation = 0;
             robotStatus.speedTranslation = 0;
             robotStatus.movement = MOVEMENT::NONE;
