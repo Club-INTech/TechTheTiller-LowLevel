@@ -67,6 +67,7 @@ constexpr int MIN_PWM_REACTION = 15;
 
 constexpr int quadrature_state[]={0,1,-1,0,-1,0,0,1,1,0,0,-1,0,-1,1,0};
  
+constexpr uint16_t  SAMPLING_FREQUENCY = 10;
 constexpr uint16_t  MCS_FREQ = 100; //100hz
 constexpr double    MCS_PERIOD = 1000000.0 / MCS_FREQ; // Durée en µs entre deux mesures
 constexpr uint32_t  STEPPER_FREQUENCY = 24000;//3000; // 625/2 Hz

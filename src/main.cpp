@@ -12,7 +12,8 @@
 #include <SimpleTimer.h>
 
 
-SimpleTimer timer;
+SimpleTimer mcsTimer;
+SimpleTimer samplingTimer;
 
 
 auto getMotionDatum() {
@@ -71,9 +72,12 @@ void loop() {
 	//mcs.leftMotor.run(40);
 	//mcs.rightMotor.run(40);
 
-	timer.setInterval(1000 / MCS_FREQ, [&](){
+	mcsTimer.setInterval(1000 / MCS_FREQ, [&](){
 		mcs.control();
-		//if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum());
+	});
+
+	samplingTimer.setInterval(1000 / SAMPLING_FREQUENCY, [&](){
+		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum());
 	});
 	//orderManager.execute("montlhery");
 
@@ -89,7 +93,8 @@ void loop() {
 	// //interrupts();
 	//delay(4000);
 	while (true) {
-		timer.run();
+		mcsTimer.run();
+		samplingTimer.run();
 		orderManager.communicate();
         
 	}

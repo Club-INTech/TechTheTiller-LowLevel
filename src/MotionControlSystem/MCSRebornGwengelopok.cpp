@@ -117,14 +117,9 @@ void MCS::initStatus() {
 
 }
 
-/**
- * Rafraîchit les consignes de vitesses enregistrées aux moteurs
- * D'autres méthodes de MCS se chargent d'enregistrer les consignes. Les consignes sont maintenues jusqu'à un nouvel
- * appel de 'control'
- */
+
 void MCS::control()
 {
-    /* Si l'asserv est désactivé */
     time_points_criteria = millis();
     if(!robotStatus.controlled) return;
 
@@ -132,7 +127,6 @@ void MCS::control()
     updatePositionOrientation();
     updateSpeed();
 
-    // normalisation ((255 / (ABS(robotStatus.speedTranslation) + ABS(robotStatus.speedRotation) * 36.325f)) *
 
     int32_t leftPWM =  leftSpeedPID.compute(robotStatus.speedLeftWheel);
     int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
