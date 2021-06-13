@@ -69,8 +69,8 @@ void loop() {
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
 
-	//mcs.leftMotor.run(40);
-	//mcs.rightMotor.run(40);
+	//mcs.leftMotor.run(255);
+	//mcs.rightMotor.run(255);
 
 	mcsTimer.setInterval(1000 / MCS_FREQ, [&](){
 		mcs.control();
@@ -79,19 +79,11 @@ void loop() {
 	samplingTimer.setInterval(1000 / SAMPLING_FREQUENCY, [&](){
 		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum());
 	});
-	//orderManager.execute("montlhery");
-
-	// // orderManager.execute("ct0");
-	// // orderManager.execute("cr1");
-	//delay(2000);
-	//orderManager.execute("av");
-	//orderManager.execute("td");
+	orderManager.execute("montlhery");
+	orderManager.execute("cv1");
 	
-	// // mcs.rotate(PI);
-	//orderManager.execute("start_mda 4096");
+	orderManager.execute("start_mda 4096");
 	
-	// //interrupts();
-	//delay(4000);
 	while (true) {
 		mcsTimer.run();
 		samplingTimer.run();
@@ -99,10 +91,6 @@ void loop() {
         
 	}
 
-	// int stateR = static_cast<int>(((GPIOA->IDR & 0x0020) >> 5) | ((GPIOB->IDR & 0x0001) << 1));
-	// int stateL = static_cast<int>(((GPIOA->IDR & 0x0040) >> 5) | ((GPIOA->IDR & 0x1000) >> 12));
-	// Serial.printf("%i, %i\n", stateL, stateR);
-	// delay(100);
 }
 
                    /*``.           `-:--.`

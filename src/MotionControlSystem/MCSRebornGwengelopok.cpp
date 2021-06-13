@@ -16,14 +16,14 @@ MCS::MCS()
   
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(0.45, 4.2*1e-4, 1e-2, 0); //0.45, 4*1e-4, 1e-2, 0
+    leftSpeedPID.setTunings(0.45, 4*1e-4, 1e-2, 0); //0.45, 4*1e-4, 1e-2, 0
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(0.3, 8*1e-5, 6*1e-3, 0); //0.35, 2.9*1e-4, 4*1e-2, 0
+    rightSpeedPID.setTunings(0.35, 2.9*1e-4, 4*1e-2, 0); //0.35, 2.9*1e-4, 4*1e-2, 0
     rightSpeedPID.enableAWU(false);
 
     translationPID.setTunings(2,0,0,0);
     translationPID.enableAWU(false);
-    rotationPID.setTunings(2.2,0,0,0);
+    rotationPID.setTunings(200.0,0,0,0);
     rotationPID.enableAWU(false);
 
 #elif defined(SLAVE)
@@ -68,7 +68,7 @@ void MCS::initSettings() {
 
 
     /* mm/s */
-    controlSettings.maxTranslationSpeed = 500; 
+    controlSettings.maxTranslationSpeed = 700; 
     controlSettings.tolerancySpeed = 5;
 
     /* rad */
@@ -118,37 +118,13 @@ void MCS::initStatus() {
 }
 
 
-void MCS::control()
-{
-    time_points_criteria = millis();
-    if(!robotStatus.controlled) return;
-
-
-    updatePositionOrientation();
-    updateSpeed();
-
-
-    int32_t leftPWM =  leftSpeedPID.compute(robotStatus.speedLeftWheel);
-    int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
-    
-    leftMotor.run(leftPWM);
-    rightMotor.run(rightPWM);
-
-    // if(robotStatus.speedLeftWheel != 0 ) {
-    //     DEBUG("lpid: %f, rpid: %f \n", leftSpeedPID.compute(robotStatus.speedLeftWheel), rightSpeedPID.compute(robotStatus.speedRightWheel));
-    // }
-
-    encoderLeft.reset_ticks();
-    encoderRight.reset_ticks();
-    
-}
 
 void MCS::updatePositionOrientation() {
 
     leftDistance = (float) (encoderLeft.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD;
     rightDistance = (float) (encoderRight.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD; 
 
-    // DEBUG("l: %i, r: %i\n", encoderLeft.get_ticks(), encoderRight.get_ticks());
+    //DEBUG("l: %i, r: %i\n", encoderLeft.get_ticks(), encoderRight.get_ticks());
 
     float current_angle = getAngle();
 
@@ -162,12 +138,18 @@ void MCS::updatePositionOrientation() {
     robotStatus.leftWheelY += dyLeft;
 
     robotStatus.rightWheelX -= dxRight;
-    robotStatus.rightWheelY += dyRight; 
+    robotStatus.rightWheelY += dyRight;
 
-    // Serial.printf("l: %f, r: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY);
-    //DEBUG("l: %f, r: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY);
+    float robotTheoricLength = sqrtf(powf((robotStatus.rightWheelY - robotStatus.leftWheelY),2.0f) + powf((robotStatus.rightWheelX - robotStatus.leftWheelX),2.0f)); 
 
-    robotStatus.orientation = atan((robotStatus.rightWheelY - robotStatus.leftWheelY) / (robotStatus.rightWheelX - robotStatus.leftWheelX)) + angleOffset;
+
+    //DEBUG("l: %f, r: %f, a: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY, current_angle);
+
+
+    //float orientationSinusMeasure = asinf((robotStatus.rightWheelY - robotStatus.leftWheelY) / robotTheoricLength) + angleOffset;
+    float orientationCosinusMeasure = acosf((robotStatus.rightWheelX - robotStatus.leftWheelX) / robotTheoricLength) + angleOffset; 
+
+    robotStatus.orientation = robotStatus.rightWheelY < robotStatus.leftWheelY ? 2*PI - orientationCosinusMeasure : orientationCosinusMeasure;
 
     /* somme des résultantes */
     robotStatus.x = (robotStatus.leftWheelX + robotStatus.rightWheelX) / 2.0f;
@@ -183,10 +165,10 @@ void MCS::updateSpeed()
     robotStatus.speedLeftWheel = leftDistance * (float) MCS_FREQ;
     robotStatus.speedRightWheel = rightDistance * (float) MCS_FREQ;
 
-    // if(robotStatus.speedLeftWheel > 1500 || robotStatus.speedRightWheel > 1500 || robotStatus.speedLeftWheel < -1500 || robotStatus.speedRightWheel < -1500) {
-    //     robotStatus.speedLeftWheel = 0;
-    //     robotStatus.speedRightWheel = 0;
-    // }
+    if(robotStatus.speedLeftWheel > 1600 || robotStatus.speedRightWheel > 1600 || robotStatus.speedLeftWheel < -1500 || robotStatus.speedRightWheel < -1500) {
+        robotStatus.speedLeftWheel = 0;
+        robotStatus.speedRightWheel = 0;
+    }
 
 
     if(robotStatus.controlledTranslation)
@@ -243,7 +225,31 @@ void MCS::updateSpeed()
     
     }
 
-    //DEBUG("l: %f, r: %f\n", previousLeftSpeedGoal, previousRightSpeedGoal);
+}
+
+void MCS::control()
+{
+    time_points_criteria = millis();
+    if(!robotStatus.controlled) return;
+
+
+    updatePositionOrientation();
+    updateSpeed();
+
+
+    int32_t leftPWM =  leftSpeedPID.compute(robotStatus.speedLeftWheel);
+    int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
+    
+    leftMotor.run(leftPWM);
+    rightMotor.run(rightPWM);
+
+    // if(robotStatus.speedLeftWheel != 0 ) {
+    //     DEBUG("lpid: %f, rpid: %f \n", leftSpeedPID.compute(robotStatus.speedLeftWheel), rightSpeedPID.compute(robotStatus.speedRightWheel));
+    // }
+
+    encoderLeft.reset_ticks();
+    encoderRight.reset_ticks();
+    
 }
 
 

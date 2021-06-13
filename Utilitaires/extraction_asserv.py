@@ -135,7 +135,7 @@ if(mode == "speed" or mode == ""):
     Img = figure(figsize=(14,14))
     speedSubs = (subplot(211),subplot(212))
     
-    time_base = [i*10 for i in range(len(speeds[0]))]
+    time_base = [i*100 for i in range(len(speeds[0]))]
     # graph = []
     # new_time_base = []
 
