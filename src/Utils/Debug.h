@@ -3,6 +3,6 @@
 
 #include <Arduino.h>
 
-#define DEBUG(fmt, ...) Serial.printf(fmt, ##__VA_ARGS__)
+#define SERIAL_DEBUG(fmt, ...) Serial.printf(fmt, ##__VA_ARGS__)
 
 #endif

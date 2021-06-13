@@ -2,6 +2,21 @@
 // Created by jglrxavpok aka Coin-Coin Ier <3 (27/02) on 20/12/18.
 //
 
+/*/////////////////////////////////////////////////////////////////
+//===============================================================//
+
+            Patched a lot by SUDOGAUSS. You must verify
+            all steps of calculating and updating speed 
+            before you start working on MCS. If you are
+            not sure about existing code and how to change
+            it, please contact me for, so I can explain
+
+            mail: tsimafei.liashkevich@telecom-sudparis.eu
+            TECH_THE_TILLER 2020 - 2021. Thank you!!!!!!!!
+
+//===============================================================//
+////////////////////////////////////////////////////////////////*/
+
 #include "MCS.h"
 
 
@@ -23,7 +38,7 @@ MCS::MCS()
 
     translationPID.setTunings(2,0,0,0);
     translationPID.enableAWU(false);
-    rotationPID.setTunings(200.0,0,0,0);
+    rotationPID.setTunings(1.5,0,0,0);
     rotationPID.enableAWU(false);
 
 #elif defined(SLAVE)
@@ -59,12 +74,12 @@ void MCS::initSettings() {
 
 
     /* mm/s^2/MCS_PERIOD */
-    controlSettings.maxAcceleration = 5;//2;
-    controlSettings.maxDeceleration = 5;//2;
+    controlSettings.maxAcceleration = 5;
+    controlSettings.maxDeceleration = 5;
 
 
     /* rad/s */
-    controlSettings.maxRotationSpeed = 0.04 * PI;
+    controlSettings.maxRotationSpeed = 1.5 * PI;
 
 
     /* mm/s */
@@ -88,7 +103,6 @@ void MCS::initSettings() {
     /* patate */
     controlSettings.tolerancyDifferenceSpeed = 500*2;
 
-    //filter.set_decade_attenuation(0.04f);
 }
 
 void MCS::initStatus() {
@@ -118,15 +132,36 @@ void MCS::initStatus() {
 }
 
 
+/* 
+    Updates position and orientation using encoders ticks.
+    The idea is that between two updates(~10ms) robot has not
+    changed a lot his angle with horizontal axe. In other terms
+    the angle between two updates is constant.
+
+    Knowing that we measure a distance travelled by each encoder wheel,
+    it is enough to project this distance on xAxis and yAxis.
+
+    Than we use acos to determine a new angle. We don't use a measured 
+    distance between encoders wheels, but we calculate it, because
+    incertitude can cause a acos nan output.
+*/
 
 void MCS::updatePositionOrientation() {
 
-    leftDistance = (float) (encoderLeft.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD;
+    // We use on change interruptions, so we must divide by ticks per period to know the real travalled distance
+
+    leftDistance = (float) (encoderLeft.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD; 
     rightDistance = (float) (encoderRight.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD; 
 
-    //DEBUG("l: %i, r: %i\n", encoderLeft.get_ticks(), encoderRight.get_ticks());
+
+    //run `pio run -e main_debug_ticks -t upload` in order to see ticks in real time in Serial
+    #ifdef SERIAL_DEBUG_TICKS 
+    SERIAL_DEBUG("l: %i, r: %i\n", encoderLeft.get_ticks(), encoderRight.get_ticks());
+    #endif
 
     float current_angle = getAngle();
+
+    // angle is considered as constant, so we can calculate xAxis and yAxis projections
 
     float dxLeft = leftDistance * sinf(current_angle);
     float dyLeft = leftDistance * cosf(current_angle);
@@ -134,28 +169,33 @@ void MCS::updatePositionOrientation() {
     float dxRight = rightDistance * sinf(current_angle);
     float dyRight = rightDistance * cosf(current_angle);
 
+    // update positions
+
     robotStatus.leftWheelX -= dxLeft;
     robotStatus.leftWheelY += dyLeft;
 
     robotStatus.rightWheelX -= dxRight;
     robotStatus.rightWheelY += dyRight;
 
+    // robot length calculated only with encoders data, we don't use the real one, because of incertitude
+
     float robotTheoricLength = sqrtf(powf((robotStatus.rightWheelY - robotStatus.leftWheelY),2.0f) + powf((robotStatus.rightWheelX - robotStatus.leftWheelX),2.0f)); 
 
-
-    //DEBUG("l: %f, r: %f, a: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY, current_angle);
-
-
-    //float orientationSinusMeasure = asinf((robotStatus.rightWheelY - robotStatus.leftWheelY) / robotTheoricLength) + angleOffset;
-    float orientationCosinusMeasure = acosf((robotStatus.rightWheelX - robotStatus.leftWheelX) / robotTheoricLength) + angleOffset; 
-
-    robotStatus.orientation = robotStatus.rightWheelY < robotStatus.leftWheelY ? 2*PI - orientationCosinusMeasure : orientationCosinusMeasure;
-
-    /* somme des résultantes */
-    robotStatus.x = (robotStatus.leftWheelX + robotStatus.rightWheelX) / 2.0f;
-    robotStatus.y = (robotStatus.leftWheelY + robotStatus.rightWheelY) / 2.0f;
+    //run `pio run -e main_debug_position -t upload` in order to see ticks in real time in Serial
+    #ifdef SERIAL_DEBUG_POSITION
+    SERIAL_DEBUG("l: %f, r: %f, a: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY, current_angle);
+    #endif
 
     
+    // we calculate a new angle (it is a raw value because acos is defined only in [0, PI])
+    float orientationCosinusMeasure = acosf((robotStatus.rightWheelX - robotStatus.leftWheelX) / robotTheoricLength) + angleOffset; 
+
+    // according to wheel's y we could determine whether the angle is in [0, PI] or [PI, 2PI]
+    robotStatus.orientation = robotStatus.rightWheelY < robotStatus.leftWheelY ? 2*PI - orientationCosinusMeasure : orientationCosinusMeasure;
+
+    // x and y of robot's center
+    robotStatus.x = (robotStatus.leftWheelX + robotStatus.rightWheelX) / 2.0f;
+    robotStatus.y = (robotStatus.leftWheelY + robotStatus.rightWheelY) / 2.0f;
 
 }
 
@@ -192,8 +232,8 @@ void MCS::updateSpeed()
     robotStatus.speedTranslation = MAX(-controlSettings.maxTranslationSpeed, MIN(controlSettings.maxTranslationSpeed, robotStatus.speedTranslation));
     robotStatus.speedRotation = MAX(-controlSettings.maxRotationSpeed, MIN(controlSettings.maxRotationSpeed, robotStatus.speedRotation)) * DISTANCE_COD_GAUCHE_CENTRE;
 
-    robotStatus.finalLeftSpeedGoal = robotStatus.speedTranslation - robotStatus.speedRotation * 36.325f;
-    robotStatus.finalRightSpeedGoal = robotStatus.speedTranslation + robotStatus.speedRotation * 36.325f;
+    robotStatus.finalLeftSpeedGoal = robotStatus.speedTranslation - robotStatus.speedRotation * COD_WHEEL_RADIUS;
+    robotStatus.finalRightSpeedGoal = robotStatus.speedTranslation + robotStatus.speedRotation * COD_WHEEL_RADIUS;
 
     if (leftSpeedPID.active) {
         
@@ -372,22 +412,22 @@ void MCS::rotate(float angle) {
     leftSpeedPID.active = true;
     rightSpeedPID.active = true;
 
-    float differenceAngle = robotStatus.orientation-targetAngle;
-    while(ABS(differenceAngle) > PI)
-    {
-        float signe = ABS(differenceAngle)/differenceAngle;
-        float ratio = floor(ABS(differenceAngle)/PI);
-        targetAngle += signe*2*PI*ratio;
+    // float differenceAngle = robotStatus.orientation-targetAngle;
+    // while(ABS(differenceAngle) > PI)
+    // {
+    //     float signe = ABS(differenceAngle)/differenceAngle;
+    //     float ratio = floor(ABS(differenceAngle)/PI);
+    //     targetAngle += signe*2*PI*ratio;
 
 
-        differenceAngle = robotStatus.orientation-targetAngle;
-    }
+    //     differenceAngle = robotStatus.orientation-targetAngle;
+    // }
     if (!rotationPID.active){
         rotationPID.active = true;
         rotationPID.fullReset();
     }
 
-    robotStatus.movement = (differenceAngle < PI && differenceAngle > - PI) ? MOVEMENT::TRIGO : MOVEMENT::ANTITRIGO;
+    // robotStatus.movement = (differenceAngle < PI && differenceAngle > - PI) ? MOVEMENT::TRIGO : MOVEMENT::ANTITRIGO;
 
     rotationPID.setGoal(targetAngle);
     robotStatus.moving = true;
