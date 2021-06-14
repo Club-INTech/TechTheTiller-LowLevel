@@ -24,6 +24,8 @@ struct RobotStatus
     float x;
     float y;
     float orientation;
+    float previousOrientation;
+    int turnPeriod;
 
     float leftWheelX;
     float leftWheelY;

@@ -80,7 +80,7 @@ void loop() {
 		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum());
 	});
 	orderManager.execute("montlhery");
-	orderManager.execute("cv1");
+	orderManager.execute("cr1");
 	
 	orderManager.execute("start_mda 4096");
 	

@@ -116,6 +116,8 @@ void MCS::initStatus() {
     robotStatus.controlledTranslation = true;
     robotStatus.currentLeftSpeedGoal = 0;
     robotStatus.currentRightSpeedGoal = 0;
+    robotStatus.previousOrientation = 0;
+    robotStatus.turnPeriod = 0;
     previousLeftSpeedGoal = 0;
     previousRightSpeedGoal = 0;
     previousLeftTicks = 0;
@@ -190,25 +192,41 @@ void MCS::updatePositionOrientation() {
     // we calculate a new angle (it is a raw value because acos is defined only in [0, PI])
     float orientationCosinusMeasure = acosf((robotStatus.rightWheelX - robotStatus.leftWheelX) / robotTheoricLength) + angleOffset; 
 
-    // according to wheel's y we could determine whether the angle is in [0, PI] or [PI, 2PI]
-    robotStatus.orientation = robotStatus.rightWheelY < robotStatus.leftWheelY ? 2*PI - orientationCosinusMeasure : orientationCosinusMeasure;
+    float rawAngle = robotStatus.rightWheelY < robotStatus.leftWheelY ? 2*PI-orientationCosinusMeasure : orientationCosinusMeasure;
+
+    float positiveTurnGap = (rawAngle + robotStatus.turnPeriod * 2*PI) - robotStatus.previousOrientation;
+    float negativeTurnGap = (rawAngle + (robotStatus.turnPeriod - 1) * 2*PI) - robotStatus.previousOrientation;
+
+    if(ABS(positiveTurnGap) < ABS(negativeTurnGap)) {
+        if(positiveTurnGap < -PI) {
+            robotStatus.turnPeriod += 1;
+        }
+        robotStatus.orientation = rawAngle + robotStatus.turnPeriod*2*PI;
+    }
+    else {
+        if(negativeTurnGap > PI) {
+            robotStatus.turnPeriod -= 1;
+        }
+        robotStatus.orientation = rawAngle + (robotStatus.turnPeriod - 1)*2*PI;
+    }
 
     // x and y of robot's center
     robotStatus.x = (robotStatus.leftWheelX + robotStatus.rightWheelX) / 2.0f;
     robotStatus.y = (robotStatus.leftWheelY + robotStatus.rightWheelY) / 2.0f;
 
+    robotStatus.previousOrientation = robotStatus.orientation;
 }
 
 void MCS::updateSpeed()
 {
-    /* le robot calcul sa vitesse */
+
     robotStatus.speedLeftWheel = leftDistance * (float) MCS_FREQ;
     robotStatus.speedRightWheel = rightDistance * (float) MCS_FREQ;
 
-    if(robotStatus.speedLeftWheel > 1600 || robotStatus.speedRightWheel > 1600 || robotStatus.speedLeftWheel < -1500 || robotStatus.speedRightWheel < -1500) {
-        robotStatus.speedLeftWheel = 0;
-        robotStatus.speedRightWheel = 0;
-    }
+    //run `pio run -e main_debug_speed -t upload` in order to see ticks in real time in Serial
+    #ifdef SERIAL_DEBUG_SPEED
+    SERIAL_DEBUG("l: %f, r: %f\n", robotStatus.speedLeftWheel, robotStatus.speedRightWheel);
+    #endif
 
 
     if(robotStatus.controlledTranslation)
@@ -230,10 +248,11 @@ void MCS::updateSpeed()
     }
 
     robotStatus.speedTranslation = MAX(-controlSettings.maxTranslationSpeed, MIN(controlSettings.maxTranslationSpeed, robotStatus.speedTranslation));
-    robotStatus.speedRotation = MAX(-controlSettings.maxRotationSpeed, MIN(controlSettings.maxRotationSpeed, robotStatus.speedRotation)) * DISTANCE_COD_GAUCHE_CENTRE;
+    robotStatus.speedRotation = MAX(-controlSettings.maxRotationSpeed, MIN(controlSettings.maxRotationSpeed, robotStatus.speedRotation));
 
-    robotStatus.finalLeftSpeedGoal = robotStatus.speedTranslation - robotStatus.speedRotation * COD_WHEEL_RADIUS;
-    robotStatus.finalRightSpeedGoal = robotStatus.speedTranslation + robotStatus.speedRotation * COD_WHEEL_RADIUS;
+    robotStatus.finalLeftSpeedGoal = robotStatus.speedTranslation - robotStatus.speedRotation * DISTANCE_COD_GAUCHE_CENTRE;
+    robotStatus.finalRightSpeedGoal = robotStatus.speedTranslation + robotStatus.speedRotation * DISTANCE_COD_DROITE_CENTRE;
+
 
     if (leftSpeedPID.active) {
         
@@ -282,10 +301,6 @@ void MCS::control()
     
     leftMotor.run(leftPWM);
     rightMotor.run(rightPWM);
-
-    // if(robotStatus.speedLeftWheel != 0 ) {
-    //     DEBUG("lpid: %f, rpid: %f \n", leftSpeedPID.compute(robotStatus.speedLeftWheel), rightSpeedPID.compute(robotStatus.speedRightWheel));
-    // }
 
     encoderLeft.reset_ticks();
     encoderRight.reset_ticks();
