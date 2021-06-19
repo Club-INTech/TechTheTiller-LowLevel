@@ -13,7 +13,7 @@ void SensorMgr::init() {
 
 	for(int i = 0 ; i < NBR_OF_DISTANCE_SENSOR; i++) {
 		// TODO: tester chacun des SICK
-		distanceSensors[i] = SICKDT35_B15851(SICK_PINS[i], 50, 1074);
+		distanceSensors[i] = SICKOD2_N250W150I2(SICK_PINS[i], 50, 1074);
 	}
 
 	// TODO: changer les valeurs pour chaque SICK (chaque résistance a une précision de ~1%)
@@ -56,6 +56,6 @@ bool SensorMgr::isReadyToGo()
 	return(false);								// Sinon on ne part pas de toutes façons
 }
 
-SICKDT35_B15851& SensorMgr::getDistanceSensor(size_t index) {
+SICKOD2_N250W150I2& SensorMgr::getDistanceSensor(size_t index) {
 	return distanceSensors[index];
 }

@@ -15,7 +15,7 @@
 #include "MotionControlSystem/RobotInfo/RobotStatus.h"
 #include "COM/ComMgr.h"
 #include "AbstractSensorUS.h"
-#include "SICKDT35_B15851.h"
+#include "SICKOD2_N250W150I2.h"
 
 
 class SensorMgr : public Singleton<SensorMgr>
@@ -33,14 +33,14 @@ public:
 	 * @param index l'indice du capteur
 	 * @return
 	 */
-	SICKDT35_B15851& getDistanceSensor(size_t index);
+	SICKOD2_N250W150I2& getDistanceSensor(size_t index);
 
 
 private:
 
     ComMgr& highLevel;
 
-    SICKDT35_B15851 distanceSensors[NBR_OF_DISTANCE_SENSOR];
+    SICKOD2_N250W150I2 distanceSensors[NBR_OF_DISTANCE_SENSOR];
     MOVEMENT measure_direction;
 
     bool jumperPlugged;
