@@ -135,7 +135,7 @@ private:
 //    SelfContainedPID<float> rotationPID90;
     SelfContainedPID<float> rotationPID;
 
-    int32_t currentDistance;
+    float currentDistance;
     int16_t targetX;
     int16_t targetY;
 

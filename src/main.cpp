@@ -34,7 +34,7 @@ auto getMotionDatum() {
 
   char s[50];
   //snprintf(s,50,"%f,%f,%f,%f\n", xlw, ylw, xrw, yrw);
-  snprintf(s,50,"%f,%f,%f,%f\n", leftSpeed, leftSpeedGoal, rightSpeed, rightSpeedGoal);
+  snprintf(s,50,"%f,%f,%f,%f\n", angle, leftSpeedGoal, rightSpeed, rightSpeedGoal);
   return String(s);
 }
 
@@ -81,6 +81,7 @@ void loop() {
 	});
 	orderManager.execute("montlhery");
 	orderManager.execute("cr1");
+	//orderManager.execute("ct1");
 	
 	orderManager.execute("start_mda 4096");
 	

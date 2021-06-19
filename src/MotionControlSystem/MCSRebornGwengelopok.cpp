@@ -38,7 +38,7 @@ MCS::MCS()
 
     translationPID.setTunings(2,0,0,0);
     translationPID.enableAWU(false);
-    rotationPID.setTunings(1.5,0,0,0);
+    rotationPID.setTunings(1.8,0,0,0);
     rotationPID.enableAWU(false);
 
 #elif defined(SLAVE)
@@ -79,7 +79,7 @@ void MCS::initSettings() {
 
 
     /* rad/s */
-    controlSettings.maxRotationSpeed = 1.5 * PI;
+    controlSettings.maxRotationSpeed = PI;
 
 
     /* mm/s */
@@ -117,6 +117,8 @@ void MCS::initStatus() {
     robotStatus.currentLeftSpeedGoal = 0;
     robotStatus.currentRightSpeedGoal = 0;
     robotStatus.previousOrientation = 0;
+    robotStatus.baseX = 0;
+    robotStatus.baseY =0;
     robotStatus.turnPeriod = 0;
     previousLeftSpeedGoal = 0;
     previousRightSpeedGoal = 0;
@@ -189,11 +191,24 @@ void MCS::updatePositionOrientation() {
     #endif
 
     
-    // we calculate a new angle (it is a raw value because acos is defined only in [0, PI])
+    // we calculate a new angle (it is not a real value because acos is defined only in [0, PI])
     float orientationCosinusMeasure = acosf((robotStatus.rightWheelX - robotStatus.leftWheelX) / robotTheoricLength) + angleOffset; 
 
+    // raw angle value, because we don't know number of periods, so it is an angle with 2*pi*k precision
     float rawAngle = robotStatus.rightWheelY < robotStatus.leftWheelY ? 2*PI-orientationCosinusMeasure : orientationCosinusMeasure;
 
+    /* 
+        Gaps between current and previous orientation in the case where we move in trigonometric or
+        non-trigonometric direction and angle s positif or negatif
+
+        It helps us to determine the real angle.
+
+        For example, if we move in trigonometric direction the angle grows, so the positive gap value
+        will be bigger than negative gap within all possible periods.
+
+        Than if positive gap is less than tolerancy(pi), it does mean that we incremented the period, etc...
+        
+    */
     float positiveTurnGap = (rawAngle + robotStatus.turnPeriod * 2*PI) - robotStatus.previousOrientation;
     float negativeTurnGap = (rawAngle + (robotStatus.turnPeriod - 1) * 2*PI) - robotStatus.previousOrientation;
 
@@ -214,11 +229,17 @@ void MCS::updatePositionOrientation() {
     robotStatus.x = (robotStatus.leftWheelX + robotStatus.rightWheelX) / 2.0f;
     robotStatus.y = (robotStatus.leftWheelY + robotStatus.rightWheelY) / 2.0f;
 
+    // changing previous orientation for next iteration
     robotStatus.previousOrientation = robotStatus.orientation;
+
+    // current distance
+    currentDistance = sqrtf(powf((robotStatus.x - robotStatus.baseX),2) + powf((robotStatus.y - robotStatus.baseY),2));
 }
 
 void MCS::updateSpeed()
 {
+
+    // in order to know the speed we multiply measured distance by a mcs.control call frequency
 
     robotStatus.speedLeftWheel = leftDistance * (float) MCS_FREQ;
     robotStatus.speedRightWheel = rightDistance * (float) MCS_FREQ;
@@ -233,12 +254,12 @@ void MCS::updateSpeed()
     {
         robotStatus.speedTranslation = translationPID.compute(currentDistance);
     }
-    else if(!robotStatus.forcedMovement)
+    else if(!robotStatus.forcedMovement) // forced movement is used to activate a speed asservisement
     {
         robotStatus.speedTranslation = 0.0f;
     }
 
-    if(robotStatus.controlledRotation && !expectedWallImpact)
+    if(robotStatus.controlledRotation && !expectedWallImpact) // robot can't turn when he is close to the wall
     {
         robotStatus.speedRotation = rotationPID.compute(robotStatus.orientation);
     }
@@ -247,12 +268,18 @@ void MCS::updateSpeed()
         robotStatus.speedRotation = 0.0f;
     }
 
+    // order speed must be in segment [-max_speed, max_speed]
+
     robotStatus.speedTranslation = MAX(-controlSettings.maxTranslationSpeed, MIN(controlSettings.maxTranslationSpeed, robotStatus.speedTranslation));
     robotStatus.speedRotation = MAX(-controlSettings.maxRotationSpeed, MIN(controlSettings.maxRotationSpeed, robotStatus.speedRotation));
+
+    // final goals for each wheel are used because of acceleration
+    // we multiply rotation speed by a radius of circle which surround robot's base
 
     robotStatus.finalLeftSpeedGoal = robotStatus.speedTranslation - robotStatus.speedRotation * DISTANCE_COD_GAUCHE_CENTRE;
     robotStatus.finalRightSpeedGoal = robotStatus.speedTranslation + robotStatus.speedRotation * DISTANCE_COD_DROITE_CENTRE;
 
+    // if speed pids are active, we set a new goal; goal can change because of acceleration or translation goal or rotation goal
 
     if (leftSpeedPID.active) {
         
@@ -286,6 +313,11 @@ void MCS::updateSpeed()
 
 }
 
+/* 
+    mcs control is the principal function that orchestrate robot movement
+    it is called with MCS_FREQ frequency in main loop
+*/
+
 void MCS::control()
 {
     time_points_criteria = millis();
@@ -295,12 +327,17 @@ void MCS::control()
     updatePositionOrientation();
     updateSpeed();
 
+    //calculating a pwm for each wheel
 
     int32_t leftPWM =  leftSpeedPID.compute(robotStatus.speedLeftWheel);
     int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
+
+    // transmitting a pwm to motors
     
     leftMotor.run(leftPWM);
     rightMotor.run(rightPWM);
+
+    // after entire mcs period, we reset all encoders ticks
 
     encoderLeft.reset_ticks();
     encoderRight.reset_ticks();
