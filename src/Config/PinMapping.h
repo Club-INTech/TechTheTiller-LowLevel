@@ -20,6 +20,7 @@ constexpr uint8_t ENCODER_LEFT_B = D2;
 constexpr uint8_t ENCODER_RIGHT_A = D3;
 constexpr uint8_t ENCODER_RIGHT_B = A4;
 
+
 /* CAPTEURS */
 constexpr uint8_t PIN_JMPR = D4;
 constexpr uint8_t SICK_PINS[] = {A0, A1, A6, A3};

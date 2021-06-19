@@ -8,6 +8,13 @@
 #include "Config/PinMapping.h"
 #include "COM/InterruptStackPrint.h"
 #include "COM/Order/OrderManager.h"
+#include "Config/Defines.h"
+#include <SimpleTimer.h>
+
+
+SimpleTimer mcsTimer;
+SimpleTimer samplingTimer;
+
 
 auto getMotionDatum() {
   float leftSpeedGoal, rightSpeedGoal;
@@ -20,12 +27,20 @@ auto getMotionDatum() {
   float leftSpeed = orderManager.motionControlSystem.getLeftSpeed();
   float rightSpeed = orderManager.motionControlSystem.getRightSpeed();
 
+  float xlw = orderManager.motionControlSystem.getXLeftWheel();
+  float ylw = orderManager.motionControlSystem.getYLeftWheel();
+  float xrw = orderManager.motionControlSystem.getXRightWheel();
+  float yrw = orderManager.motionControlSystem.getYRightWheel();
+
   char s[50];
-  snprintf(s,50,"%f,%f,%f,%f\n", leftSpeed, leftSpeedGoal,rightSpeed,rightSpeedGoal);
+  //snprintf(s,50,"%f,%f,%f,%f\n", xlw, ylw, xrw, yrw);
+  snprintf(s,50,"%f,%f,%f,%f\n", angle, leftSpeedGoal, rightSpeed, rightSpeedGoal);
   return String(s);
 }
 
+
 void setup(){
+	//noInterrupts();
 	InitAllPins();
 
 	ComMgr::Instance().init();
@@ -45,20 +60,38 @@ void setup(){
 	Wire.setSDA(D0);
 	Wire.setSCL(D1);
 	Wire.begin();
+	//interrupts();
 }
 
+
 void loop() {
+	//noInterrupts();
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
-    mcs.controlledTranslation(false);
-    mcs.setTranslationSpeed(50.0);
 
-	while (true) {
+	//mcs.leftMotor.run(255);
+	//mcs.rightMotor.run(255);
+
+	mcsTimer.setInterval(1000 / MCS_FREQ, [&](){
 		mcs.control();
+	});
+
+	samplingTimer.setInterval(1000 / SAMPLING_FREQUENCY, [&](){
+		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum());
+	});
+	orderManager.execute("montlhery");
+	orderManager.execute("cr1");
+	//orderManager.execute("ct1");
+	
+	orderManager.execute("start_mda 4096");
+	
+	while (true) {
+		mcsTimer.run();
+		samplingTimer.run();
 		orderManager.communicate();
-        orderManager.execute("rawposdata");
-		//if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity) dbuf::buffer.concat(getMotionDatum());
+        
 	}
+
 }
 
                    /*``.           `-:--.`

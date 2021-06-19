@@ -10,7 +10,7 @@
 #include "Utils/Utils.h"
 #include "Utils/DelayingBuffer.hpp"
 #include "Config/PinMapping.h"
-#include "MotionControlSystem/RobotStatus.h"
+#include "MotionControlSystem/RobotInfo/RobotStatus.h"
 //
 #include "Servo.h"
 #include "Stepper.h"

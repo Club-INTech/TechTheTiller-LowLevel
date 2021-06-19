@@ -56,9 +56,8 @@ void ORDER_start_mda::impl(Args args) {
   buffer = "";
   capacity = motion_datum_string_size * OrderManager::parseInt(args[0]);
   buffer.reserve(capacity);
+  init_buff = true;
 
-  auto& mcs = MCS::Instance();
-  mcs.setTranslationSpeed(50.0);
 }
 
 void ORDER_send_md::impl(Args args) {

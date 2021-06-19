@@ -32,6 +32,7 @@ public:
 
 	void reset()
 	{
+		excess = false;
 		currentElement = 0;
 		currentSum = 0;
 		for(unsigned int i = 0; i < BUFFER_SIZE; i++)
@@ -42,6 +43,7 @@ public:
 
 	void add(T newValue)
 	{
+		if (currentElement == BUFFER_SIZE - 1) excess = true;
 		currentSum -= buffer[currentElement];
 		buffer[currentElement] = newValue;
 		currentSum += newValue;
@@ -50,13 +52,14 @@ public:
 
 	T value() const
 	{
-		return currentSum / (T)BUFFER_SIZE;
+		return currentSum / (excess ? (T)BUFFER_SIZE : (T)(currentElement+1));
 	}
 
 private:
 	T buffer[BUFFER_SIZE];
 	unsigned int currentElement;
 	T currentSum;
+	bool excess;
 };
 
 #endif // AVERAGE_HPP

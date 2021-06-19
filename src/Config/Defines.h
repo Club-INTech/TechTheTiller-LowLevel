@@ -10,6 +10,8 @@
 *COMMUNICATION
 */
 
+#define SIGN(var) ABS(var) / var
+
 
 constexpr uint32_t MIN_TIME_BETWEEN_GOTO_TR_ROT = 100; // en ticks d'asserv'
 // Nombre d'octets acceptables depuis le HL
@@ -58,7 +60,15 @@ constexpr uint8_t F_ENV_POS = 50;
 * Asservissement
 */
 
-constexpr uint16_t  MCS_FREQ = 1000; //1Khz
+#define REDUCTION_COEFFICENT(translation_speed) \
+            ((400 / (translation_speed))
+
+constexpr int MIN_PWM_REACTION = 15;
+
+constexpr int quadrature_state[]={0,1,-1,0,-1,0,0,1,1,0,0,-1,0,-1,1,0};
+ 
+constexpr uint16_t  SAMPLING_FREQUENCY = 10;
+constexpr uint16_t  MCS_FREQ = 100; //100hz
 constexpr double    MCS_PERIOD = 1000000.0 / MCS_FREQ; // Durée en µs entre deux mesures
 constexpr uint32_t  STEPPER_FREQUENCY = 24000;//3000; // 625/2 Hz
 constexpr double    STEPPER_PERIOD = 1000000.0 / STEPPER_FREQUENCY; // Durée en µs entre deux mesures
@@ -66,12 +76,15 @@ constexpr uint16_t  POSITION_UPDATE_FREQUENCY = 20; // 20 Hz
 constexpr double    POSITION_UPDATE_PERIOD = 1000000.0 / POSITION_UPDATE_FREQUENCY; // Durée en µs entre deux mesures
 
 constexpr uint16_t  TICKS_PER_TURN =            1024;   // Unité : ticks
-constexpr float     COD_WHEEL_DIAMETER =        67.29;  // Unité : mm 63.57
+constexpr float     COD_WHEEL_DIAMETER =        66.82f;  // Unité : mm 63.57
+constexpr float     COD_WHEEL_RADIUS =          33.41f;
+constexpr float     MEAN_TICKS_PER_PERIOD =     3.65f;
 
 //distance roue codeuse pneu = 14.36mm
 
-constexpr uint8_t   DISTANCE_COD_GAUCHE_CENTRE = 160; // Unité : mm
-constexpr uint8_t   DISTANCE_COD_DROITE_CENTRE = 160; // Unité : mm
+constexpr uint8_t   DISTANCE_COD_GAUCHE_CENTRE = 161; // Unité : mm
+constexpr uint8_t   DISTANCE_COD_DROITE_CENTRE = 161; // Unité : mm
+constexpr uint8_t   DISTANCE_INTER_COD         = DISTANCE_COD_DROITE_CENTRE + DISTANCE_COD_GAUCHE_CENTRE;
 
 constexpr float TICK_TO_MM = static_cast<float>(PI*COD_WHEEL_DIAMETER/TICKS_PER_TURN); // Unité : mm/ticks
 constexpr float TICK_TO_RADIAN = TICK_TO_MM / DISTANCE_COD_GAUCHE_CENTRE; // Unité : rad/ticks

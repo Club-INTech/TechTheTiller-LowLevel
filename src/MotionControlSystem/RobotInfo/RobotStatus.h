@@ -23,7 +23,17 @@ struct RobotStatus
 
     float x;
     float y;
+    float baseX;
+    float baseY;
     float orientation;
+    float previousOrientation;
+    int turnPeriod;
+
+    float leftWheelX;
+    float leftWheelY;
+
+    float rightWheelX;
+    float rightWheelY;
 
     MOVEMENT movement;
 
@@ -31,6 +41,12 @@ struct RobotStatus
     float speedRotation;
     float speedLeftWheel;
     float speedRightWheel;
+
+    float currentLeftSpeedGoal;
+    float currentRightSpeedGoal;
+
+    float finalLeftSpeedGoal;
+    float finalRightSpeedGoal;
 
     bool sentMoveAbnormal;
 

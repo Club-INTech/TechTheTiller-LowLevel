@@ -1,5 +1,5 @@
 /**
-*Contient la liste des correspondances pour les entrées série du programme
+* Contient la liste des correspondances pour les entrées série du programme
 *
 * @author caillou, sylvain, rémi, melanie, Ug
 *

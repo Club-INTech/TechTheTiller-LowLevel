@@ -8,19 +8,21 @@
 #include "Utils/Singleton.hpp"
 #include "Utils/Average.hpp"
 #include "Utils/Utils.h"
+#include "Utils/Debug.h"
 #include "Config/Defines.h"
 #include "Config/PinMapping.h"
 #include "COM/ComMgr.h"
 #include "COM/InterruptStackPrint.h"
 
-#include "ControlSettings.h"
-#include "RobotStatus.h"
-#include "Motor.h"
-#include "PID.hpp"
-#include "SelfContainedPID.hpp"
+#include "RobotInfo/ControlSettings.h"
+#include "RobotInfo/RobotStatus.h"
+#include "Motors/Motor.h"
+#include "PID/PID.hpp"
+#include "PID/SelfContainedPID.hpp"
 #include "PointToPointTrajectory.h"
+#include "Utils/Filter.hpp"
 #define ENCODER_OPTIMIZE_INTERRUPTS
-#include "Encoder.h"
+#include "Encoders/Encoder.hpp"
 
 #include <cmath>
 
@@ -80,6 +82,14 @@ public:
     float getLeftSpeed();
     float getRightSpeed();
 
+    float getXLeftWheel();
+    float getYLeftWheel();
+
+    float getXRightWheel();
+    float getYRightWheel();
+
+    long time_points_criteria;
+
     void getSpeedGoals(float&,float&);
 
     /**
@@ -107,15 +117,16 @@ public:
     inline void setLeftTunings(float kp, float ki, float kd) { leftSpeedPID.setTunings(kp, ki, kd); }
     inline void setRightTunings(float kp, float ki, float kd) { rightSpeedPID.setTunings(kp, ki, kd); }
 
+    Motor leftMotor;
+    Motor rightMotor;
+
 private:
-    Encoder* encoderRight = nullptr;
-    Encoder* encoderLeft = nullptr;
+    Encoder<RIGHT> encoderRight;
+    Encoder<LEFT> encoderLeft;
 
     RobotStatus robotStatus;
     ControlSettings controlSettings;
 
-    Motor leftMotor;
-    Motor rightMotor;
 
     SelfContainedPID<float> leftSpeedPID;
     SelfContainedPID<float> rightSpeedPID;
@@ -124,7 +135,7 @@ private:
 //    SelfContainedPID<float> rotationPID90;
     SelfContainedPID<float> rotationPID;
 
-    int32_t currentDistance;
+    float currentDistance;
     int16_t targetX;
     int16_t targetY;
 
@@ -132,6 +143,8 @@ private:
     int32_t rightTicks;
     int32_t previousLeftTicks;
     int32_t previousRightTicks;
+    float leftDistance;
+    float rightDistance;
     float previousLeftSpeedGoal;
     float previousRightSpeedGoal;
     int16_t targetDistance;
@@ -139,8 +152,12 @@ private:
     float angleOffset;
     bool expectedWallImpact;
 
-    Average<float, 100> averageLeftSpeed;
-    Average<float, 100> averageRightSpeed;
+    //Average<float, 100> averageLeftSpeed;
+    //Average<float, 100> averageRightSpeed;
+
+    //Filter<float> filter;
+
+
 #if defined(MAIN)
     Average<float, 25> averageRotationDerivativeError;
     Average<float, 25> averageTranslationDerivativeError;

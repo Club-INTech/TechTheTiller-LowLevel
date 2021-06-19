@@ -31,12 +31,12 @@ fi
 touch "$fileName"
 outFile=$(echo $fileName | cut -f 3 -d"/")
 
-echo send_md > /dev/ttyACM3
-if [ ! -e /dev/ttyACM3 ]; then
-	echo "Waiting for serial /dev/ttyACM3"
+echo send_md > /dev/ttyACM0
+if [ ! -e /dev/ttyACM0 ]; then
+	echo "Waiting for serial /dev/ttyACM0"
 	echo "Retrying every 100ms"
 
-	while [ ! -e /dev/ttyACM3 ]; do
+	while [ ! -e /dev/ttyACM0 ]; do
 		sleep 0.1
 	done
 fi
@@ -47,11 +47,11 @@ trap "pythonGraph \"$fileName\" \"$outFile\" $1" INT
 trap "pythonGraph \"$fileName\" \"$outFile\" $1" TERM
 trap "pythonGraph \"$fileName\" \"$outFile\" $1" EXIT
 
-echo > /dev/ttyACM3
-stty -F /dev/ttyACM3 115200 raw -echo -echoe -echok
+echo > /dev/ttyACM0
+stty -F /dev/ttyACM0 115200 raw -echo -echoe -echok
 
 while true; do
-	read line < /dev/ttyACM3
+	read line < /dev/ttyACM0
 	echo $line >> "$fileName"
 	case "$line" in
    		*"DATAEND"*)
