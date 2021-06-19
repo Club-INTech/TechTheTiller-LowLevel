@@ -89,7 +89,6 @@ void loop() {
 		mcsTimer.run();
 		samplingTimer.run();
 		orderManager.communicate();
-        
 	}
 
 }
