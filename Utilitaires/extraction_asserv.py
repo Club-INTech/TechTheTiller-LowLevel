@@ -10,12 +10,12 @@ from interpolation import Interpolation
 
 Tmesures = 0.01 #en secondes
 
-consigneAngle = 0.6
-consignePos = 250
+#consigneAngle = 0.6
+#consignePos = 250
 
 file = sys.argv[1]
 
-if(len(sys.argv) == 3):
+if(len(sys.argv) >= 3):
     mode = sys.argv[2]
 else:
     mode = ""
@@ -55,11 +55,11 @@ while(ligne!="DATAEND" and ligne):
     ligne = ligne.split(",")
     ligne.insert(0,0)
     ligne.insert(0,0)
-    ligne.insert(0,0)
+    #ligne.insert(0,0)
     if(len(ligne)==7):
         try:
             positions.append((float(ligne[0])**2+float(ligne[1])**2)**0.5)
-            #angles.append(float(ligne[2]))
+            angles.append(float(ligne[2]))
             for i in [0,1]:
                 speeds[i].append(float(ligne[3+2*i]))
                 speedSetpoints[i].append(float(ligne[4+2*i]))
@@ -113,21 +113,27 @@ if(mode == "pos" or mode == ""):
     # plot(abscisses[1:-1],[9000*0.09]*(len(positionsY)-2))
 
 if(mode == "angle" or mode == ""):
+    if len(sys.argv) < 4:
+        print("Please provide expected consigne angle")
+        exit(400)
+    
+    consigne_angle = float(sys.argv[3])
+    time_base = [i*100 for i in range(len(angles))]
     Img = figure(figsize=(14,14))
     ax1 = subplot(211)
-    ax2 = subplot(212)
-    ax1.plot(abscisses,angles)
-    ax1.plot(abscisses,[consigneAngle]*len(abscisses))
-    ax2.plot(abscisses[1:-1],[(float(angles[i+1])-float(angles[i-1]))/0.002 for i in range(1,len(angles)-1)])
+    #ax2 = subplot(212)
+    ax1.plot(time_base,angles)
+    ax1.plot(time_base,[consigne_angle for i in range(len(angles))])
+    #ax2.plot(abscisses[1:-1],[(float(angles[i+1])-float(angles[i-1]))/0.002 for i in range(1,len(angles)-1)])
     Img.savefig("serialOutput/"+file+"- angles.png")
     clf()
 
     subplot(211)
-    plot(abscisses,angles)
-    plot(abscisses,[consigneAngle]*len(abscisses))
-    subplot(212)
-    plot(abscisses[1:-1],[(float(angles[i+1])-float(angles[i-1]))/0.002 for i in range(1,len(angles)-1)])
-    plot(abscisses,[0]*len(abscisses))
+    plot(time_base,angles)
+    plot(time_base,[consigne_angle for i in range(len(angles))])
+    #subplot(212)
+    #plot(abscisses[1:-1],[(float(angles[i+1])-float(angles[i-1]))/0.002 for i in range(1,len(angles)-1)])
+    #plot(abscisses,[0]*len(abscisses))
 
 if(mode == "speed" or mode == ""):
 

@@ -32,9 +32,9 @@ auto getMotionDatum() {
   float xrw = orderManager.motionControlSystem.getXRightWheel();
   float yrw = orderManager.motionControlSystem.getYRightWheel();
 
-  char s[50];
+  char s[65];
   //snprintf(s,50,"%f,%f,%f,%f\n", xlw, ylw, xrw, yrw);
-  snprintf(s,50,"%f,%f,%f,%f\n", angle, leftSpeedGoal, rightSpeed, rightSpeedGoal);
+  snprintf(s,65,"%f,%f,%f,%f,%f\n", angle, leftSpeed, leftSpeedGoal, rightSpeed, rightSpeedGoal);
   return String(s);
 }
 
@@ -69,8 +69,8 @@ void loop() {
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
 
-	//mcs.leftMotor.run(255);
-	//mcs.rightMotor.run(255);
+	//mcs.leftMotor.run(20);
+	// mcs.rightMotor.run(255);
 
 	mcsTimer.setInterval(1000 / MCS_FREQ, [&](){
 		mcs.control();
