@@ -8,13 +8,12 @@
 #include "Config/PinMapping.h"
 #include "COM/InterruptStackPrint.h"
 #include "COM/Order/OrderManager.h"
+#include "COM/dxl.hpp"
 #include "Config/Defines.h"
 #include <SimpleTimer.h>
 
-
 SimpleTimer mcsTimer;
 SimpleTimer samplingTimer;
-
 
 auto getMotionDatum() {
   float leftSpeedGoal, rightSpeedGoal;
@@ -40,7 +39,6 @@ auto getMotionDatum() {
 
 
 void setup(){
-	//noInterrupts();
 	InitAllPins();
 
 	ComMgr::Instance().init();
@@ -54,15 +52,20 @@ void setup(){
 
 	OrderManager::Instance().init();
 	Serial.println("Ordres OK");
-
 	Serial.println("Init OK");
 
+  // I2C
 	Wire.setSDA(D0);
 	Wire.setSCL(D1);
 	Wire.begin();
-	//interrupts();
-}
 
+  // DXL
+  hammer_dxl_stream.begin(57600);
+  for (auto id : hammer_dxl_ids) {
+    dxl::send_packet(hammer_dxl_stream, id, dxl::Instruction::write, uint16_t{64}, uint8_t{1});
+    delayMicroseconds(dxl_interframe_delay_us);    
+  }
+}
 
 void loop() {
 	//noInterrupts();
@@ -82,15 +85,14 @@ void loop() {
 	orderManager.execute("montlhery");
 	orderManager.execute("cr1");
 	//orderManager.execute("ct1");
-	
+
 	orderManager.execute("start_mda 4096");
-	
+
 	while (true) {
 		mcsTimer.run();
 		samplingTimer.run();
 		orderManager.communicate();
 	}
-
 }
 
                    /*``.           `-:--.`

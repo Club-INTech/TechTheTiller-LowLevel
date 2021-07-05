@@ -11,6 +11,7 @@
 #include "Utils/DelayingBuffer.hpp"
 #include "Config/PinMapping.h"
 #include "MotionControlSystem/RobotInfo/RobotStatus.h"
+#include "COM/dxl.hpp"
 //
 #include "Servo.h"
 #include "Stepper.h"
@@ -19,6 +20,7 @@
 #include <Wire.h>
 
 #include "external.hpp"
+#include "dxl/2.0/packet.hpp"
 
 /*******************************************************************************
   ORDER pour 2020-2021
@@ -31,6 +33,8 @@ ORDER(hammers, 1);
 ORDER(set_hammer_angle, 2);
 ORDER(raise_hammer, 1);
 ORDER(lower_hammer, 1);
+ORDER(raise_dxl, 0);
+ORDER(lower_dxl, 0);
 ORDER(toggle_valve, 2);
 ORDER(suck, 2);
 

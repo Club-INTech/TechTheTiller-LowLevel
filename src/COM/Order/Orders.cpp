@@ -49,6 +49,26 @@ void ORDER_lower_hammer::impl(Args args) {
   executeRPC(hammers_id, lower_hammer_id, &data);
 }
 
+void ORDER_raise_dxl::impl(Args args) {
+  using namespace dxl;
+  for (size_t i = 0; i < sizeof hammer_dxl_ids; i++) {
+    dxl::send_packet(hammer_dxl_stream, hammer_dxl_ids[i], dxl::Instruction::write,
+      uint16_t{116},
+      hammer_dxl_home_positions[i] + hammer_dxl_raised_offsets[i]);
+    delayMicroseconds(dxl_interframe_delay_us);
+  }
+}
+
+void ORDER_lower_dxl::impl(Args args) {
+  using namespace dxl;
+  for (size_t i = 0; i < sizeof hammer_dxl_ids; i++) {
+    dxl::send_packet(hammer_dxl_stream, hammer_dxl_ids[i], dxl::Instruction::write,
+      uint16_t{116},
+      hammer_dxl_home_positions[i] + hammer_dxl_lowered_offsets[i]);
+    delayMicroseconds(dxl_interframe_delay_us);
+  }
+}
+
 void ORDER_toggle_valve::impl(Args args) {
   using namespace external;
   static BufferedData data(2 * sizeof(int));

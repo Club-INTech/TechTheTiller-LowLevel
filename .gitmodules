@@ -4,3 +4,10 @@
 [submodule "Carte-Hammers"]
 	path = Carte-Hammers
 	url = https://github.com/Club-INTech/Carte-Hammers.git/
+[submodule "lib/dynamixel"]
+	path = lib/dynamixel
+	url = https://github.com/StarQTius/dynamixel
+	branch = master
+[submodule "lib/SimpleTimer"]
+    path = lib/SimpleTimer
+	url = https://github.com/schinken/SimpleTimer/

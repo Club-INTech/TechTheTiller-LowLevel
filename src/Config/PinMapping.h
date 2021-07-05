@@ -26,7 +26,7 @@ constexpr uint8_t PIN_JMPR = D4;
 constexpr uint8_t SICK_PINS[] = {A0, A1, A6, A3};
 
 constexpr uint8_t XL1 = D6;
-constexpr uint8_t XL2 = D9;
+constexpr uint8_t XL2 = D11;
 
 /* LEDs debug */
 constexpr uint8_t LED1 = D8;

@@ -20,6 +20,10 @@ void InitAllPins() {
     digitalWrite(FWD_RIGHT, LOW);
     digitalWrite(BKW_RIGHT, LOW);
 
+    // DXL
+    pinMode(XL1, OUTPUT);
+    pinMode(XL2, OUTPUT);
+
     // Éclairages
     pinMode(LED1,OUTPUT);
     digitalWrite(LED1,LOW);
