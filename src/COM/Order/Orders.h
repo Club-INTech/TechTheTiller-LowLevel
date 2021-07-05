@@ -35,6 +35,7 @@ ORDER(raise_hammer, 1);
 ORDER(lower_hammer, 1);
 ORDER(raise_dxl, 0);
 ORDER(lower_dxl, 0);
+ORDER(arm, 2);
 ORDER(toggle_valve, 2);
 ORDER(suck, 2);
 

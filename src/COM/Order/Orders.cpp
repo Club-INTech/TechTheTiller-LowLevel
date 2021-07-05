@@ -69,6 +69,18 @@ void ORDER_lower_dxl::impl(Args args) {
   }
 }
 
+void ORDER_arm::impl(Args args) {
+  using namespace dxl;
+
+  Serial.println(OrderManager::parseInt(args[0]));
+  Serial.println(OrderManager::parseInt(args[1]));
+
+  uint8_t dxl_index = OrderManager::parseInt(args[0]);
+  dxl::send_packet(arm_dxl_stream, arm_dxl_ids[dxl_index], dxl::Instruction::write,
+    uint16_t{116},
+    OrderManager::parseInt(args[1]) == 0 ? arm_dxl_lowered_positions[dxl_index] : arm_dxl_raised_positions[dxl_index]);
+}
+
 void ORDER_toggle_valve::impl(Args args) {
   using namespace external;
   static BufferedData data(2 * sizeof(int));

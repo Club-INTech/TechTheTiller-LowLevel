@@ -63,7 +63,13 @@ void setup(){
   hammer_dxl_stream.begin(57600);
   for (auto id : hammer_dxl_ids) {
     dxl::send_packet(hammer_dxl_stream, id, dxl::Instruction::write, uint16_t{64}, uint8_t{1});
-    delayMicroseconds(dxl_interframe_delay_us);    
+    delayMicroseconds(dxl_interframe_delay_us);
+  }
+
+  arm_dxl_stream.begin(57600);
+  for (auto id : arm_dxl_ids) {
+    dxl::send_packet(arm_dxl_stream, id, dxl::Instruction::write, uint16_t{64}, uint8_t{1});
+    delayMicroseconds(dxl_interframe_delay_us);
   }
 }
 
