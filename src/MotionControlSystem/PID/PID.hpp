@@ -30,7 +30,7 @@ public:
 		epsilon = 0;
 		pre_error = 0;
 		derivative = 0;
-		integral.reset();
+		integral = 0;
 
 		resetErrors();
 	}
@@ -39,13 +39,13 @@ public:
 
 		T error = (*setPoint) - (*input);
 		derivative = error - pre_error;
-		integral.push(error);
-		// if( AWU_enabled && fabs(integral) > integral_max_value )
-		// 	integral = sign(integral)*integral_max_value;
+		integral += error;
+		if( AWU_enabled && fabs(integral) > integral_max_value )
+			integral = sign(integral)*integral_max_value;
 		pre_error = error;
 
 		T result = (T)(
-				kp * error + ki * integral.sum + kd * derivative);
+				kp * error + ki * integral + kd * derivative);
 
 		//Seuillage de la commande
 		if (ABS(result) < epsilon)
@@ -93,7 +93,7 @@ public:
 
 	void resetErrors() {
 		pre_error = 0;
-		integral.reset();
+		integral = 0;
 		derivative = 0;
 	}
 
@@ -122,7 +122,7 @@ public:
 	}
 
 	T getIntegralErrol() const {
-		return integral.sum;
+		return integral;
 	}
 
 	void enableAWU(bool b) {
@@ -154,9 +154,9 @@ private:
 
 	T pre_error;
 	T derivative;
-	//T integral;
+	T integral;
 
-	sum_array<T, 200> integral;	
+	//sum_array<T, 200> integral;	
 
 	float integral_max_value = 0;
 	bool AWU_enabled = false;

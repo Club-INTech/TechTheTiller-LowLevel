@@ -138,6 +138,7 @@ void ORDER_t::impl(Args args)
     orderManager.highLevel.printfln(DEBUG_HEADER,"angle : %f", angle);
 
     orderManager.motionControlSystem.disableP2P();
+    orderManager.execute("sstop");
     orderManager.execute("stop");
     orderManager.motionControlSystem.rotate(angle);
 }
@@ -301,7 +302,7 @@ void ORDER_maxtrro::impl(Args args){
 
 void ORDER_av::impl(Args args)
 {
-    orderManager.execute("stop");
+    orderManager.execute("sstop");
     orderManager.motionControlSystem.speedBasedMovement(MOVEMENT::FORWARD);
     orderManager.highLevel.printfln(DEBUG_HEADER, "av received");
 }

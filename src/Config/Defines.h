@@ -78,7 +78,7 @@ constexpr double    POSITION_UPDATE_PERIOD = 1000000.0 / POSITION_UPDATE_FREQUEN
 constexpr uint16_t  TICKS_PER_TURN =            1024;   // Unité : ticks
 constexpr float     COD_WHEEL_DIAMETER =        66.82f;  // Unité : mm 63.57
 constexpr float     COD_WHEEL_RADIUS =          33.41f;
-constexpr float     MEAN_TICKS_PER_PERIOD =     3.65f;
+constexpr float     MEAN_TICKS_PER_PERIOD =     3.7f;
 
 //distance roue codeuse pneu = 14.36mm
 
