@@ -124,6 +124,9 @@ void ORDER_d::impl(Args args)
     if(expectedWallImpact) {
         orderManager.motionControlSystem.expectWallImpact();
     }
+    orderManager.execute("ct1");
+    orderManager.execute("sstop");
+    orderManager.execute("stop");
     orderManager.motionControlSystem.translate(deplacement);
 }
 
@@ -138,6 +141,7 @@ void ORDER_t::impl(Args args)
     orderManager.highLevel.printfln(DEBUG_HEADER,"angle : %f", angle);
 
     orderManager.motionControlSystem.disableP2P();
+    orderManager.execute("ct0");
     orderManager.execute("sstop");
     orderManager.execute("stop");
     orderManager.motionControlSystem.rotate(angle);

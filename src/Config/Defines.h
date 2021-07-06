@@ -65,7 +65,7 @@ constexpr uint8_t F_ENV_POS = 50;
 
 constexpr int MIN_PWM_REACTION = 15;
 
-constexpr int quadrature_state[]={0,1,-1,0,-1,0,0,1,1,0,0,-1,0,-1,1,0};
+constexpr int quadrature_state[]={0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0};
  
 constexpr uint16_t  SAMPLING_FREQUENCY = 10;
 constexpr uint16_t  MCS_FREQ = 100; //100hz
@@ -82,8 +82,8 @@ constexpr float     MEAN_TICKS_PER_PERIOD =     3.7f;
 
 //distance roue codeuse pneu = 14.36mm
 
-constexpr uint8_t   DISTANCE_COD_GAUCHE_CENTRE = 161; // Unité : mm
-constexpr uint8_t   DISTANCE_COD_DROITE_CENTRE = 161; // Unité : mm
+constexpr uint8_t   DISTANCE_COD_GAUCHE_CENTRE = 165; // Unité : mm
+constexpr uint8_t   DISTANCE_COD_DROITE_CENTRE = 165; // Unité : mm
 constexpr uint8_t   DISTANCE_INTER_COD         = DISTANCE_COD_DROITE_CENTRE + DISTANCE_COD_GAUCHE_CENTRE;
 
 constexpr float TICK_TO_MM = static_cast<float>(PI*COD_WHEEL_DIAMETER/TICKS_PER_TURN); // Unité : mm/ticks

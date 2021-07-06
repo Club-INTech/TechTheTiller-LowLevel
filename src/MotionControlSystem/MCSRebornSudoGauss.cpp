@@ -31,14 +31,14 @@ MCS::MCS()
   
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(0.92, 1*1e-4, 3.1*1e-3, 0); //1, 6.75*1e-5, 3*1e-3, 0; new_method 0.92, 0, 2*1e-3
+    leftSpeedPID.setTunings(0.706, 2.4*1e-5, 0.9*1e-4, 0); //master 0.92, 1*1e-4, 3.1*1e-3, 0; slave 0.989, 1e-5, 1e-4
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(0.35, 1.8*1e-4, 8*1e-4, 0); //0.63, 6*1e-5, 7.1*1e-3, 0; new_method 0.26, 2.8*1e-4, 0
+    rightSpeedPID.setTunings(0.7, 2.46*1e-5, 1e-4, 0); //master 0.35, 1.8*1e-4, 8*1e-4, 0; slave 1, 2.6*1e-5, 1e-4
     rightSpeedPID.enableAWU(false);
 
-    translationPID.setTunings(1,1e-5,0,0); // 1, 1e-5, 0, 0
+    translationPID.setTunings(1.4,2*1e-5,1e-3,0); // 1, 2*1e-5, 1e-3, 0
     translationPID.enableAWU(false);
-    rotationPID.setTunings(2.2,0,41,0); // 2.2, 0, 41, 0
+    rotationPID.setTunings(1.8,0,0,0); // 2.2, 0, 41, 0
     rotationPID.enableAWU(false);
 
 #elif defined(SLAVE)
@@ -261,7 +261,7 @@ void MCS::updateSpeed()
 
     if(robotStatus.controlledRotation && !expectedWallImpact) // robot can't turn when he is close to the wall
     {
-        robotStatus.speedRotation = rotationPID.compute(robotStatus.orientation);
+        robotStatus.speedRotation = ABS(rotationPID.getCurrentGoal() - robotStatus.orientation) <= 0.04 ? 0 : rotationPID.compute(robotStatus.orientation);
     }
     else if(!robotStatus.forcedMovement)
     {
@@ -395,7 +395,7 @@ void MCS::translate(int16_t amount) {
     robotStatus.controlled = true;
     if(!robotStatus.controlledTranslation)
         return;
-    targetDistance = amount;
+    //targetDistance = amount;
     robotStatus.translation = true;
     leftSpeedPID.active = true;
     rightSpeedPID.active = true;
@@ -580,16 +580,20 @@ void MCS::setMaxRotationSpeed(float speed) {
     controlSettings.maxRotationSpeed = speed;
 }
 
-int16_t MCS::getX() {
-    return (int16_t) robotStatus.x;
+float MCS::getX() {
+    return robotStatus.x;
 }
 
-int16_t MCS::getY() {
-    return (int16_t) robotStatus.y;
+float MCS::getY() {
+    return robotStatus.y;
 }
 
 float MCS::getAngle() {
     return robotStatus.orientation;
+}
+
+float MCS::getCurrentDistance() {
+    return currentDistance;
 }
 
 void MCS::setX(int16_t x) {

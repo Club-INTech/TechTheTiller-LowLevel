@@ -54,11 +54,11 @@ while(ligne!="DATAEND" and ligne):
     ligneEntiere = ligne
     ligne = ligne.split(",")
     ligne.insert(0,0)
-    ligne.insert(0,0)
+    #ligne.insert(0,0)
     #ligne.insert(0,0)
     if(len(ligne)==7):
         try:
-            positions.append((float(ligne[0])**2+float(ligne[1])**2)**0.5)
+            positions.append(float(ligne[1]))
             angles.append(float(ligne[2]))
             for i in [0,1]:
                 speeds[i].append(float(ligne[3+2*i]))
@@ -94,23 +94,28 @@ while(ligne!="DATAEND" and ligne):
     ligne = fileStream.readline()
 
 if(mode == "pos" or mode == ""):
+
+    if len(sys.argv) < 4:
+        print("Please provide expected consigne angle")
+        exit(400)
+
+    consigne_position = float(sys.argv[3])
+
+    time_base = [i*100 for i in range(len(positions))]
     Img = figure(figsize=(14,14))
     ax1 = subplot(211)
-    ax2 = subplot(212)
-    ax1.plot(abscisses,positions)
-    ax1.plot(abscisses,[consignePos]*len(abscisses))
-    ax1.plot(abscisses,[0]*len(abscisses))
-    ax2.plot(abscisses[1:-1],[(float(positions[i+1])-float(positions[i-1]))/0.002 for i in range(1,len(positions)-1)])
+
+    ax1.plot(time_base,positions)
+    ax1.plot(time_base,[consigne_position for i in range(len(positions))])
+    
     Img.savefig("serialOutput/"+file+".png")
     clf()
 
     subplot(211)
-    plot(abscisses,positions)
-    plot(abscisses,[consignePos]*len(abscisses))
-    plot(abscisses,[0]*len(abscisses))
-    subplot(212)
-    plot(abscisses[1:-1],[(float(positions[i+1])-float(positions[i-1]))/0.002 for i in range(1,len(positions)-1)])
-    # plot(abscisses[1:-1],[9000*0.09]*(len(positionsY)-2))
+    plot(time_base,positions)
+    plot(time_base,[consigne_position for i in range(len(positions))])
+    
+    
 
 if(mode == "angle" or mode == ""):
     if len(sys.argv) < 4:
@@ -118,22 +123,21 @@ if(mode == "angle" or mode == ""):
         exit(400)
     
     consigne_angle = float(sys.argv[3])
+
     time_base = [i*100 for i in range(len(angles))]
     Img = figure(figsize=(14,14))
     ax1 = subplot(211)
-    #ax2 = subplot(212)
+    
     ax1.plot(time_base,angles)
     ax1.plot(time_base,[consigne_angle for i in range(len(angles))])
-    #ax2.plot(abscisses[1:-1],[(float(angles[i+1])-float(angles[i-1]))/0.002 for i in range(1,len(angles)-1)])
+    
     Img.savefig("serialOutput/"+file+"- angles.png")
     clf()
 
     subplot(211)
     plot(time_base,angles)
     plot(time_base,[consigne_angle for i in range(len(angles))])
-    #subplot(212)
-    #plot(abscisses[1:-1],[(float(angles[i+1])-float(angles[i-1]))/0.002 for i in range(1,len(angles)-1)])
-    #plot(abscisses,[0]*len(abscisses))
+    
 
 if(mode == "speed" or mode == ""):
 
