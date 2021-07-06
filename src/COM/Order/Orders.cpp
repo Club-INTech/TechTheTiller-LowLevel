@@ -78,6 +78,7 @@ void ORDER_lower_hammer::impl(Args args) {
 void ORDER_raise_dxl::impl(Args args) {
   using namespace dxl;
 
+  delayMicroseconds(1750);
   dxl::send_packet(hammer_dxl_stream, 0xfe, dxl::Instruction::sync_write, uint16_t{116}, uint16_t{4},
     uint8_t{hammer_dxl_ids[0]}, uint32_t{hammer_dxl_home_positions[0] + hammer_dxl_raised_offsets[0]},
     uint8_t{hammer_dxl_ids[1]}, uint32_t{hammer_dxl_home_positions[1] + hammer_dxl_raised_offsets[1]});
@@ -86,6 +87,7 @@ void ORDER_raise_dxl::impl(Args args) {
 void ORDER_lower_dxl::impl(Args args) {
   using namespace dxl;
 
+  delayMicroseconds(1750);
   dxl::send_packet(hammer_dxl_stream, 0xfe, dxl::Instruction::sync_write, uint16_t{116}, uint16_t{4},
     uint8_t{hammer_dxl_ids[0]}, uint32_t{hammer_dxl_home_positions[0] + hammer_dxl_lowered_offsets[0]},
     uint8_t{hammer_dxl_ids[1]}, uint32_t{hammer_dxl_home_positions[1] + hammer_dxl_lowered_offsets[1]});
