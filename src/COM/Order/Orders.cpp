@@ -42,7 +42,7 @@ void ORDER_suckall::impl(Args args) {
   using namespace external;
 
   for (int i = 0; i < 5; i++) {
-    static BufferedData data(2 * sizeof(int));
+    BufferedData data(2 * sizeof(int));
 
     putData(i, &data);
     putData(OrderManager::parseInt(args[0]), &data);
