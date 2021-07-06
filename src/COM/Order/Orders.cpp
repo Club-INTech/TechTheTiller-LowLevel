@@ -10,6 +10,20 @@
 
 using namespace I2CC;
 
+void ORDER_hammer::impl(Args args) {
+  using namespace external;
+
+  for (int i = 0; i < 5; i++) {
+    BufferedData data(sizeof(int));
+    putData(i, &data);
+
+    if (OrderManager::parseInt(args[i]) == 0)
+      executeRPC(hammers_id, lower_hammer_id, &data);
+    else
+      executeRPC(hammers_id, raise_hammer_id, &data);
+  }
+}
+
 void ORDER_hammers::impl(Args args) {
   using namespace external;
 

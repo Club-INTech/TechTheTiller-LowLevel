@@ -27,6 +27,7 @@
 *******************************************************************************/
 
 // HL crew requests
+ORDER(hammer, 5);
 ORDER(hammers, 1);
 
 // Actionators
