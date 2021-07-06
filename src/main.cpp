@@ -61,16 +61,15 @@ void setup(){
 
   // DXL
   hammer_dxl_stream.begin(57600);
-  for (auto id : hammer_dxl_ids) {
-    dxl::send_packet(hammer_dxl_stream, id, dxl::Instruction::write, uint16_t{64}, uint8_t{1});
-    delayMicroseconds(dxl_interframe_delay_us);
-  }
+  dxl::send_packet(hammer_dxl_stream, 0xfe, dxl::Instruction::sync_write, uint16_t{64}, uint16_t{1},
+    uint8_t{hammer_dxl_ids[0]}, uint8_t{1},
+    uint8_t{hammer_dxl_ids[1]}, uint8_t{1});
 
   arm_dxl_stream.begin(57600);
-  for (auto id : arm_dxl_ids) {
-    dxl::send_packet(arm_dxl_stream, id, dxl::Instruction::write, uint16_t{64}, uint8_t{1});
-    delayMicroseconds(dxl_interframe_delay_us);
-  }
+  dxl::send_packet(arm_dxl_stream, 0xfe, dxl::Instruction::sync_write, uint16_t{64}, uint16_t{1},
+    uint8_t{arm_dxl_ids[0]}, uint8_t{1},
+    uint8_t{arm_dxl_ids[1]}, uint8_t{1});
+
 }
 
 void loop() {
