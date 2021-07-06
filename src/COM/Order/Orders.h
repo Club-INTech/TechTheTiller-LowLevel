@@ -29,6 +29,7 @@
 // HL crew requests
 ORDER(hammer, 5);
 ORDER(hammers, 1);
+ORDER(suckall, 1);
 
 // Actionators
 ORDER(set_hammer_angle, 2);

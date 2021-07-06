@@ -38,6 +38,18 @@ void ORDER_hammers::impl(Args args) {
   }
 }
 
+void ORDER_suckall::impl(Args args) {
+  using namespace external;
+
+  for (int i = 0; i < 5; i++) {
+    static BufferedData data(2 * sizeof(int));
+
+    putData(i, &data);
+    putData(OrderManager::parseInt(args[0]), &data);
+    executeRPC(pumps_id, suck_id, &data);
+  }
+}
+
 void ORDER_set_hammer_angle::impl(Args args) {
   using namespace external;
   static BufferedData data(sizeof(int) + sizeof(float));
