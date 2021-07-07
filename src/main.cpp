@@ -72,7 +72,7 @@ void loop() {
 	auto& orderManager = OrderManager::Instance();
 
 	//mcs.leftMotor.run(20);
-	// mcs.rightMotor.run(255);
+	//mcs.rightMotor.run(60);
 
 	mcsTimer.setInterval(1000 / MCS_FREQ, [&](){
 		mcs.control();
@@ -83,7 +83,7 @@ void loop() {
 	});
 	//orderManager.execute("montlhery");
 	orderManager.execute("cr1");
-	//orderManager.execute("ct1");
+	orderManager.execute("ct1");
 	
 	orderManager.execute("start_mda 4096");
 	
