@@ -42,7 +42,7 @@ ORDER(toggle_valve, 2);
 ORDER(suck, 2);
 
 // Motion data acquisition
-constexpr auto motion_datum_string_size = 50;
+constexpr auto motion_datum_string_size = 80;
 
 ORDER(start_mda, 1);
 ORDER(send_md, 0);

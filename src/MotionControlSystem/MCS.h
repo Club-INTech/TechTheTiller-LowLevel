@@ -40,6 +40,7 @@ public:
     void updateSpeed();
     void control();
     void stop();
+    void fullStop();
     void stopTranslation();
     void stopRotation();
 
@@ -74,8 +75,8 @@ public:
      */
     void resetEncoders();
 
-    int16_t getX();
-    int16_t getY();
+    float getX();
+    float getY();
     float getAngle();
     int32_t getLeftTicks();
     int32_t getRightTicks();
@@ -91,6 +92,8 @@ public:
     long time_points_criteria;
 
     void getSpeedGoals(float&,float&);
+
+    float getCurrentDistance();
 
     /**
      * Permet de définir une rotation à la fin d'un mouvement (au lieu de devoir attendre la fin du mouvement et de donner un ordre de rotation)

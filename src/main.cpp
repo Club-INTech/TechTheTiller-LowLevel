@@ -20,8 +20,8 @@ auto getMotionDatum() {
 	auto& orderManager = OrderManager::Instance();
   orderManager.motionControlSystem.getSpeedGoals(leftSpeedGoal, rightSpeedGoal);
 
-  int16_t xPos = orderManager.motionControlSystem.getX();
-  int16_t yPos = orderManager.motionControlSystem.getY();
+  float xPos = orderManager.motionControlSystem.getX();
+  float yPos = orderManager.motionControlSystem.getY();
   float angle = orderManager.motionControlSystem.getAngle();
   float leftSpeed = orderManager.motionControlSystem.getLeftSpeed();
   float rightSpeed = orderManager.motionControlSystem.getRightSpeed();
@@ -31,9 +31,11 @@ auto getMotionDatum() {
   float xrw = orderManager.motionControlSystem.getXRightWheel();
   float yrw = orderManager.motionControlSystem.getYRightWheel();
 
-  char s[50];
+  float d = orderManager.motionControlSystem.getCurrentDistance();
+
+  char s[80];
   //snprintf(s,50,"%f,%f,%f,%f\n", xlw, ylw, xrw, yrw);
-  snprintf(s,50,"%f,%f,%f,%f\n", angle, leftSpeedGoal, rightSpeed, rightSpeedGoal);
+  snprintf(s,80,"%f,%f,%f,%f,%f,%f\n", d, angle, leftSpeed, leftSpeedGoal, rightSpeed, rightSpeedGoal);
   return String(s);
 }
 
@@ -77,8 +79,8 @@ void loop() {
 	auto& mcs = MCS::Instance();
 	auto& orderManager = OrderManager::Instance();
 
-	//mcs.leftMotor.run(255);
-	//mcs.rightMotor.run(255);
+	//mcs.leftMotor.run(20);
+	//mcs.rightMotor.run(60);
 
 	mcsTimer.setInterval(1000 / MCS_FREQ, [&](){
 		mcs.control();
@@ -87,10 +89,10 @@ void loop() {
 	samplingTimer.setInterval(1000 / SAMPLING_FREQUENCY, [&](){
 		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum());
 	});
-	orderManager.execute("montlhery");
+	//orderManager.execute("montlhery");
 	orderManager.execute("cr1");
-	//orderManager.execute("ct1");
-
+	orderManager.execute("ct1");
+	
 	orderManager.execute("start_mda 4096");
 
 	while (true) {
