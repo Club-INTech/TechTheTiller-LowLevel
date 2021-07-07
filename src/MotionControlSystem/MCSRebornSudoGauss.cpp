@@ -31,14 +31,14 @@ MCS::MCS()
   
 #if defined(MAIN)
 
-    leftSpeedPID.setTunings(0.706, 2.4*1e-5, 0.9*1e-4, 0); //master 0.92, 1*1e-4, 3.1*1e-3, 0; slave 0.989, 1e-5, 1e-4
+    leftSpeedPID.setTunings(0.706, 2.4*1e-5, 0.9*1e-4, 0); //master 0.1600, 0, 0, 0; slave 0.706, 2.4*1e-5, 0.9*1e-4
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(0.7, 2.46*1e-5, 1e-4, 0); //master 0.35, 1.8*1e-4, 8*1e-4, 0; slave 1, 2.6*1e-5, 1e-4
+    rightSpeedPID.setTunings(0.7, 2.46*1e-5, 1e-4, 0); //master 0.1525, 0, 0, 0; slave 0.7, 2.46*1e-5, 1e-4
     rightSpeedPID.enableAWU(false);
 
-    translationPID.setTunings(1.4,2*1e-5,1e-3,0); // 1, 2*1e-5, 1e-3, 0
+    translationPID.setTunings(1.2,0,3*1e-2,0); // 1, 2*1e-5, 1e-3, 0
     translationPID.enableAWU(false);
-    rotationPID.setTunings(1.8,0,0,0); // 2.2, 0, 41, 0
+    rotationPID.setTunings(2.2,0,9.5,0); // 2.2, 0, 41, 0
     rotationPID.enableAWU(false);
 
 #elif defined(SLAVE)
@@ -252,16 +252,26 @@ void MCS::updateSpeed()
 
     if(robotStatus.controlledTranslation)
     {
-        robotStatus.speedTranslation = translationPID.compute(currentDistance);
+        if(ABS(translationPID.getCurrentGoal() - currentDistance) <= translationControlTolerancy) {
+            stop();
+        } else {
+            robotStatus.speedTranslation =  translationPID.compute(currentDistance);
+        }
+        
     }
     else if(!robotStatus.forcedMovement) // forced movement is used to activate a speed asservisement
     {
         robotStatus.speedTranslation = 0.0f;
     }
 
-    if(robotStatus.controlledRotation && !expectedWallImpact) // robot can't turn when he is close to the wall
+    if(robotStatus.controlledRotation && !expectedWallImpact) // r obot can't turn when he is close to the wall
     {
-        robotStatus.speedRotation = ABS(rotationPID.getCurrentGoal() - robotStatus.orientation) <= 0.04 ? 0 : rotationPID.compute(robotStatus.orientation);
+        if(ABS(rotationPID.getCurrentGoal() - robotStatus.orientation) <= angleControlTolerancy && !robotStatus.controlledTranslation) {
+            stop();
+        } else {
+            robotStatus.speedRotation = rotationPID.compute(robotStatus.orientation);
+        }
+        
     }
     else if(!robotStatus.forcedMovement)
     {
@@ -281,40 +291,44 @@ void MCS::updateSpeed()
 
     // if speed pids are active, we set a new goal; goal can change because of acceleration or translation goal or rotation goal
 
-    if (leftSpeedPID.active) {
+    // if(ABS(robotStatus.currentLeftSpeedGoal - robotStatus.speedLeftWheel) <= 10 && ABS(robotStatus.currentRightSpeedGoal - robotStatus.speedRightWheel) <= 10) {
+
+        if (leftSpeedPID.active) {
         
-        if( robotStatus.currentLeftSpeedGoal + controlSettings.maxAcceleration <= robotStatus.finalLeftSpeedGoal) {
-            robotStatus.currentLeftSpeedGoal += controlSettings.maxAcceleration;
-        } 
-        else if(robotStatus.currentLeftSpeedGoal - controlSettings.maxDeceleration >= robotStatus.finalLeftSpeedGoal && !robotStatus.stuck) {
-            robotStatus.currentLeftSpeedGoal -= controlSettings.maxDeceleration;
-        } else  {
-            robotStatus.currentLeftSpeedGoal = robotStatus.finalLeftSpeedGoal;
+            if( robotStatus.currentLeftSpeedGoal + controlSettings.maxAcceleration <= robotStatus.finalLeftSpeedGoal) {
+                robotStatus.currentLeftSpeedGoal += controlSettings.maxAcceleration;
+            } 
+            else if(robotStatus.currentLeftSpeedGoal - controlSettings.maxDeceleration >= robotStatus.finalLeftSpeedGoal && !robotStatus.stuck) {
+                robotStatus.currentLeftSpeedGoal -= controlSettings.maxDeceleration;
+            } else  {
+                robotStatus.currentLeftSpeedGoal = robotStatus.finalLeftSpeedGoal;
+             }
+
+
+            leftSpeedPID.setGoal(robotStatus.currentLeftSpeedGoal);
+    
         }
 
+        if (rightSpeedPID.active) {
+            
+            if( robotStatus.currentRightSpeedGoal + controlSettings.maxAcceleration <= robotStatus.finalRightSpeedGoal) {
+                robotStatus.currentRightSpeedGoal += controlSettings.maxAcceleration;
+            }
 
-        leftSpeedPID.setGoal(robotStatus.currentLeftSpeedGoal);
-    
+            else if(robotStatus.currentRightSpeedGoal - controlSettings.maxDeceleration >= robotStatus.finalRightSpeedGoal && !robotStatus.stuck) {
+                robotStatus.currentRightSpeedGoal -= controlSettings.maxDeceleration;
+            } else {
+                robotStatus.currentRightSpeedGoal = robotStatus.finalRightSpeedGoal;
+            }
+
+
+            rightSpeedPID.setGoal(robotStatus.currentRightSpeedGoal);
+        
+        }
+
     }
 
-    if (rightSpeedPID.active) {
-        
-        if( robotStatus.currentRightSpeedGoal + controlSettings.maxAcceleration <= robotStatus.finalRightSpeedGoal) {
-            robotStatus.currentRightSpeedGoal += controlSettings.maxAcceleration;
-        }
-
-        else if(robotStatus.currentRightSpeedGoal - controlSettings.maxDeceleration >= robotStatus.finalRightSpeedGoal && !robotStatus.stuck) {
-            robotStatus.currentRightSpeedGoal -= controlSettings.maxDeceleration;
-        } else {
-            robotStatus.currentRightSpeedGoal = robotStatus.finalRightSpeedGoal;
-        }
-
-
-        rightSpeedPID.setGoal(robotStatus.currentRightSpeedGoal);
-    
-    }
-
-}
+// }
 
 /* 
     mcs control is the principal function that orchestrate robot movement
@@ -330,13 +344,20 @@ void MCS::control()
     updatePositionOrientation();
     updateSpeed();
 
+    if(ABS(rotationPID.getCurrentGoal() - robotStatus.orientation) <= angleHLTolerancy && !robotStatus.controlledTranslation) {
+        ComMgr::Instance().printfln(EVENT_HEADER, "Rotation finished");
+    } 
+    else if(ABS(translationPID.getCurrentGoal() - currentDistance) <= translationHLTolerancy) {
+        ComMgr::Instance().printfln(EVENT_HEADER, "Translation finished");
+    }
+
     //calculating a pwm for each wheel
 
     int32_t leftPWM =  leftSpeedPID.compute(robotStatus.speedLeftWheel);
     int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
 
-    // if(robotStatus.orientation > 0.1) {
-    //     SERIAL_DEBUG("a: %f\n", rotationPID.getDerivativeError());
+    // if(robotStatus.speedTranslation > 100) {
+    //     SERIAL_DEBUG("l: %f; r: %f\n", leftSpeedPID.getIntegralErrol(), rightSpeedPID.getIntegralErrol());
     // }
 
     // transmitting a pwm to motors
@@ -349,6 +370,12 @@ void MCS::control()
     encoderLeft.reset_ticks();
     encoderRight.reset_ticks();
     
+}
+
+void MCS::fullStop() {
+    stop();
+    robotStatus.controlledTranslation = false;
+    robotStatus.controlledRotation = false;
 }
 
 
@@ -414,11 +441,6 @@ void MCS::translate(int16_t amount) {
     robotStatus.movement = amount > 0 ? MOVEMENT::FORWARD : MOVEMENT::BACKWARD;
     translationPID.setGoal(amount + currentDistance);
     robotStatus.moving = true;
-#if defined(MAIN)
-    digitalWrite(LED2,LOW);
-#elif defined(SLAVE)
-    digitalWrite(LED2_1,HIGH);
-#endif
 }
 
 void MCS::rotate(float angle) {
@@ -440,11 +462,6 @@ void MCS::rotate(float angle) {
 
     rotationPID.setGoal(targetAngle);
     robotStatus.moving = true;
-#if defined(MAIN)
-    digitalWrite(LED2,LOW);
-#elif defined(SLAVE)
-    digitalWrite(LED2_1,LOW);
-#endif
 }
 
 

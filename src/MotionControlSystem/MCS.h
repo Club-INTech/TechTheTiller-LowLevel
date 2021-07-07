@@ -40,6 +40,7 @@ public:
     void updateSpeed();
     void control();
     void stop();
+    void fullStop();
     void stopTranslation();
     void stopRotation();
 

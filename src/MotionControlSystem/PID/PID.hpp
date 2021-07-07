@@ -11,7 +11,7 @@
 
 #include <stdint.h>
 #include "Utils/Utils.h"
-#include "Utils/SumArray.hpp"
+#include "Utils/integral.hpp"
 
 template <typename T>
 class PID
@@ -156,7 +156,7 @@ private:
 	T derivative;
 	T integral;
 
-	//sum_array<T, 200> integral;	
+	// Integral<T, 100> integral;	
 
 	float integral_max_value = 0;
 	bool AWU_enabled = false;
