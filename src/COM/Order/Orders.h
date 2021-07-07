@@ -74,6 +74,8 @@ ORDER(t,1);
  * @Description: Goto a position by first rotating then translating.
  * @Arguments: x cible en mm, y cible en mm, [séquentiel: booléen]
  */
+
+ORDER(tw,0);
 ORDER(goto,2);
 /**
  * @Description: Essaye d'arrêter le robot à la position actuelle.

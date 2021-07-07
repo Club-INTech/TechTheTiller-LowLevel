@@ -41,6 +41,7 @@ public:
     void control();
     void stop();
     void fullStop();
+    void finalStop();
     void stopTranslation();
     void stopRotation();
 
@@ -123,11 +124,11 @@ public:
     Motor leftMotor;
     Motor rightMotor;
 
+    RobotStatus robotStatus;
+
 private:
     Encoder<RIGHT> encoderRight;
     Encoder<LEFT> encoderLeft;
-
-    RobotStatus robotStatus;
     ControlSettings controlSettings;
 
 

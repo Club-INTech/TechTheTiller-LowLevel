@@ -44,15 +44,15 @@ MCS::MCS()
 #elif defined(SLAVE)
 
 /* asserv en vitesse */
-    leftSpeedPID.setTunings(0.53, 0.00105, 30, 0);//0.0015
+    leftSpeedPID.setTunings(0.9, 0.94*1e-4, 3.05*1e-3, 0);//0.0015
     leftSpeedPID.enableAWU(false);
-    rightSpeedPID.setTunings(0.53, 0.00105, 30, 0);//0.0015
+    rightSpeedPID.setTunings(0.37, 2.00*1e-4, 8*1e-4, 0);//0.0015
     rightSpeedPID.enableAWU(false);
 /* asserv en translation */
-    translationPID.setTunings(2.75,0,5,0);//2.75  0  5
+    translationPID.setTunings(1.2,0,3*1e-2,0);//2.75  0  5
     translationPID.enableAWU(false);
 /* asserv en rotation */
-    rotationPID.setTunings(3.2,0.0000,0,0);  //3.2  0  0
+    rotationPID.setTunings(1.3,0,20,0);  //3.2  0  0
     rotationPID.enableAWU(false);
 
 #endif
@@ -344,11 +344,13 @@ void MCS::control()
     updatePositionOrientation();
     updateSpeed();
 
-    if(ABS(rotationPID.getCurrentGoal() - robotStatus.orientation) <= angleHLTolerancy && !robotStatus.controlledTranslation) {
+    if(ABS(rotationPID.getCurrentGoal() - robotStatus.orientation) <= angleHLTolerancy && !robotStatus.controlledTranslation && !robotStatus.termination) {
         ComMgr::Instance().printfln(EVENT_HEADER, "Rotation finished");
+        robotStatus.termination = true;
     } 
-    else if(ABS(translationPID.getCurrentGoal() - currentDistance) <= translationHLTolerancy) {
+    else if(ABS(translationPID.getCurrentGoal() - currentDistance) <= translationHLTolerancy && !robotStatus.termination && robotStatus.controlledTranslation) {
         ComMgr::Instance().printfln(EVENT_HEADER, "Translation finished");
+        robotStatus.termination = true;
     }
 
     //calculating a pwm for each wheel
@@ -356,8 +358,16 @@ void MCS::control()
     int32_t leftPWM =  leftSpeedPID.compute(robotStatus.speedLeftWheel);
     int32_t rightPWM = rightSpeedPID.compute(robotStatus.speedRightWheel);
 
-    // if(robotStatus.speedTranslation > 100) {
-    //     SERIAL_DEBUG("l: %f; r: %f\n", leftSpeedPID.getIntegralErrol(), rightSpeedPID.getIntegralErrol());
+    if(ABS(leftPWM) <= pwmTolerancy) {
+        leftPWM = 0;
+    }
+
+    if(ABS(rightPWM) <= pwmTolerancy) {
+        rightPWM = 0;
+    }
+
+    // if(robotStatus.orientation > 0.1) {
+    //     SERIAL_DEBUG("l: %f; r: %f\n", (float) leftPWM, (float) rightPWM);
     // }
 
     // transmitting a pwm to motors
@@ -376,6 +386,12 @@ void MCS::fullStop() {
     stop();
     robotStatus.controlledTranslation = false;
     robotStatus.controlledRotation = false;
+}
+
+void MCS::finalStop() {
+    stop();
+    leftSpeedPID.setGoal(0);
+    rightSpeedPID.setGoal(0);
 }
 
 
