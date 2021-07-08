@@ -3,7 +3,6 @@
 
 #include "Defines.h"
 
-#if defined(MAIN)
 /**
  * Pinmapping du principal : https://cadlab.io/project/23715/master/circuit/Q2FydGUtUHJpbmNpcGFsZS5icmQ%3D
  */
@@ -34,6 +33,6 @@ constexpr uint8_t LED2 = D7;
 
 void InitAllPins();
 
-#endif
+
 
 #endif //_PIN_MAPPING_h

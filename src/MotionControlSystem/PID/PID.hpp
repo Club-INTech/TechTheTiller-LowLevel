@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include "Utils/Utils.h"
+#include "Utils/integral.hpp"
 
 template <typename T>
 class PID
@@ -30,6 +31,7 @@ public:
 		pre_error = 0;
 		derivative = 0;
 		integral = 0;
+
 		resetErrors();
 	}
 
@@ -153,6 +155,8 @@ private:
 	T pre_error;
 	T derivative;
 	T integral;
+
+	// Integral<T, 100> integral;	
 
 	float integral_max_value = 0;
 	bool AWU_enabled = false;

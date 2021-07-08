@@ -20,6 +20,7 @@ struct RobotStatus
     bool forcedMovement;
     bool moving;
     bool stuck;
+    bool termination;
 
     float x;
     float y;

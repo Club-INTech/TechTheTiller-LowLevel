@@ -42,7 +42,7 @@ ORDER(toggle_valve, 2);
 ORDER(suck, 2);
 
 // Motion data acquisition
-constexpr auto motion_datum_string_size = 50;
+constexpr auto motion_datum_string_size = 80;
 
 ORDER(start_mda, 1);
 ORDER(send_md, 0);
@@ -74,6 +74,8 @@ ORDER(t,1);
  * @Description: Goto a position by first rotating then translating.
  * @Arguments: x cible en mm, y cible en mm, [séquentiel: booléen]
  */
+
+ORDER(tw,0);
 ORDER(goto,2);
 /**
  * @Description: Essaye d'arrêter le robot à la position actuelle.

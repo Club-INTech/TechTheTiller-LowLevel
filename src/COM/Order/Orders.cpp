@@ -180,6 +180,10 @@ void ORDER_d::impl(Args args)
     if(expectedWallImpact) {
         orderManager.motionControlSystem.expectWallImpact();
     }
+    orderManager.execute("ct1");
+    orderManager.execute("sstop");
+    orderManager.execute("stop");
+    orderManager.execute("tw");
     orderManager.motionControlSystem.translate(deplacement);
 }
 
@@ -194,7 +198,15 @@ void ORDER_t::impl(Args args)
     orderManager.highLevel.printfln(DEBUG_HEADER,"angle : %f", angle);
 
     orderManager.motionControlSystem.disableP2P();
+    orderManager.execute("ct0");
+    orderManager.execute("sstop");
+    orderManager.execute("stop");
+    orderManager.execute("tw");
     orderManager.motionControlSystem.rotate(angle);
+}
+
+void ORDER_tw::impl(Args args) {
+    orderManager.motionControlSystem.robotStatus.termination = false;
 }
 
 void ORDER_goto::impl(Args args)
@@ -356,12 +368,14 @@ void ORDER_maxtrro::impl(Args args){
 
 void ORDER_av::impl(Args args)
 {
+    orderManager.execute("sstop");
     orderManager.motionControlSystem.speedBasedMovement(MOVEMENT::FORWARD);
     orderManager.highLevel.printfln(DEBUG_HEADER, "av received");
 }
 
 void ORDER_rc::impl(Args args)
 {
+    orderManager.execute("stop");
     orderManager.motionControlSystem.speedBasedMovement(MOVEMENT::BACKWARD);
     orderManager.highLevel.printfln(DEBUG_HEADER, "rc received");
 }
@@ -534,8 +548,6 @@ void ORDER_endMatch::impl(Args args) {
     orderManager.execute("stop");
     orderManager.execute("sstop");
 
-#if defined(MAIN)
-
     while(true) {
         digitalWrite(LED1, LOW);
         digitalWrite(LED2, LOW);
@@ -544,26 +556,4 @@ void ORDER_endMatch::impl(Args args) {
         digitalWrite(LED2, HIGH);
         delay(100);
     }
-
-#elif defined(SLAVE)
-
-    digitalWrite(LED1_3, HIGH);
-    digitalWrite(LED2_1, HIGH);
-    digitalWrite(LED2_2, HIGH);
-    digitalWrite(LED3_1, HIGH);
-    digitalWrite(LED3_2, HIGH);
-    while(true) {
-        digitalWrite(LED1_1, LOW);
-        digitalWrite(LED1_2, LOW);
-        digitalWrite(LED2_3, LOW);
-        digitalWrite(LED3_3, LOW);
-        delay(100);
-        digitalWrite(LED1_1, HIGH);
-        digitalWrite(LED1_2, HIGH);
-        digitalWrite(LED2_3, HIGH);
-        digitalWrite(LED3_3, HIGH);
-        delay(100);
-    }
-
-#endif
 }
