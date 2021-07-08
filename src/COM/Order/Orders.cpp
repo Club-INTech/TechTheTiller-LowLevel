@@ -52,7 +52,7 @@ void ORDER_suckall::impl(Args args) {
 
 void ORDER_set_hammer_angle::impl(Args args) {
   using namespace external;
-  static BufferedData data(sizeof(int) + sizeof(float));
+  BufferedData data(sizeof(int) + sizeof(float));
 
   putData(OrderManager::parseInt(args[0]), &data);
   putData(OrderManager::parseFloat(args[1]), &data);
@@ -61,7 +61,7 @@ void ORDER_set_hammer_angle::impl(Args args) {
 
 void ORDER_raise_hammer::impl(Args args) {
   using namespace external;
-  static BufferedData data(sizeof(int));
+  BufferedData data(sizeof(int));
 
   putData(OrderManager::parseInt(args[0]), &data);
   executeRPC(hammers_id, raise_hammer_id, &data);
@@ -69,7 +69,7 @@ void ORDER_raise_hammer::impl(Args args) {
 
 void ORDER_lower_hammer::impl(Args args) {
   using namespace external;
-  static BufferedData data(sizeof(int));
+  BufferedData data(sizeof(int));
 
   putData(OrderManager::parseInt(args[0]), &data);
   executeRPC(hammers_id, lower_hammer_id, &data);
@@ -107,7 +107,7 @@ void ORDER_arm::impl(Args args) {
 
 void ORDER_toggle_valve::impl(Args args) {
   using namespace external;
-  static BufferedData data(2 * sizeof(int));
+  BufferedData data(2 * sizeof(int));
 
   putData(OrderManager::parseInt(args[0]), &data);
   putData(OrderManager::parseInt(args[1]), &data);
@@ -116,7 +116,7 @@ void ORDER_toggle_valve::impl(Args args) {
 
 void ORDER_suck::impl(Args args) {
   using namespace external;
-  static BufferedData data(2 * sizeof(int));
+  BufferedData data(2 * sizeof(int));
 
   putData(OrderManager::parseInt(args[0]), &data);
   putData(OrderManager::parseInt(args[1]), &data);
