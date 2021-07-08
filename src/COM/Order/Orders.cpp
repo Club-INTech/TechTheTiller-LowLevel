@@ -50,6 +50,17 @@ void ORDER_suckall::impl(Args args) {
   }
 }
 
+void ORDER_flag::impl(Args args) {
+  using namespace external;
+  BufferedData data(sizeof(int));
+  putData(5, &data);
+
+  if (OrderManager::parseInt(args[0]))
+    executeRPC(hammers_id, raise_hammer_id, &data);
+  else
+    executeRPC(hammers_id, lower_hammer_id, &data);
+}
+
 void ORDER_set_hammer_angle::impl(Args args) {
   using namespace external;
   BufferedData data(sizeof(int) + sizeof(float));
