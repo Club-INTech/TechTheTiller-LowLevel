@@ -90,18 +90,18 @@ constexpr float     COD_WHEEL_RADIUS =          33.41f;
 constexpr float angleControlTolerancy = 0.01;
 constexpr float translationControlTolerancy = 3;
 
-constexpr float angleHLTolerancy = 0.02;
-constexpr float translationHLTolerancy = 5;
+constexpr float angleHLTolerancy = 0.03;
+constexpr float translationHLTolerancy = 6;
 
 constexpr int pwmTolerancy = 12;
 
 #if defined(MAIN)
 
-constexpr float     MEAN_TICKS_PER_PERIOD =     3.7f;
+constexpr float     MEAN_TICKS_PER_PERIOD =     3.35f;
 
 
-constexpr uint8_t   DISTANCE_COD_GAUCHE_CENTRE = 165; // Unité : mm
-constexpr uint8_t   DISTANCE_COD_DROITE_CENTRE = 165; // Unité : mm
+constexpr uint8_t   DISTANCE_COD_GAUCHE_CENTRE = 162.5; // Unité : mm
+constexpr uint8_t   DISTANCE_COD_DROITE_CENTRE = 162.5; // Unité : mm
 
 #elif defined(SLAVE)
 
