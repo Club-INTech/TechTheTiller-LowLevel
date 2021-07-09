@@ -36,7 +36,7 @@ MCS::MCS()
     rightSpeedPID.setTunings(0.3, 0, 0, 0); // 0.3, 0, 0, 0
     rightSpeedPID.enableAWU(false);
 
-    translationPID.setTunings(0.8,3*1e-4,0,0); // 0.8, 3*1e-4, 0
+    translationPID.setTunings(0.9,7*1e-4,0,0); // 0.9, 7*1e-4, 0
     translationPID.enableAWU(false);
     rotationPID.setTunings(2.22,7*1e-4,8,0); // 2.22, 7*1e-4, 8
     rotationPID.enableAWU(false);
@@ -281,6 +281,9 @@ void MCS::updateSpeed()
             // }
 
             robotStatus.speedTranslation =  translationPID.compute(currentDistance);
+            if(robotStatus.movement == MOVEMENT::BACKWARD) {
+                robotStatus.speedTranslation = robotStatus.speedTranslation * (-1);
+            }
         
     }
     else if(!robotStatus.forcedMovement) // forced movement is used to activate a speed asservisement
@@ -485,7 +488,7 @@ void MCS::translate(int16_t amount) {
     }
     robotStatus.movement = amount > 0 ? MOVEMENT::FORWARD : MOVEMENT::BACKWARD;
     //translationPID.setGoal(amount + currentDistance);
-    robotStatus.finalTranslationGoal = amount + currentDistance;
+    robotStatus.finalTranslationGoal = ABS(amount) + currentDistance;
     robotStatus.moving = true;
 }
 
