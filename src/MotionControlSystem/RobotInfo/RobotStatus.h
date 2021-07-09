@@ -20,7 +20,8 @@ struct RobotStatus
     bool forcedMovement;
     bool moving;
     bool stuck;
-    bool termination;
+    bool translationTermination;
+    bool rotationTermination;
 
     float x;
     float y;
@@ -48,6 +49,9 @@ struct RobotStatus
 
     float finalLeftSpeedGoal;
     float finalRightSpeedGoal;
+
+    float finalTranslationGoal;
+    float currentTranslationGoal;
 
     bool sentMoveAbnormal;
 

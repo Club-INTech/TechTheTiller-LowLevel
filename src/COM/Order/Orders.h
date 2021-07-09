@@ -75,7 +75,8 @@ ORDER(t,1);
  * @Arguments: x cible en mm, y cible en mm, [séquentiel: booléen]
  */
 
-ORDER(tw,0);
+ORDER(trw,0);
+ORDER(tuw,0);
 ORDER(goto,2);
 /**
  * @Description: Essaye d'arrêter le robot à la position actuelle.

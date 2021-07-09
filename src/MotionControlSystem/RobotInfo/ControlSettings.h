@@ -21,6 +21,8 @@ public:
     /*rad/s*/
     float maxRotationSpeed;
 
+    float translationStep;
+
     /* ms */
     uint8_t stopDelay;
 

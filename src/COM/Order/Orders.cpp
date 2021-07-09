@@ -181,9 +181,9 @@ void ORDER_d::impl(Args args)
         orderManager.motionControlSystem.expectWallImpact();
     }
     orderManager.execute("ct1");
-    orderManager.execute("sstop");
+    //orderManager.execute("sstop");
     orderManager.execute("stop");
-    orderManager.execute("tw");
+    orderManager.execute("trw");
     orderManager.motionControlSystem.translate(deplacement);
 }
 
@@ -199,14 +199,18 @@ void ORDER_t::impl(Args args)
 
     orderManager.motionControlSystem.disableP2P();
     orderManager.execute("ct0");
-    orderManager.execute("sstop");
+    //orderManager.execute("sstop");
     orderManager.execute("stop");
-    orderManager.execute("tw");
+    orderManager.execute("tuw");
     orderManager.motionControlSystem.rotate(angle);
 }
 
-void ORDER_tw::impl(Args args) {
-    orderManager.motionControlSystem.robotStatus.termination = false;
+void ORDER_trw::impl(Args args) {
+    orderManager.motionControlSystem.robotStatus.translationTermination = false;
+}
+
+void ORDER_tuw::impl(Args args) {
+    orderManager.motionControlSystem.robotStatus.rotationTermination = false;
 }
 
 void ORDER_goto::impl(Args args)
