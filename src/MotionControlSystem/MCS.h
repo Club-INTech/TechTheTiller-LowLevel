@@ -44,7 +44,7 @@ public:
     void stopTranslation();
     void stopRotation();
 
-    void translate(int16_t);
+    void translate(float);
     void rotate(float);
     void gotoPoint(int16_t,int16_t,bool);
     void gotoPoint2(int16_t,int16_t);
@@ -107,8 +107,11 @@ public:
      */
     void disableP2P();
 
-    void setX(int16_t);
-    void setY(int16_t);
+    SelfContainedPID<float> translationPID;
+    SelfContainedPID<float> rotationPID;
+
+    void setX(float);
+    void setY(float);
     void setAngle(float);
 
     void expectWallImpact();
@@ -124,6 +127,7 @@ public:
     Motor rightMotor;
 
     RobotStatus robotStatus;
+    float currentDistance;
 
 private:
     Encoder<RIGHT> encoderRight;
@@ -133,12 +137,7 @@ private:
 
     SelfContainedPID<float> leftSpeedPID;
     SelfContainedPID<float> rightSpeedPID;
-    SelfContainedPID<float> translationPID;
-//    SelfContainedPID<float> rotationPID180;
-//    SelfContainedPID<float> rotationPID90;
-    SelfContainedPID<float> rotationPID;
 
-    float currentDistance;
     int16_t targetX;
     int16_t targetY;
 

@@ -65,7 +65,7 @@ ORDER(xyo,0);
  * @Description: Lance une translation.
  * @Arguments: Distance en mm, [excpectedWallImpact: booléen]
  */
-ORDER(d,1);
+ORDER(d,2);
 /**
  * @Description: Lance une rotation.
  * @Arguments: Angle en radians ou 'pi'

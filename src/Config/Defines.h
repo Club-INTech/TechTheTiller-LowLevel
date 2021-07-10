@@ -10,7 +10,7 @@
 *COMMUNICATION
 */
 
-#define SIGN(var) ABS(var) / var
+#define SIGN(var) (var <= 0.001f && var >= -0.001f) ? 1 : ABS(var) / var
 
 
 constexpr uint32_t MIN_TIME_BETWEEN_GOTO_TR_ROT = 100; // en ticks d'asserv'

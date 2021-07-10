@@ -36,7 +36,7 @@ MCS::MCS()
     rightSpeedPID.setTunings(0.3, 0, 0, 0); // 0.3, 0, 0, 0
     rightSpeedPID.enableAWU(false);
 
-    translationPID.setTunings(0.9,7*1e-4,0,0); // 0.9, 7*1e-4, 0
+    translationPID.setTunings(1.4,8.5*1e-4,0,0); // 0.9, 7*1e-4, 0 //new 1.4, 8.5*1e-4
     translationPID.enableAWU(false);
     rotationPID.setTunings(2.22,7*1e-4,8,0); // 2.22, 7*1e-4, 8
     rotationPID.enableAWU(false);
@@ -463,7 +463,7 @@ void MCS::smoothReset() {
     rightSpeedPID.resetOutput(0);
 }
 
-void MCS::translate(int16_t amount) {
+void MCS::translate(float amount) {
     robotStatus.controlled = true;
     if(!robotStatus.controlledTranslation)
         return;
@@ -717,11 +717,11 @@ float MCS::getCurrentDistance() {
     return currentDistance;
 }
 
-void MCS::setX(int16_t x) {
+void MCS::setX(float x) {
     robotStatus.x = x;
 }
 
-void MCS::setY(int16_t y) {
+void MCS::setY(float y) {
     robotStatus.y = y;
 }
 

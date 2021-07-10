@@ -174,14 +174,16 @@ void ORDER_j::impl(Args args)
 
 void ORDER_xyo::impl(Args args)
 {
-    orderManager.highLevel.printfln(STD_HEADER,"%i",orderManager.motionControlSystem.getX());
-    orderManager.highLevel.printfln(STD_HEADER,"%i",orderManager.motionControlSystem.getY());
+    orderManager.highLevel.printfln(STD_HEADER,"%f",orderManager.motionControlSystem.getX());
+    orderManager.highLevel.printfln(STD_HEADER,"%f",orderManager.motionControlSystem.getY());
+    orderManager.highLevel.printfln(STD_HEADER,"%f",orderManager.motionControlSystem.robotStatus.leftWheelX);
+    orderManager.highLevel.printfln(STD_HEADER,"%f",orderManager.motionControlSystem.robotStatus.rightWheelX);
     orderManager.highLevel.printfln(STD_HEADER,"%f",orderManager.motionControlSystem.getAngle());
 }
 
 void ORDER_d::impl(Args args)
 {
-    int16_t deplacement = OrderManager::parseInt(args[0]);
+    float deplacement = OrderManager::parseFloat(args[0]);
     bool expectedWallImpact = false;
     if(args.nbrParams() == 2) {
         expectedWallImpact = ! strcmp(args[1], "true");
@@ -267,8 +269,26 @@ void ORDER_cxyo::impl(Args args)
     orderManager.motionControlSystem.setY(OrderManager::parseFloat(args[1]));
     orderManager.motionControlSystem.setAngle(OrderManager::parseFloat(args[2]));
 
+    orderManager.motionControlSystem.robotStatus.leftWheelX = orderManager.motionControlSystem.getX() - SIGN(orderManager.motionControlSystem.getAngle()) * DISTANCE_COD_GAUCHE_CENTRE * cosf(orderManager.motionControlSystem.getAngle());
+    orderManager.motionControlSystem.robotStatus.rightWheelX = orderManager.motionControlSystem.getX() + SIGN(orderManager.motionControlSystem.getAngle()) * DISTANCE_COD_DROITE_CENTRE * cosf(orderManager.motionControlSystem.getAngle());
+
+    orderManager.motionControlSystem.robotStatus.leftWheelY = orderManager.motionControlSystem.getY() - DISTANCE_COD_GAUCHE_CENTRE * sinf(orderManager.motionControlSystem.getAngle());
+    orderManager.motionControlSystem.robotStatus.rightWheelY = orderManager.motionControlSystem.getY() + DISTANCE_COD_DROITE_CENTRE * sinf(orderManager.motionControlSystem.getAngle());
+
+    orderManager.motionControlSystem.rotationPID.setGoal(orderManager.motionControlSystem.getAngle());
+    orderManager.motionControlSystem.robotStatus.previousOrientation = orderManager.motionControlSystem.getAngle();
+
+    // orderManager.motionControlSystem.translationPID.setGoal(sqrtf(powf((orderManager.motionControlSystem.robotStatus.x - orderManager.motionControlSystem.robotStatus.baseX),2) + powf((orderManager.motionControlSystem.robotStatus.y - orderManager.motionControlSystem.robotStatus.baseY),2)));
+    // orderManager.motionControlSystem.currentDistance = sqrtf(powf((orderManager.motionControlSystem.robotStatus.x - orderManager.motionControlSystem.robotStatus.baseX),2) + powf((orderManager.motionControlSystem.robotStatus.y - orderManager.motionControlSystem.robotStatus.baseY),2));
+
+    orderManager.motionControlSystem.translationPID.setGoal(0);
+    orderManager.motionControlSystem.currentDistance = 0;
+
+    orderManager.motionControlSystem.robotStatus.baseX = orderManager.motionControlSystem.getX();
+    orderManager.motionControlSystem.robotStatus.baseY = orderManager.motionControlSystem.getY();
+
     // Mise à jour de l'offset et du target des codeuses. Faut pas tourner parce que le HL te dit où t'es. Je sais il est pas gentil mais faut l'accepter
-    orderManager.motionControlSystem.setAngleOffset(OrderManager::parseFloat(args[2]));
+    //orderManager.motionControlSystem.setAngleOffset(OrderManager::parseFloat(args[2]));
     orderManager.motionControlSystem.resetEncoders();
     orderManager.highLevel.printfln(DEBUG_HEADER, "X,Y,O set");
 }
