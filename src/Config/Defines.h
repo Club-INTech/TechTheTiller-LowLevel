@@ -116,7 +116,7 @@ constexpr float overflowTolerancy = 2;
 #endif
 
 
-constexpr uint8_t   DISTANCE_INTER_COD         = DISTANCE_COD_DROITE_CENTRE + DISTANCE_COD_GAUCHE_CENTRE;
+constexpr auto   DISTANCE_INTER_COD         = DISTANCE_COD_DROITE_CENTRE + DISTANCE_COD_GAUCHE_CENTRE;
 
 constexpr float TICK_TO_MM = static_cast<float>(PI*COD_WHEEL_DIAMETER/TICKS_PER_TURN); // Unité : mm/ticks
 constexpr float TICK_TO_RADIAN = TICK_TO_MM / DISTANCE_COD_GAUCHE_CENTRE; // Unité : rad/ticks

@@ -82,18 +82,19 @@ void loop() {
 	//mcs.leftMotor.run(20);
 	//mcs.rightMotor.run(60);
 
-	mcsTimer.setInterval(1000 / MCS_FREQ, [&](){
+	mcsTimer.setInterval(1000 / MCS_FREQ, +[](){
+		auto& mcs = MCS::Instance();
 		mcs.control();
 	});
 
-	samplingTimer.setInterval(1000 / SAMPLING_FREQUENCY, [&](){
+	samplingTimer.setInterval(1000 / SAMPLING_FREQUENCY, +[](){
 		if (dbuf::buffer.length() + motion_datum_string_size < dbuf::capacity && dbuf::init_buff ) dbuf::buffer.concat(getMotionDatum());
 	});
-	//orderManager.execute("montlhery");
-	orderManager.execute("cr1");
-	orderManager.execute("ct1");
-	
-	orderManager.execute("start_mda 4096");
+	orderManager.execute("montlhery");
+	// orderManager.execute("cr1");
+	// orderManager.execute("ct1");
+
+	// orderManager.execute("start_mda 4096");
 
 	while (true) {
 		mcsTimer.run();

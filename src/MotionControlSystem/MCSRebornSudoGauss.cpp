@@ -6,7 +6,7 @@
 //===============================================================//
 
             Patched a lot by SUDOGAUSS. You must verify
-            all steps of calculating and updating speed 
+            all steps of calculating and updating speed
             before you start working on MCS. If you are
             not sure about existing code and how to change
             it, please contact me for, so I can explain
@@ -20,15 +20,15 @@
 #include "MCS.h"
 
 
-MCS::MCS() 
-    : leftMotor(Side::LEFT), rightMotor(Side::RIGHT), 
-      encoderLeft(ENCODER_LEFT_A, ENCODER_LEFT_B), encoderRight(ENCODER_RIGHT_A, ENCODER_RIGHT_B), 
+MCS::MCS()
+    : leftMotor(Side::LEFT), rightMotor(Side::RIGHT),
+      encoderLeft(ENCODER_LEFT_A, ENCODER_LEFT_B), encoderRight(ENCODER_RIGHT_A, ENCODER_RIGHT_B),
       leftTicks(0), rightTicks(0)
     {
 
     initSettings();
     initStatus();
-  
+
 #if defined(MAIN)
 
     leftSpeedPID.setTunings(0.27, 0, 0, 0); // 0.27, 0, 0, 0
@@ -87,7 +87,7 @@ void MCS::initSettings() {
 
 
     /* mm/s */
-    controlSettings.maxTranslationSpeed = 900; 
+    controlSettings.maxTranslationSpeed = 500;
     controlSettings.tolerancySpeed = 5;
 
     /* rad */
@@ -140,7 +140,7 @@ void MCS::initStatus() {
 }
 
 
-/* 
+/*
     Updates position and orientation using encoders ticks.
     The idea is that between two updates(~10ms) robot has not
     changed a lot his angle with horizontal axe. In other terms
@@ -149,7 +149,7 @@ void MCS::initStatus() {
     Knowing that we measure a distance travelled by each encoder wheel,
     it is enough to project this distance on xAxis and yAxis.
 
-    Than we use acos to determine a new angle. We don't use a measured 
+    Than we use acos to determine a new angle. We don't use a measured
     distance between encoders wheels, but we calculate it, because
     incertitude can cause a acos nan output.
 */
@@ -158,15 +158,15 @@ void MCS::updatePositionOrientation() {
 
     // We use on change interruptions, so we must divide by ticks per period to know the real travalled distance
 
-    leftDistance = (float) (encoderLeft.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD; 
-    rightDistance = (float) (encoderRight.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD; 
+    leftDistance = (float) (encoderLeft.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD;
+    rightDistance = (float) (encoderRight.get_ticks()) * TICK_TO_MM / MEAN_TICKS_PER_PERIOD;
 
     encoderLeft.reset_ticks();
     encoderRight.reset_ticks();
 
 
     //run `pio run -e main_debug_ticks -t upload` in order to see ticks in real time in Serial
-    #ifdef SERIAL_DEBUG_TICKS 
+    #ifdef SERIAL_DEBUG_TICKS
     SERIAL_DEBUG("l: %i, r: %i\n", encoderLeft.get_ticks(), encoderRight.get_ticks());
     #endif
 
@@ -190,21 +190,21 @@ void MCS::updatePositionOrientation() {
 
     // robot length calculated only with encoders data, we don't use the real one, because of incertitude
 
-    float robotTheoricLength = sqrtf(powf((robotStatus.rightWheelY - robotStatus.leftWheelY),2.0f) + powf((robotStatus.rightWheelX - robotStatus.leftWheelX),2.0f)); 
+    float robotTheoricLength = sqrtf(powf((robotStatus.rightWheelY - robotStatus.leftWheelY),2.0f) + powf((robotStatus.rightWheelX - robotStatus.leftWheelX),2.0f));
 
     //run `pio run -e main_debug_position -t upload` in order to see ticks in real time in Serial
     #ifdef SERIAL_DEBUG_POSITION
     SERIAL_DEBUG("l: %f, r: %f, a: %f\n", robotStatus.leftWheelY, robotStatus.rightWheelY, current_angle);
     #endif
 
-    
+
     // we calculate a new angle (it is not a real value because acos is defined only in [0, PI])
-    float orientationCosinusMeasure = acosf((robotStatus.rightWheelX - robotStatus.leftWheelX) / robotTheoricLength) + angleOffset; 
+    float orientationCosinusMeasure = acosf((robotStatus.rightWheelX - robotStatus.leftWheelX) / robotTheoricLength) + angleOffset;
 
     // raw angle value, because we don't know number of periods, so it is an angle with 2*pi*k precision
     float rawAngle = robotStatus.rightWheelY < robotStatus.leftWheelY ? 2*PI-orientationCosinusMeasure : orientationCosinusMeasure;
 
-    /* 
+    /*
         Gaps between current and previous orientation in the case where we move in trigonometric or
         non-trigonometric direction and angle s positif or negatif
 
@@ -214,7 +214,7 @@ void MCS::updatePositionOrientation() {
         will be bigger than negative gap within all possible periods.
 
         Than if positive gap is less than tolerancy(-pi), it does mean that we incremented the period, etc...
-        
+
     */
     float positiveTurnGap = (rawAngle + robotStatus.turnPeriod * 2*PI) - robotStatus.previousOrientation;
     float negativeTurnGap = (rawAngle + (robotStatus.turnPeriod - 1) * 2*PI) - robotStatus.previousOrientation;
@@ -266,7 +266,7 @@ void MCS::updateSpeed()
 
             if( robotStatus.currentTranslationGoal + controlSettings.translationStep <= robotStatus.finalTranslationGoal) {
                 robotStatus.currentTranslationGoal += controlSettings.translationStep;
-            } 
+            }
             else if( robotStatus.currentTranslationGoal - controlSettings.translationStep >= robotStatus.finalTranslationGoal) {
                 robotStatus.currentTranslationGoal -= controlSettings.translationStep;
             } else {
@@ -284,7 +284,7 @@ void MCS::updateSpeed()
             if(robotStatus.movement == MOVEMENT::BACKWARD) {
                 robotStatus.speedTranslation = robotStatus.speedTranslation * (-1);
             }
-        
+
     }
     else if(!robotStatus.forcedMovement) // forced movement is used to activate a speed asservisement
     {
@@ -294,7 +294,7 @@ void MCS::updateSpeed()
     if(robotStatus.controlledRotation && !expectedWallImpact) // r obot can't turn when he is close to the wall
     {
             robotStatus.speedRotation = rotationPID.compute(robotStatus.orientation);
-        
+
     }
     else if(!robotStatus.forcedMovement)
     {
@@ -316,36 +316,36 @@ void MCS::updateSpeed()
 
 
         if (leftSpeedPID.active) {
-        
+
             if( robotStatus.currentLeftSpeedGoal + controlSettings.maxAcceleration <= robotStatus.finalLeftSpeedGoal) {
                 robotStatus.currentLeftSpeedGoal += controlSettings.maxAcceleration;
-            } 
+            }
             else if(robotStatus.currentLeftSpeedGoal - controlSettings.maxDeceleration >= robotStatus.finalLeftSpeedGoal && !robotStatus.stuck) {
                 robotStatus.currentLeftSpeedGoal -= controlSettings.maxDeceleration;
-            } 
+            }
 
 
             leftSpeedPID.setGoal(robotStatus.currentLeftSpeedGoal);
-    
+
         }
 
         if (rightSpeedPID.active) {
-            
+
             if( robotStatus.currentRightSpeedGoal + controlSettings.maxAcceleration <= robotStatus.finalRightSpeedGoal) {
                 robotStatus.currentRightSpeedGoal += controlSettings.maxAcceleration;
             }
 
             else if(robotStatus.currentRightSpeedGoal - controlSettings.maxDeceleration >= robotStatus.finalRightSpeedGoal && !robotStatus.stuck) {
                 robotStatus.currentRightSpeedGoal -= controlSettings.maxDeceleration;
-            } 
+            }
             rightSpeedPID.setGoal(robotStatus.currentRightSpeedGoal);
-        
+
         }
 
     }
 
 
-/* 
+/*
     mcs control is the principal function that orchestrate robot movement
     it is called with MCS_FREQ frequency in main loop
 */
@@ -355,7 +355,6 @@ void MCS::control()
     time_points_criteria = millis();
     if(!robotStatus.controlled) return;
 
-
     updatePositionOrientation();
     updateSpeed();
 
@@ -364,7 +363,7 @@ void MCS::control()
 
     if(ABS(robotStatus.speedLeftWheel) >= overflowTolerancy * ABS(leftSpeedPID.getCurrentGoal()) || ABS(robotStatus.speedRightWheel) >= overflowTolerancy * ABS(leftSpeedPID.getCurrentGoal())) {
         leftPWM = 0;
-        rightPWM = 0;   
+        rightPWM = 0;
     }
 
     if(ABS(rotationPID.getCurrentGoal() - robotStatus.orientation) <= angleHLTolerancy && robotStatus.controlledRotation) {
@@ -375,7 +374,7 @@ void MCS::control()
             stopRotation();
             robotStatus.rotationTermination = true;
         }
-    } 
+    }
     if(ABS(translationPID.getCurrentGoal() - currentDistance) <= translationHLTolerancy && robotStatus.controlledTranslation) {
         if(!robotStatus.translationTermination) {
             // leftPWM = 0;
@@ -402,12 +401,12 @@ void MCS::control()
     // }
 
     // transmitting a pwm to motors
-    
+
     leftMotor.run(leftPWM);
     rightMotor.run(rightPWM);
 
     // after entire mcs period, we reset all encoders ticks
-    
+
 }
 
 
@@ -451,7 +450,7 @@ void MCS::stop() {
 }
 
 void MCS::smoothReset() {
-    
+
     translationPID.fullReset();
     rotationPID.fullReset();
     leftSpeedPID.fullReset();
@@ -507,7 +506,7 @@ void MCS::rotate(float angle) {
         rotationPID.fullReset();
     }
 
-    
+
 
     rotationPID.setGoal(targetAngle);
     robotStatus.moving = true;
