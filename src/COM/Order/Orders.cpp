@@ -86,6 +86,26 @@ void ORDER_lower_hammer::impl(Args args) {
   executeRPC(hammers_id, lower_hammer_id, &data);
 }
 
+void ORDER_raise_hammers::impl(Args args) {
+  using namespace external;
+
+  for (int i = 0; i < 5; i++) {
+    BufferedData data(sizeof(int));
+    putData(i, &data);
+    executeRPC(hammers_id, raise_hammer_id, &data);
+  }
+}
+
+void ORDER_lower_hammers::impl(Args args) {
+  using namespace external;
+
+  for (int i = 0; i < 5; i++) {
+    BufferedData data(sizeof(int));
+    putData(i, &data);
+    executeRPC(hammers_id, lower_hammer_id, &data);
+  }
+}
+
 void ORDER_raise_dxl::impl(Args args) {
   using namespace dxl;
 

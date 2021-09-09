@@ -36,6 +36,8 @@ ORDER(flag, 1);
 ORDER(set_hammer_angle, 2);
 ORDER(raise_hammer, 1);
 ORDER(lower_hammer, 1);
+ORDER(raise_hammers, 0);
+ORDER(lower_hammers, 0);
 ORDER(raise_dxl, 0);
 ORDER(lower_dxl, 0);
 ORDER(arm, 2);
